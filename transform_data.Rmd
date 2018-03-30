@@ -1,0 +1,17 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+ 
+```{r}
+
+library(memisc)
+library(foreign)
+
+#data <- as.data.set(spss.system.file('data/Bestand_BAS_2015_2016_5nieuwegemeenten.sav'))
+
+#write.csv(data, file = "data/Bestand_BAS_2015_2016_5nieuwegemeenten.csv")
+
+write.table(read.spss("data/Bestand_BAS_2015_2016_5nieuwegemeenten.sav"), file="data/Bestand_BAS_2015_2016_5nieuwegemeenten.csv", quote = TRUE, sep = ",")
+            
+```
