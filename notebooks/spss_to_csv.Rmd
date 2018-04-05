@@ -2,16 +2,13 @@
 title: "R Notebook"
 output: html_notebook
 ---
- 
+
 ```{r}
 
-#library(memisc)
-library(foreign)
+library(haven)
 
-#data <- as.data.set(spss.system.file('data/Bestand_BAS_2015_2016_5nieuwegemeenten.sav'))
+data_2004_2016 <- read_sav("data/Bestand_BAS_2004_2016.sav")
 
-#write.csv(data, file = "data/Bestand_BAS_2015_2016_5nieuwegemeenten.csv")
+write.table(data_2004_2016, file="data/raw/data_2004_2016.csv",quote = TRUE, sep=",")
 
-write.table(read.spss("data/Bestand_BAS_2004_2016.sav"), file="data/Bestand_BAS_2004_2016.csv", quote = TRUE, sep = ",")
-            
 ```
