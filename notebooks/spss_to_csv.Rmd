@@ -7,8 +7,8 @@ output: html_notebook
 
 library(haven)
 
-data_2004_2016 <- read_sav("data/Bestand_BAS_2004_2016.sav")
+data_2004_2016 <- read_sav("data/raw_sav/Bestand_BAS_2004_2016.sav")
 
-write.table(data_2004_2016, file="data/raw/data_2004_2016.csv",quote = TRUE, sep=",")
+write.table(data_2004_2016, file="data/raw_csv/data_2004_2016.csv",quote = TRUE, sep=",")
 
 ```
