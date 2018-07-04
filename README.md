@@ -1,4 +1,4 @@
-# Low Cost Posturograhpy
+# Low Cost Posturography
 
 This repository hosts the source code written in the context of my master thesis work.
 The goal is to investigate the Wii Balance  potential as a cheap alternative to force plates.
