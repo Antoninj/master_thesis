@@ -3,6 +3,8 @@ import json
 
 
 class SensorDataReader(object):
+    """ Class to collect sensor data from the WBB and the force plate """
+
     def __init__(self, filepath):
         self.config = self.load_config()
         self.acquisition_reader = btk.btkAcquisitionFileReader()
@@ -24,13 +26,12 @@ class SensorDataReader(object):
         acq = reader.GetOutput()
 
         if balance_board:
-            data_points_labels = ["COP x y body weight", "BottomLeft Kg",
-                                  "BottomRight Kg", "TopLeft Kg", "TopLeft Kg"]
+            data_points_labels = self.config["data_points_labels"]
             points = [acq.GetPoint(label)
                       for label in data_points_labels]
             values = [point.GetValues() for point in points]
         else:
-            analog_labels = ["Fx1", "Fy1", "Mx1", "Fx2", "Fy2", "Mx2"]
+            analog_labels = self.config["analog_labels"]
 
             analogs = [acq.GetAnalog(label)
                        for label in analog_labels]
