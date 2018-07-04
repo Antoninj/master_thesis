@@ -1,5 +1,4 @@
 {
-    "analog_labels" : ["Fx1", "Fy1", "Mx1", "Fx2", "Fy2", "Mx2"],
-    "data_points_labels" : ["COP x y body weight", "BottomLeft Kg",
-                                  "BottomRight Kg", "TopLeft Kg", "TopLeft Kg"]
+    "analog_labels" : ["Fx1", "Fy1", "Fz1", "Mx1", "My2", "Fx2", "Fy2", "Fz2", "Mx2", "My2"],
+    "data_points_labels" : ["BottomLeft Kg", "BottomRight Kg", "TopLeft Kg", "TopLeft Kg"]
 }

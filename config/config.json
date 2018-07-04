@@ -1,6 +1,5 @@
 {
-	"db":"png",
-    "split_number": 7,
-    "block_size": 40,
-    "tolerance": 1
+	"width":43.3,
+    "length": 23.8,
+    "height": 15
 }

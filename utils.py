@@ -16,3 +16,9 @@ class NumpyEncoder(json.JSONEncoder):
         elif isinstance(obj, (np.ndarray,)):  # This is the fix
             return obj.tolist()
         return json.JSONEncoder.default(self, obj)
+
+
+def load_config():
+    with open("config/config.json") as cfg:
+        config = json.load(cfg)
+    return config

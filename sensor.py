@@ -1,15 +1,17 @@
 import btk
 import json
+from utils import load_config
 
 
 class SensorDataReader(object):
-    """ Class to collect sensor data from the WBB and the force plate """
+    """ Class to collect and format the raw sensor data values from the WBB and force plate acquisition files which are stored in the c3d file format (cd https://www.c3d.org/HTML/default.htm).
+
+    The locally compiled binaries of the biomechanical toolkit python wrapper (http://biomechanical-toolkit.github.io/docs/Wrapping/Python/index.html) are used to read and extract the data. """
 
     def __init__(self, filepath):
         self.config = self.load_config()
         self.acquisition_reader = btk.btkAcquisitionFileReader()
-        self.acquisition_reader.SetFilename(filepath)
-        self.acquisition_reader.Update()
+        self.set_reader_filename(filepath)
 
     def set_reader_filename(self, filepath):
         self.acquisition_reader.SetFilename(filepath)

@@ -1,4 +1,5 @@
 {
     "order" : 4,
-    "cutoff_frequency" : 12
+    "cutoff_frequency" : 12,
+    "type" : "constant"
 }
