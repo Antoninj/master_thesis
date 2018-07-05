@@ -1,4 +1,4 @@
 {
     "analog_labels" : ["Fx1", "Fy1", "Fz1", "Mx1", "My2", "Fx2", "Fy2", "Fz2", "Mx2", "My2"],
-    "data_points_labels" : ["BottomLeft Kg", "BottomRight Kg", "TopLeft Kg", "TopLeft Kg"]
+    "data_points_labels" : ["BottomLeft Kg", "BottomRight Kg", "TopRight Kg", "TopLeft Kg"]
 }

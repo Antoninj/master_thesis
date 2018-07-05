@@ -1,13 +1,12 @@
 import argparse
 import json
 import os
-
+from utils import load_config
 
 if __name__ == "__main__":
 
     # Load configuration file
-    with open("config/config.json") as cfg:
-        config = json.load(cfg)
+    config = load_config()
 
     parser = argparse.ArgumentParser(
         description="")
