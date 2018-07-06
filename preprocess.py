@@ -1,6 +1,5 @@
 import scipy.signal
 import json
-from utils import load_config
 
 
 class DataPreprocessor(object):

@@ -17,6 +17,7 @@ def compute_cop_wbb_x(raw_data):
     TL = raw_data["TopLeft Kg"][:, 0]
     BL = raw_data["BottomLeft Kg"][:, 0]
 
+
     return lx / 2 * ((TR + BR) - (TL + BL)) / (TR + BR + TL + BL)
 
 

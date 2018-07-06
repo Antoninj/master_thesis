@@ -6,7 +6,6 @@
 [Bb]uild/
 
 #Others
-config/
 __pycache__
 BalanceBoard_Static
 btk-core-0.3.0_src

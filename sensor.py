@@ -1,10 +1,10 @@
 import btk
 import json
-from utils import load_config
+# from utils import load_config
 
 
 class SensorDataReader(object):
-    """ Class to collect and format the raw sensor data values from the WBB and force plate acquisition files which are stored in the c3d file format (cd https://www.c3d.org/HTML/default.htm).
+    """ Class to collect and format the raw sensor data values from the WBB and force plate acquisition files which are stored in the c3d file format (cf https://www.c3d.org/HTML/default.htm).
 
     The locally compiled and installed binaries of the biomechanical toolkit python wrapper (http://biomechanical-toolkit.github.io/docs/Wrapping/Python/index.html) are used to read and extract the data. """
 
