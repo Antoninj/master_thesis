@@ -19,6 +19,6 @@ class NumpyEncoder(json.JSONEncoder):
 
 
 def load_config():
-    with open("config/config.json") as cfg:
+    with open("config/global.json") as cfg:
         config = json.load(cfg)
     return config

@@ -1,19 +1,19 @@
 from sensor import SensorDataReader
 from preprocess import DataPreprocessor
-import json
 from cop import *
 from matplotlib import pyplot as plt
 import argparse
-
+config = load_config()
 
 if __name__ == "__main__":
 
     # Load configuration file
-    with open("config/config.json") as cfg:
-        config = json.load(cfg)
+    config = load_config()
 
+    # WBB data test file
     filepath_wbb = "/Users/Antonin/Documents/VUB/semester 4/thesis/code/BalanceBoard_Static/Sujet1/Session1/BalanceBoard/1.c3d"
 
+    # Force plate data test file
     filepath_fp = "/Users/Antonin/Documents/VUB/semester 4/thesis/code/BalanceBoard_Static/Sujet1/Session1/Vicon/1.c3d"
 
     parser = argparse.ArgumentParser(
