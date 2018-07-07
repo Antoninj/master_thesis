@@ -17,15 +17,18 @@ class DataPreprocessor(object):
         return config
 
     def apply_resampling(self, input_signal):
-        """Resample the input signal using polyphase filtering.
+        """ Function to resample the input signal using polyphase filtering.
 
         Scipy documentation: https: // docs.scipy.org / doc / scipy - 1.1.0 / reference / generated / scipy.signal.resample_poly.html  # scipy.signal.resample_poly """
+
+        # Retrieve the upsampling and downsampling factors from the configuration file
         up = self.config["upsampling factor"]
         down = self.config["downsampling factor"]
+
         return scipy.signal.resample_poly(input_signal, up, down)
 
     def apply_filtering(self, input_signal, analog_frequency):
-        """ This function creates a low pass butterworth filter. The order and the cutoff frequencies of the filter can be specified through the configuration file.
+        """ Function to create and apply a low pass butterworth filter. The order and the cutoff frequencies of the filter can be specified through the configuration file.
 
         Scipy documentation: https: // docs.scipy.org / doc / scipy - 1.1.0 / reference / generated / scipy.signal.butter.html  # scipy.signal.butter
 
@@ -37,16 +40,16 @@ class DataPreprocessor(object):
         order = self.config["order"]
         fc = self.config["cutoff frequency"]
 
-        # Create the filter
+        # Create the low pass butterworth filter
         b, a = scipy.signal.butter(order, fc / (0.5 * analog_frequency))
 
-        # Apply the filter
+        # Apply the filter to the input signal
         filtered_signal = scipy.signal.filtfilt(b, a, input_signal)
 
         return filtered_signal
 
     def apply_detrending(self, input_signal):
-        """Detrend the input signal by removing a linear trend or just the mean of the signal.
+        """ Function to detrend the input signal by removing a linear trend or just the mean of the signal.
 
         Scipy documentation: https://docs.scipy.org/doc/scipy-1.1.0/reference/generated/scipy.signal.detrend.html#scipy.signal.detrend """
 
@@ -55,7 +58,9 @@ class DataPreprocessor(object):
         return scipy.signal.detrend(input_signal, type=detrending_type)
 
     def preprocess(self, input_signal, analog_frequency, balance_board=False):
-        """ Wrapper function that applies all the preprocessing steps at once. """
+        """ Wrapper function that applies all the preprocessing steps at once.
+
+        The resampling is only applied to the wii balance board data in order to match the force plate acquisition frequency """
 
         if balance_board:
             resampled_signal = self.apply_resampling(input_signal)

@@ -14,21 +14,21 @@ class SensorDataReader(object):
         self.set_reader_filename(filepath)
 
     def set_reader_filename(self, filepath):
-        """ Change acquisition file """
+        """ Function to change the current acquisition file used by the file reader """
 
         self.acquisition_reader.SetFilename(filepath)
         self.acquisition_reader.Update()
 
     @staticmethod
     def load_config():
-        """ Load configuration file """
+        """ Function to load the configuration file """
 
         with open("config/sensor.json") as cfg:
             config = json.load(cfg)
         return config
 
     def get_raw_data(self, balance_board=False):
-        """ Extract and aggregate raw sensor data of interest """
+        """ Function to extract and aggregate raw sensor data of interest """
 
         reader = self.acquisition_reader
         acq = reader.GetOutput()
@@ -46,7 +46,7 @@ class SensorDataReader(object):
         return dict(zip(labels, values))
 
     def get_frequency(self, point=False):
-        """ Extract analog/point frequencies """
+        """ Function to extract analog/point frequencies """
 
         reader = self.acquisition_reader
         acq = reader.GetOutput()

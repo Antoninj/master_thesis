@@ -24,12 +24,11 @@ if __name__ == "__main__":
 
     WBB = args.wbb
     if WBB:
-
         data_reader = SensorDataReader(filepath_wbb)
         raw_data = data_reader.get_raw_data(balance_board=True)
         analog_freq = data_reader.get_frequency()
 
-        print(raw_data, analog_freq)
+        #print(raw_data, analog_freq)
 
         cop_wbb_x = compute_cop_wbb_x(raw_data)
         cop_wbb_y = compute_cop_wbb_y(raw_data)
@@ -51,28 +50,28 @@ if __name__ == "__main__":
             plt.show()
 
     else:
-
         data_reader = SensorDataReader(filepath_fp)
         raw_data = data_reader.get_raw_data()
         analog_freq = data_reader.get_frequency()
 
-        print(raw_data, analog_freq)
+        #print(raw_data["Fz1"], analog_freq)
 
-        #cop_fp_x = compute_cop_fp_x(raw_data)
-        #cop_fp_y = compute_cop_fp_y(raw_data)
+        cop_fp_x = compute_cop_fp_x(raw_data)
+        cop_fp_y = compute_cop_fp_y(raw_data)
 
-        #print("FP COP x: {} \nFP COP y: {}".format(cop_fp_x, cop_fp_y))
+        print("FP COP x: {} \nFP COP y: {}".format(cop_fp_x, cop_fp_y))
 
-        #data_preprocessor = DataPreprocessor()
+        data_preprocessor = DataPreprocessor()
         #preprocessed_data = data_preprocessor.preprocess(cop_fp_x, analog_freq)
 
-        #preprocessed_cop_wbb_x = data_preprocessor.apply_filtering(cop_wbb_x, analog_freq)
-        #filtered_detrended = data_preprocessor.apply_detrending(preprocessed_cop_wbb_x)
+        preprocessed_cop_fp_x = data_preprocessor.apply_filtering(cop_fp_x, analog_freq)
+        print(preprocessed_cop_fp_x)
+        #filtered_detrended = data_preprocessor.apply_detrending(preprocessed_cop_fp_x)
 
         plot_figure = False
 
         if plot_figure:
             plt.figure()
-            plt.plot(cop_wbb_x)
+            plt.plot(cop_fp_x)
             plt.plot(preprocessed_data)
             plt.show()
