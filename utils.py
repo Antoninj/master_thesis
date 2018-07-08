@@ -18,7 +18,9 @@ class NumpyEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
-def load_config():
-    with open("config/global.json") as cfg:
+def load_config(filename="global"):
+    """ Function to load a configuration file """
+
+    with open("config/{}.json".format(filename)) as cfg:
         config = json.load(cfg)
     return config

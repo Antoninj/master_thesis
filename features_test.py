@@ -1,36 +1,23 @@
-from time_features import DistanceFeatures
+from time_features import DistanceFeatures, AreaFeatures, HybridFeatures
 from utils import load_config
 
 if __name__ == "__main__":
 
     # Load configuration file
-    config = load_config()
+    config = load_config("test")
 
     # WBB data test file
-    filepath_wbb = "/Users/Antonin/Documents/VUB/semester 4/thesis/code/BalanceBoard_Static/Sujet1/Session1/BalanceBoard/1_cop.json"
+    wbb_cop_data = config["wbb cop data test file"]
 
-    distance_features = DistanceFeatures(filepath_wbb)
+    distance_features = DistanceFeatures(wbb_cop_data)
 
-    rd_mean_distance = distance_features.compute_rd_mean_distance()
-    ap_mean_distance = distance_features.compute_ap_mean_distance()
-    ml_mean_distance = distance_features.compute_ml_mean_distance()
+    #distance_features.summary()
 
-    print("Rd mean distance: {}".format(rd_mean_distance))
-    print("AP mean distance: {}".format(ap_mean_distance))
-    print("ML mean distance: {} \n".format(ml_mean_distance))
+    area_features = AreaFeatures(wbb_cop_data)
 
-    rd_rms_distance = distance_features.compute_rd_rms_distance()
-    ap_rms_distance = distance_features.compute_ap_rms_distance()
-    ml_rms_distance = distance_features.compute_ml_rms_distance()
+    #area_features.summary()
 
-    print("Rd rms distance: {}".format(rd_rms_distance))
-    print("AP rms distance: {}".format(ap_rms_distance))
-    print("ML rms distance: {} \n".format(ml_rms_distance))
+    hybrid_features = HybridFeatures(wbb_cop_data)
 
-    rd_path_length = distance_features.compute_rd_path_length()
-    ap_path_length = distance_features.compute_ap_path_length()
-    ml_path_length = distance_features.compute_ml_path_length()
+    hybrid_features.summary()
 
-    print("Rd path length: {}".format(rd_path_length))
-    print("AP path length: {}".format(ap_path_length))
-    print("ML path length: {} \n".format(ml_path_length))

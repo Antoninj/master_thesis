@@ -17,10 +17,10 @@ def compute_wbb_cop_positions(data_reader):
     return cop_data
 
 
-def preprocess_wbb_cop_positions(data_preprocessor, cop_data):
+def preprocess_wbb_cop_positions(data_preprocessor, cop_data, frequency):
 
     labels = ["COP x", "COP y"]
-    preprocessed_data = [data_preprocessor.preprocess(data, 1000, True) for data in cop_data]
+    preprocessed_data = [data_preprocessor.preprocess(data, frequency, True) for data in cop_data]
 
     return dict(zip(labels, preprocessed_data))
 
@@ -35,11 +35,10 @@ def compute_fp_cop_positions(data_reader):
     return cop_data
 
 
-def preprocess_fp_cop_positions(data_preprocessor, data_reader, cop_data):
+def preprocess_fp_cop_positions(data_preprocessor, cop_data, frequency):
 
-    analog_freq = data_reader.get_frequency()
     labels = ["COP x", "COP y"]
-    preprocessed_data = [data_preprocessor.preprocess(data, analog_freq) for data in cop_data]
+    preprocessed_data = [data_preprocessor.preprocess(data, frequency) for data in cop_data]
 
     return dict(zip(labels, preprocessed_data))
 
@@ -54,12 +53,15 @@ def save_cop_positions(preprocessed_data, filepath):
 
 if __name__ == "__main__":
 
-    # Load configuration file
-    config = load_config()
+    # Load configuration files
+    test_config = load_config("test")
+    preprocessing_config = load_config("preprocess")
 
-    filepath_wbb = "/Users/Antonin/Documents/VUB/semester 4/thesis/code/BalanceBoard_Static/Sujet1/Session1/BalanceBoard/1.c3d"
+    # WBB data test file
+    filepath_wbb = test_config["wbb raw data test file"]
 
-    filepath_fp = "/Users/Antonin/Documents/VUB/semester 4/thesis/code/BalanceBoard_Static/Sujet1/Session1/Vicon/1.c3d"
+    # Force plate data test file
+    filepath_wbb = test_config["fp raw data test file"]
 
     parser = argparse.ArgumentParser(
         description="")
@@ -73,11 +75,13 @@ if __name__ == "__main__":
     WBB = args.wbb
     if WBB:
         wbb_cop_positions = compute_wbb_cop_positions(data_reader)
-        preprocessed_cop_positions = preprocess_wbb_cop_positions(data_preprocessor, wbb_cop_positions)
+        frequency = preprocessing_config["acquisition frequency"]
+        preprocessed_cop_positions = preprocess_wbb_cop_positions(data_preprocessor, wbb_cop_positions, frequency)
 
     else:
         data_reader.set_reader_filename(filepath_fp)
         fp_cop_positions = compute_fp_cop_positions(data_reader)
-        preprocessed_cop_positions = preprocess_fp_cop_positions(data_preprocessor, data_reader, wbb_cop_positions)
+        analog_freq = data_reader.get_frequency()
+        preprocessed_cop_positions = preprocess_fp_cop_positions(data_preprocessor, wbb_cop_positions, analog_freq)
 
     save_cop_positions(preprocessed_cop_positions, filepath_wbb)

@@ -8,13 +8,13 @@ config = load_config()
 if __name__ == "__main__":
 
     # Load configuration file
-    config = load_config()
+    config = load_config("test")
 
     # WBB data test file
-    filepath_wbb = "/Users/Antonin/Documents/VUB/semester 4/thesis/code/BalanceBoard_Static/Sujet1/Session1/BalanceBoard/1.c3d"
+    filepath_wbb = config["wbb raw data test file"]
 
     # Force plate data test file
-    filepath_fp = "/Users/Antonin/Documents/VUB/semester 4/thesis/code/BalanceBoard_Static/Sujet1/Session1/Vicon/1.c3d"
+    filepath_wbb = config["fp raw data test file"]
 
     parser = argparse.ArgumentParser(
         description="")

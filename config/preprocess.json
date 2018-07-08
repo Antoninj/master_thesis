@@ -3,5 +3,6 @@
     "cutoff frequency" : 12,
     "detrending type" : "constant",
     "upsampling factor" : 100,
-    "downsampling factor" : 3
+    "downsampling factor" : 3,
+    "acquisition frequency" : 1000
 }
