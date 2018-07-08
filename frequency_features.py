@@ -1,4 +1,11 @@
-class FrequencyMeasures(object):
+import math
+import numpy as np
+import json
+
+
+class FrequencyFeatures(object):
+    """                             """
+
     def __init__(self, cop_data):
         self.parse_cop_data()
 
