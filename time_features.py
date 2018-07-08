@@ -180,7 +180,7 @@ class AreaFeatures(DistanceFeatures):
             print("{}: {}".format(key, value))
 
 
-class HybridFeatures(DistanceFeatures):
+class HybridFeatures(AreaFeatures):
     """                                       """
 
     def __init__(self, filepath):
@@ -206,12 +206,33 @@ class HybridFeatures(DistanceFeatures):
 
         return mean_frequency_ml
 
+    def compute_fractal_dimension(self, d):
+        N = self.cop_rd.size
+        FD = (np.log(N)) / (np.log((N * d) / (self.distance_features["Rd path length"])))
+
+        return FD
+
+    def compute_fractal_dimension_cc(self):
+        std_rd = self.compute_std_rd()
+        d_fd_cc = 2 * (self.distance_features["Rd mean distance"] + self.z_05 * std_rd)
+
+        return self.compute_fractal_dimension(d_fd_cc)
+
+    def compute_fractal_dimension_ce(self):
+        std_ap = self.compute_std_ap()
+        std_ml = self.compute_std_ml()
+        d_fd_ce = sqrt(8 * self.F_05 * sqrt(square(std_ap) * square(std_ml) - np.cov(self.cop_x, self.cop_y)[0][1]))
+
+        return self.compute_fractal_dimension(d_fd_ce)
+
     def compute_hybrid_features(self):
         features = {}
         features["Sway area"] = self.compute_sway_area()
         features["Mean frequency"] = self.compute_mean_frequency()
-        features["Mean frequency AP"] = self.compute_mean_frequency_ap()
-        features["Mean frequency ML"] = self.compute_mean_frequency_ml()
+        features["Mean frequency-AP"] = self.compute_mean_frequency_ap()
+        features["Mean frequency-ML"] = self.compute_mean_frequency_ml()
+        features["Fractal dimension-CC"] = self.compute_fractal_dimension_cc()
+        features["Fractal dimension-CE"] = self.compute_fractal_dimension_ce()
         return features
 
     def summary(self):
