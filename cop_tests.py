@@ -14,7 +14,7 @@ if __name__ == "__main__":
     filepath_wbb = config["wbb raw data test file"]
 
     # Force plate data test file
-    filepath_wbb = config["fp raw data test file"]
+    filepath_fp = config["fp raw data test file"]
 
     parser = argparse.ArgumentParser(
         description="")

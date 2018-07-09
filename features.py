@@ -8,7 +8,7 @@ config = load_config("preprocess")
 class CopFeatures(object):
     """                             """
 
-    acquisition_frequency = config["acquisition frequency"]
+    acquisition_frequency = config["acquisition_frequency"]
 
     def __init__(self, filepath):
         super(CopFeatures, self).__init__()

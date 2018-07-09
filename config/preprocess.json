@@ -1,8 +1,8 @@
 {
     "order" : 4,
-    "cutoff frequency" : 12,
-    "detrending type" : "constant",
-    "upsampling factor" : 100,
-    "downsampling factor" : 3,
-    "acquisition frequency" : 1000
+    "cutoff_frequency" : 12,
+    "detrending_type" : "constant",
+    "upsampling_factor" : 100,
+    "downsampling_factor" : 3,
+    "acquisition_frequency" : 1000
 }

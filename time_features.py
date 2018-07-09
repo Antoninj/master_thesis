@@ -1,9 +1,6 @@
 import numpy as np
 from numpy import mean, sqrt, square, diff
 from features import CopFeatures
-from utils import load_config
-
-config = load_config("preprocess")
 
 
 class DistanceFeatures(CopFeatures):

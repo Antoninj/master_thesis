@@ -1,5 +1,7 @@
 import scipy.signal
-import json
+from utils import load_config
+
+config = load_config("preprocess")
 
 
 class DataPreprocessor(object):
@@ -8,24 +10,18 @@ class DataPreprocessor(object):
     More specifically, it relies on the implementations found in the latest release of the scipy signal processing package scipy.signal. """
 
     def __init__(self):
-        self.config = self.load_config()
-
-    @staticmethod
-    def load_config():
-        with open("config/preprocess.json") as cfg:
-            config = json.load(cfg)
-        return config
+        self.up = config["upsampling_factor"]
+        self.down = config["downsampling_factor"]
+        self.order = config["order"]
+        self.fc = config["cutoff_frequency"]
+        self.detrending_type = config["detrending_type"]
 
     def apply_resampling(self, input_signal):
         """ Function to resample the input signal using polyphase filtering.
 
         Scipy documentation: https: // docs.scipy.org / doc / scipy - 1.1.0 / reference / generated / scipy.signal.resample_poly.html  # scipy.signal.resample_poly """
 
-        # Retrieve the upsampling and downsampling factors from the configuration file
-        up = self.config["upsampling factor"]
-        down = self.config["downsampling factor"]
-
-        return scipy.signal.resample_poly(input_signal, up, down)
+        return scipy.signal.resample_poly(input_signal, self.up, self.down)
 
     def apply_filtering(self, input_signal, analog_frequency):
         """ Function to create and apply a low pass butterworth filter. The order and the cutoff frequencies of the filter can be specified through the configuration file.
@@ -36,12 +32,8 @@ class DataPreprocessor(object):
 
         Scipy documentation: https: // docs.scipy.org / doc / scipy / reference / generated / scipy.signal.filtfilt.html """
 
-        # Retrieve the order and cutoff frequency parameters for the filter from the configuration file
-        order = self.config["order"]
-        fc = self.config["cutoff frequency"]
-
         # Create the low pass butterworth filter
-        b, a = scipy.signal.butter(order, fc / (0.5 * analog_frequency))
+        b, a = scipy.signal.butter(self.order, self.fc / (0.5 * analog_frequency))
 
         # Apply the filter to the input signal
         filtered_signal = scipy.signal.filtfilt(b, a, input_signal)
@@ -53,9 +45,7 @@ class DataPreprocessor(object):
 
         Scipy documentation: https://docs.scipy.org/doc/scipy-1.1.0/reference/generated/scipy.signal.detrend.html#scipy.signal.detrend """
 
-        detrending_type = self.config["detrending type"]
-
-        return scipy.signal.detrend(input_signal, type=detrending_type)
+        return scipy.signal.detrend(input_signal, type=self.detrending_type)
 
     def preprocess(self, input_signal, analog_frequency, balance_board=False):
         """ Wrapper function that applies all the preprocessing steps at once.

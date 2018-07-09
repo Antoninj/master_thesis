@@ -1,6 +1,7 @@
 import btk
-import json
-# from utils import load_config
+from utils import load_config
+
+config = load_config("sensor")
 
 
 class SensorDataReader(object):
@@ -9,7 +10,8 @@ class SensorDataReader(object):
     The locally compiled and installed binaries of the biomechanical toolkit python wrapper (http://biomechanical-toolkit.github.io/docs/Wrapping/Python/index.html) are used to read and extract the data. """
 
     def __init__(self, filepath):
-        self.config = self.load_config()
+        self.data_labels = config["data_points_labels"]
+        self.analog_labels = config["analog_labels"]
         self.acquisition_reader = btk.btkAcquisitionFileReader()
         self.set_reader_filename(filepath)
 
@@ -19,26 +21,17 @@ class SensorDataReader(object):
         self.acquisition_reader.SetFilename(filepath)
         self.acquisition_reader.Update()
 
-    @staticmethod
-    def load_config():
-        """ Function to load the configuration file """
-
-        with open("config/sensor.json") as cfg:
-            config = json.load(cfg)
-        return config
-
     def get_raw_data(self, balance_board=False):
         """ Function to extract and aggregate raw sensor data of interest """
 
-        reader = self.acquisition_reader
-        acq = reader.GetOutput()
+        acq = self.acquisition_reader.GetOutput()
         if balance_board:
-            labels = self.config["data_points_labels"]
+            labels = self.data_labels
             points = [acq.GetPoint(label)
                       for label in labels]
             values = [point.GetValues() for point in points]
         else:
-            labels = self.config["analog_labels"]
+            labels = self.analog_labels
             analogs = [acq.GetAnalog(label)
                        for label in labels]
             values = [analog.GetValues() for analog in analogs]
@@ -48,8 +41,7 @@ class SensorDataReader(object):
     def get_frequency(self, point=False):
         """ Function to extract analog/point frequencies """
 
-        reader = self.acquisition_reader
-        acq = reader.GetOutput()
+        acq = self.acquisition_reader.GetOutput()
         if point:
             return acq.GetPointFrequency()
         else:
