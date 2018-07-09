@@ -1,13 +1,13 @@
-import math
 import numpy as np
-import json
+from features import CopFeatures
+from scipy.signal import welch
 
 
-class FrequencyFeatures(object):
+class FrequencyFeatures(CopFeatures):
     """                             """
 
-    def __init__(self, cop_data):
-        self.parse_cop_data()
+    def __init__(self, filepath):
+        super(FrequencyFeatures, self).__init__(filepath)
+        self.spectral_density = self.compute_power_sprectral_density()
+        self.frequency_features = self.compute_frequency_features()
 
-    def parse_cop_data(self):
-        pass

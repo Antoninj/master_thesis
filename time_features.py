@@ -1,33 +1,12 @@
 import numpy as np
 from numpy import mean, sqrt, square, diff
-import json
+from features import CopFeatures
 from utils import load_config
 
 config = load_config("preprocess")
 
 
-class TimeFeatures(object):
-    """                             """
-
-    def __init__(self, filepath):
-        super(TimeFeatures, self).__init__()
-        self.parse_cop_data(filepath)
-        self.cop_rd = self.compute_rd(self.cop_x, self.cop_x)
-        self.acquisition_frequency = config["acquisition frequency"]
-
-    def parse_cop_data(self, filepath):
-        with open(filepath) as json_data:
-            cop_data = json.load(json_data)
-
-        self.cop_x = np.array(cop_data["COP x"])
-        self.cop_y = np.array(cop_data["COP y"])
-
-    @staticmethod
-    def compute_rd(cop_x, cop_y):
-        return np.array([sqrt(x**2 + y**2) for x, y in zip(cop_x, cop_y)])
-
-
-class DistanceFeatures(TimeFeatures):
+class DistanceFeatures(CopFeatures):
     """                                       """
 
     def __init__(self, filepath):
@@ -137,10 +116,11 @@ class DistanceFeatures(TimeFeatures):
 class AreaFeatures(DistanceFeatures):
     """                                       """
 
+    z_05 = 1.645
+    F_05 = 3.0
+
     def __init__(self, filepath):
         super(AreaFeatures, self).__init__(filepath)
-        self.z_05 = 1.645
-        self.F_05 = 3.0
         self.area_features = self.compute_area_features()
 
     def compute_std_rd(self):
@@ -188,8 +168,12 @@ class HybridFeatures(AreaFeatures):
         self.hybrid_features = self.compute_hybrid_features()
 
     def compute_sway_area(self):
+        sway_area = []
+        T = (self.cop_rd.size / self.acquisition_frequency)
+        for i in range(len(self.cop_rd) - 1):
+            sway_area.append((self.cop_x[i + 1] * self.cop_y[i] - self.cop_x[i] * self.cop_y[i + 1]) / (2 * T))
 
-        return None
+        return np.array(sway_area).sum()
 
     def compute_mean_frequency(self):
         mean_frequency = (self.distance_features["Rd mean velocity"]) / (2 * np.pi * self.distance_features["Rd mean distance"])

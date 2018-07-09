@@ -9,15 +9,19 @@ if __name__ == "__main__":
     # WBB data test file
     wbb_cop_data = config["wbb cop data test file"]
 
+    # Time features tests
+
     distance_features = DistanceFeatures(wbb_cop_data)
 
-    #distance_features.summary()
+    distance_features.summary()
 
     area_features = AreaFeatures(wbb_cop_data)
 
-    #area_features.summary()
+    area_features.summary()
 
     hybrid_features = HybridFeatures(wbb_cop_data)
 
     hybrid_features.summary()
+
+    # Frequency features tests
 
