@@ -8,11 +8,12 @@ import os
 
 
 class DataPipeline(object):
-    def __init__(self, filepath):
-        self.data_reader = SensorDataReader(filepath)
+    def __init__(self):
+        self.data_reader = SensorDataReader()
         self.data_preprocessor = DataPreprocessor()
 
     def compute_wbb_cop_positions(self):
+        """   """
 
         raw_data = self.data_reader.get_raw_data(balance_board=True)
         cop_wbb_x = compute_cop_wbb_x(raw_data)
@@ -22,6 +23,7 @@ class DataPipeline(object):
         return cop_data
 
     def preprocess_wbb_cop_positions(self, cop_data, frequency):
+        """   """
 
         labels = ["COP x", "COP y"]
         preprocessed_data = [self.data_preprocessor.preprocess(data, frequency, True) for data in cop_data]
@@ -29,6 +31,8 @@ class DataPipeline(object):
         return dict(zip(labels, preprocessed_data))
 
     def save_wbb_cop_positions(self, filepath):
+        """   """
+
         self.data_reader.set_reader_filename(filepath)
         wbb_cop_positions = self.compute_wbb_cop_positions()
         frequency = preprocessing_config["acquisition_frequency"]
@@ -37,9 +41,10 @@ class DataPipeline(object):
         base_image_name = os.path.splitext(filepath)[0]
         filename = base_image_name + "_cop.json"
         with open(filename, 'w') as outfile:
-                json.dump(preprocessed_cop_positions, outfile, cls=NumpyEncoder, sort_keys=True, indent=4, ensure_ascii=False)
+            json.dump(preprocessed_cop_positions, outfile, cls=NumpyEncoder, sort_keys=True, indent=4, ensure_ascii=False)
 
     def compute_fp_cop_positions(self):
+        """   """
 
         raw_data = self.data_reader.get_raw_data()
         cop_fp_x = compute_cop_fp_x(raw_data)
@@ -49,6 +54,7 @@ class DataPipeline(object):
         return cop_data
 
     def preprocess_fp_cop_positions(cop_data, frequency):
+        """   """
 
         labels = ["COP x", "COP y"]
         preprocessed_data = [self.data_preprocessor.preprocess(data, frequency) for data in cop_data]
@@ -56,6 +62,8 @@ class DataPipeline(object):
         return dict(zip(labels, preprocessed_data))
 
     def save_fp_cop_positions(self, filepath):
+        """   """
+
         self.data_reader.set_reader_filename(filepath)
         fp_cop_positions = compute_fp_cop_positions(data_reader)
         analog_freq = data_reader.get_frequency()
@@ -64,7 +72,7 @@ class DataPipeline(object):
         base_image_name = os.path.splitext(filepath)[0]
         filename = base_image_name + "_cop.json"
         with open(filename, 'w') as outfile:
-                json.dump(preprocessed_cop_positions, outfile, cls=NumpyEncoder, sort_keys=True, indent=4, ensure_ascii=False)
+            json.dump(preprocessed_cop_positions, outfile, cls=NumpyEncoder, sort_keys=True, indent=4, ensure_ascii=False)
 
 
 if __name__ == "__main__":
@@ -79,16 +87,18 @@ if __name__ == "__main__":
     # Force plate data test file
     filepath_fp = test_config["fp raw data test file"]
 
+
+    # Command line argument parser to choose between wbb or force plate data
     parser = argparse.ArgumentParser(
         description="")
     parser.add_argument("--wbb", action='store_true', help="Process WBB data")
-
     args = parser.parse_args()
-
-    cop_data_pipeline = DataPipeline(filepath_wbb)
-
     WBB = args.wbb
+
+    # Create a datapipeline object
+    cop_data_pipeline = DataPipeline()
+
     if WBB:
-        cop_pipeline.save_wbb_cop_positions(filepath_wbb)
+        cop_data_pipeline.save_wbb_cop_positions(filepath_wbb)
     else:
-        cop_pipeline.save_fp_cop_positions(filepath_fp)
+        cop_data_pipeline.save_fp_cop_positions(filepath_fp)

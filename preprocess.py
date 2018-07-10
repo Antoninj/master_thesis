@@ -5,9 +5,11 @@ config = load_config("preprocess")
 
 
 class DataPreprocessor(object):
-    """ Class that handles the preprocessing related tasks of the acquisition signal using the open source Scipy library.
+    """
+    Class to handle the preprocessing related tasks of the acquisition signal using the open source Scipy library.
 
-    More specifically, it relies on the implementations found in the latest release of the scipy signal processing package scipy.signal. """
+    More specifically, it relies on the implementations found in the latest release of the scipy signal processing package scipy.signal.
+    """
 
     def __init__(self):
         self.up = config["upsampling_factor"]
@@ -17,7 +19,7 @@ class DataPreprocessor(object):
         self.detrending_type = config["detrending_type"]
 
     def apply_resampling(self, input_signal):
-        """ Function to resample the input signal using polyphase filtering.
+        """ Function to resample the input signal using polyphase resampling.
 
         Scipy documentation: https: // docs.scipy.org / doc / scipy - 1.1.0 / reference / generated / scipy.signal.resample_poly.html  # scipy.signal.resample_poly """
 

@@ -16,15 +16,21 @@ if __name__ == "__main__":
     # Force plate data test file
     filepath_fp = config["fp raw data test file"]
 
+    # Command line argument parser to choose between wbb or force plate data
     parser = argparse.ArgumentParser(
         description="")
     parser.add_argument("--wbb", action='store_true', help="Process WBB data")
-
     args = parser.parse_args()
-
     WBB = args.wbb
+
+    # Create a sensor data reader object
+    data_reader = SensorDataReader()
+
+    # Create a data preprocessor reader object
+    data_preprocessor = DataPreprocessor()
+
     if WBB:
-        data_reader = SensorDataReader(filepath_wbb)
+        data_reader.set_reader_filename(filepath_wbb)
         raw_data = data_reader.get_raw_data(balance_board=True)
         analog_freq = data_reader.get_frequency()
 
@@ -35,7 +41,6 @@ if __name__ == "__main__":
 
         print("WBB COP x: {} \nWBB COP y: {}".format(cop_wbb_x, cop_wbb_y))
 
-        data_preprocessor = DataPreprocessor()
         preprocessed_data = data_preprocessor.preprocess(cop_wbb_x, 1000, True)
 
         #preprocessed_cop_wbb_x = data_preprocessor.apply_filtering(cop_wbb_x, analog_freq)
@@ -50,7 +55,7 @@ if __name__ == "__main__":
             plt.show()
 
     else:
-        data_reader = SensorDataReader(filepath_fp)
+        data_reader.set_reader_filename(filepath_fp)
         raw_data = data_reader.get_raw_data()
         analog_freq = data_reader.get_frequency()
 
@@ -61,7 +66,6 @@ if __name__ == "__main__":
 
         print("FP COP x: {} \nFP COP y: {}".format(cop_fp_x, cop_fp_y))
 
-        data_preprocessor = DataPreprocessor()
         #preprocessed_data = data_preprocessor.preprocess(cop_fp_x, analog_freq)
 
         preprocessed_cop_fp_x = data_preprocessor.apply_filtering(cop_fp_x, analog_freq)
