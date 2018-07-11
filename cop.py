@@ -48,7 +48,7 @@ def compute_cop_fp_x(raw_data):
     My = raw_data["My1"]
     Fz = raw_data["Fz1"]
 
-    cop_fp_x = (-My + dz * Fx) / Fz
+    cop_fp_x = -(My + dz * Fx) / Fz
 
     return cop_fp_x.flatten()
 

@@ -65,7 +65,7 @@ class DataPipeline(object):
 
         return cop_data
 
-    def preprocess_fp_cop_positions(cop_data, frequency):
+    def preprocess_fp_cop_positions(self, cop_data, frequency):
         """
         Function to preprocess the force plate data COP positions in the AP and ML directions and store them as a dictionarry
         """
@@ -76,14 +76,14 @@ class DataPipeline(object):
         return dict(zip(labels, preprocessed_data))
 
     def save_fp_cop_positions(self, filepath):
-         """
+        """
         Wrapper function that pipelines the force plate data COP computations and preprocessing steps and saves the results to a json file
         """
 
         self.data_reader.set_reader_filename(filepath)
-        fp_cop_positions = compute_fp_cop_positions(data_reader)
-        analog_freq = data_reader.get_frequency()
-        preprocessed_cop_positions = preprocess_fp_cop_positions(data_preprocessor, fp_cop_positions, analog_freq)
+        fp_cop_positions = self.compute_fp_cop_positions()
+        analog_freq = self.data_reader.get_frequency()
+        preprocessed_cop_positions = self.preprocess_fp_cop_positions(fp_cop_positions, analog_freq)
 
         base_image_name = os.path.splitext(filepath)[0]
         filename = base_image_name + "_cop.json"

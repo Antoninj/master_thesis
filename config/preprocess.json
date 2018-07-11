@@ -4,5 +4,6 @@
     "detrending_type" : "constant",
     "upsampling_factor" : 100,
     "downsampling_factor" : 3,
-    "acquisition_frequency" : 1000
+    "acquisition_frequency" : 1000,
+    "cut_threshold": 500
 }

@@ -11,12 +11,15 @@ class DataPreprocessor(object):
     More specifically, it relies on the implementations found in the latest release of the scipy signal processing package scipy.signal.
     """
 
+    up = config["upsampling_factor"]
+    down = config["downsampling_factor"]
+    order = config["order"]
+    fc = config["cutoff_frequency"]
+    detrending_type = config["detrending_type"]
+    threshold = config["cut_threshold"]
+
     def __init__(self):
-        self.up = config["upsampling_factor"]
-        self.down = config["downsampling_factor"]
-        self.order = config["order"]
-        self.fc = config["cutoff_frequency"]
-        self.detrending_type = config["detrending_type"]
+        pass
 
     def apply_resampling(self, input_signal):
         """
@@ -54,6 +57,10 @@ class DataPreprocessor(object):
 
         return scipy.signal.detrend(input_signal, type=self.detrending_type)
 
+    def cut_data(self, input_signal):
+
+        return input_signal[self.threshold:]
+
     def preprocess(self, input_signal, analog_frequency, balance_board=False):
         """
         Wrapper function that applies all the preprocessing steps at once
@@ -61,6 +68,7 @@ class DataPreprocessor(object):
         The resampling is only applied to the wii balance board data in order to match the force plate acquisition frequency.
         """
 
+        input_signal = self.cut_data(input_signal)
         if balance_board:
             resampled_signal = self.apply_resampling(input_signal)
             filtered_signal = self.apply_filtering(

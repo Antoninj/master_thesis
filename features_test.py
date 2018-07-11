@@ -16,8 +16,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="")
     parser.add_argument("-f", "--freq", action='store_true', help="Compute frequency features")
+    parser.add_argument("-p", "--plot", action='store_true', help="Plot data")
+
     args = parser.parse_args()
     freq = args.freq
+    plot = args.plot
 
     if not freq:
 
@@ -37,8 +40,14 @@ if __name__ == "__main__":
         freq_features = FrequencyFeatures(wbb_cop_data)
 
         (f, pxx) = freq_features.compute_rd_power_spectral_density()
+        f_peak = freq_features.compute_rd_f_peak()
+        power = freq_features.compute_rd_total_power()
+        f_80 = freq_features.compute_rd_power_frequency(threshold=0.8)
 
-        plt.semilogy(f, pxx)
-        plt.xlabel('frequency [Hz]')
-        plt.ylabel('PSD [mm**2/Hz]')
-        plt.show()
+        print(f_80)
+
+        if plot:
+            plt.semilogy(f, pxx)
+            plt.xlabel('frequency [Hz]')
+            plt.ylabel('PSD [mm**2/Hz]')
+            plt.show()

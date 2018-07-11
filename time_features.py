@@ -1,6 +1,9 @@
 import numpy as np
 from numpy import mean, sqrt, square, diff
 from features import CopFeatures
+from utils import load_config
+
+config = load_config("process")
 
 
 class DistanceFeatures(CopFeatures):
@@ -73,7 +76,7 @@ class DistanceFeatures(CopFeatures):
     def compute_ml_path_length(self):
         """ Compute the total length of the COP path in the ML direction """
 
-        distances = diff(self.cop_x, axis=0)
+        distances = np.absolute(diff(self.cop_x, axis=0))
         path_length = distances.sum()
 
         return path_length
@@ -81,7 +84,7 @@ class DistanceFeatures(CopFeatures):
     def compute_ap_path_length(self):
         """ Compute the total length of the COP path in the AP direction """
 
-        distances = np.diff(self.cop_y, axis=0)
+        distances = np.absolute(np.diff(self.cop_y, axis=0))
         path_length = distances.sum()
 
         return path_length
@@ -164,8 +167,9 @@ class AreaFeatures(DistanceFeatures):
     Class that implements the time domain area features computations derived from the COP positions
     """
 
-    z_05 = 1.645
-    F_05 = 3.0
+    # Constants
+    z_05 = config["z_05"]
+    F_05 = config["F_05"]
 
     def __init__(self, filepath):
         super(AreaFeatures, self).__init__(filepath)
@@ -238,7 +242,7 @@ class HybridFeatures(AreaFeatures):
     def __init__(self, filepath):
         super(HybridFeatures, self).__init__(filepath)
         self.hybrid_features = self.compute_hybrid_features()
-s
+
     def compute_sway_area(self):
         """
         Function that computes the sway area
@@ -246,12 +250,14 @@ s
         Sway area estimates the area enclosed by the COP path per unit of time.
         """
 
-        sway_area = []
+        sway_values = []
         T = (self.cop_rd.size / self.acquisition_frequency)
         for i in range(len(self.cop_rd) - 1):
-            sway_area.append((self.cop_x[i + 1] * self.cop_y[i] - self.cop_x[i] * self.cop_y[i + 1]) / (2 * T))
+            sway_values.append((self.cop_x[i + 1] * self.cop_y[i] - self.cop_x[i] * self.cop_y[i + 1]) / (2 * T))
 
-        return np.array(sway_area).sum()
+        sway_area = np.array(sway_values).sum()
+
+        return sway_area
 
     def compute_mean_frequency(self):
         """
