@@ -3,7 +3,6 @@ from preprocess import DataPreprocessor
 from cop import *
 from matplotlib import pyplot as plt
 import argparse
-config = load_config()
 
 if __name__ == "__main__":
 

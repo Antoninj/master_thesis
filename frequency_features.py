@@ -10,7 +10,6 @@ config = load_config()
 class FrequencyFeatures(CopFeatures):
     """ Class that implements the frequency domain features derived from the COP positions """
 
-    # Constants
     fs = config["frequency_features_parameters"]["sampling_frequency"]
     nperseg = config["frequency_features_parameters"]["nperseg"]
 

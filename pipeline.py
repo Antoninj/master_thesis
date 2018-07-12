@@ -2,8 +2,7 @@ from sensor import SensorDataReader
 from preprocess import DataPreprocessor
 import json
 from cop import *
-import argparse
-from utils import load_config, NumpyEncoder
+from utils import NumpyEncoder
 import os
 
 
@@ -89,30 +88,3 @@ class DataPipeline(object):
         filename = base_image_name + "_cop.json"
         with open(filename, 'w') as outfile:
             json.dump(preprocessed_cop_positions, outfile, cls=NumpyEncoder, sort_keys=True, indent=4, ensure_ascii=False)
-
-
-if __name__ == "__main__":
-
-    # Load configuration files
-    config = load_config()
-
-    # WBB data test file
-    filepath_wbb = config["test_files"]["wbb_raw_data"]
-
-    # Force plate data test file
-    filepath_fp = config["test_files"]["fp_raw_data"]
-
-    # Command line argument parser to choose between wbb or force plate data
-    parser = argparse.ArgumentParser(
-        description="")
-    parser.add_argument("--wbb", action='store_true', help="Process WBB data")
-    args = parser.parse_args()
-    WBB = args.wbb
-
-    # Create a datapipeline object
-    cop_data_pipeline = DataPipeline()
-
-    if WBB:
-        cop_data_pipeline.save_wbb_cop_positions(filepath_wbb)
-    else:
-        cop_data_pipeline.save_fp_cop_positions(filepath_fp)
