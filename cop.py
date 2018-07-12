@@ -1,5 +1,6 @@
 import numpy as np
 from utils import load_config
+
 config = load_config()
 
 
@@ -7,7 +8,7 @@ def compute_cop_wbb_x(raw_data):
     """ Function to compute the x coordinate of the WBB center of pressure """
 
     # Wbb width (in mm)
-    lx = config["width"] * 10
+    lx = config["wbb_parameters"]["width"] * 10
 
     # Wbb force sensor values
     TR = raw_data["TopRight Kg"][:, 0]
@@ -24,7 +25,7 @@ def compute_cop_wbb_y(raw_data):
     """ Function to compute the y coordinate of the WBB center of pressure """
 
     # Wbb length (in mm)
-    ly = config["length"] * 10
+    ly = config["wbb_parameters"]["length"] * 10
 
     # Wbb force sensor values
     TR = raw_data["TopRight Kg"][:, 0]
@@ -41,7 +42,7 @@ def compute_cop_fp_x(raw_data):
     """ Function to compute the x coordinate of the force plate center of pressure """
 
     # Force plate heigth (in mm)
-    dz = config["height"]
+    dz = config["wbb_parameters"]["height"]
 
     # Force plate sensor values
     Fx = raw_data["Fx1"]
@@ -57,7 +58,7 @@ def compute_cop_fp_y(raw_data):
     """ Function to compute the y coordinate of the force plate center of pressure """
 
     # Force plate heigth (in mm)
-    dz = config["height"]
+    dz = config["wbb_parameters"]["height"]
 
     # Force plate sensor values
     Fy = raw_data["Fy1"]

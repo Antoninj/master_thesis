@@ -1,9 +1,0 @@
-{
-    "order" : 4,
-    "cutoff_frequency" : 12,
-    "detrending_type" : "constant",
-    "upsampling_factor" : 100,
-    "downsampling_factor" : 3,
-    "acquisition_frequency" : 1000,
-    "cut_threshold": 500
-}

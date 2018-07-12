@@ -2,7 +2,7 @@ import numpy as np
 import json
 from utils import load_config
 
-config = load_config("preprocess")
+config = load_config()
 
 
 class CopFeatures(object):
@@ -12,21 +12,31 @@ class CopFeatures(object):
     This class doesn't implement any feature computations and is simply responsible for parsing the COP data that will be used in COP based features computations in both the time and frequency domains.
     """
 
-    acquisition_frequency = config["acquisition_frequency"]
+    acquisition_frequency = config["preprocessing_parameters"]["acquisition_frequency"]
 
-    def __init__(self, filepath):
-        super(CopFeatures, self).__init__()
-        self.parse_cop_data(filepath)
+    def __init__(self, cop_x, cop_y):
+        #super(CopFeatures, self).__init__()
+        self.cop_x = cop_x
+        self.cop_y = cop_y
         self.cop_rd = self.compute_rd(self.cop_x, self.cop_x)
 
-    def parse_cop_data(self, filepath):
+    @classmethod
+    def from_file(cls, filepath):
+        cop_x, cop_y = cls.parse_cop_data(filepath)
+
+        return cls(cop_x, cop_y)
+
+    @staticmethod
+    def parse_cop_data(filepath):
         """ Function to parse cop data from an input file """
 
         with open(filepath) as json_data:
             cop_data = json.load(json_data)
 
-        self.cop_x = np.array(cop_data["COP x"])
-        self.cop_y = np.array(cop_data["COP y"])
+        cop_x = np.array(cop_data["COP x"])
+        cop_y = np.array(cop_data["COP y"])
+
+        return cop_x, cop_y
 
     @staticmethod
     def compute_rd(cop_x, cop_y):

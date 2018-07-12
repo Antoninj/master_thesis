@@ -1,0 +1,50 @@
+{
+    "wbb_parameters": {
+        "width": 43.3,
+        "length": 23.8,
+        "height": 3.25
+    },
+    "preprocessing_parameters": {
+        "filter_order": 4,
+        "cutoff_frequency": 12,
+        "detrending_type": "constant",
+        "upsampling_factor": 100,
+        "downsampling_factor": 3,
+        "acquisition_frequency": 1000,
+        "cut_threshold": 500
+    },
+    "time_features_parameters": {
+        "z_05": 1.645,
+        "F_05": 3
+    },
+    "frequency_features_parameters": {
+        "sampling_frequency": 10,
+        "nperseg": 200
+    },
+    "sensor_labels": {
+        "analog_labels": [
+            "Fx1",
+            "Fy1",
+            "Fz1",
+            "Mx1",
+            "My1",
+            "Fx2",
+            "Fy2",
+            "Fz2",
+            "Mx2",
+            "My2"
+        ],
+        "data_points_labels": [
+            "BottomLeft Kg",
+            "BottomRight Kg",
+            "TopRight Kg",
+            "TopLeft Kg"
+        ]
+    },
+    "test_files": {
+        "wbb_raw_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/code/BalanceBoard_Static/Sujet1/Session1/BalanceBoard/1.c3d",
+        "fp_raw_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/code/BalanceBoard_Static/Sujet1/Session1/Vicon/1.c3d",
+        "wbb_cop_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/code/BalanceBoard_Static/Sujet1/Session1/BalanceBoard/1_cop.json",
+        "fp_cop_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/code/BalanceBoard_Static/Sujet1/Session1/Vicon/1_cop.c3d"
+    }
+}

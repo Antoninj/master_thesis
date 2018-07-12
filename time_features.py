@@ -3,7 +3,7 @@ from numpy import mean, sqrt, square, diff
 from features import CopFeatures
 from utils import load_config
 
-config = load_config("process")
+config = load_config()
 
 
 class DistanceFeatures(CopFeatures):
@@ -11,8 +11,8 @@ class DistanceFeatures(CopFeatures):
     Class that implements the time domain distance features computations derived from the COP positions
     """
 
-    def __init__(self, filepath):
-        super(DistanceFeatures, self).__init__(filepath)
+    def __init__(self, cop_x, cop_y):
+        super(DistanceFeatures, self).__init__(cop_x, cop_y)
         self.distance_features = self.compute_distance_features()
 
     @staticmethod
@@ -168,11 +168,11 @@ class AreaFeatures(DistanceFeatures):
     """
 
     # Constants
-    z_05 = config["z_05"]
-    F_05 = config["F_05"]
+    z_05 = config["time_features_parameters"]["z_05"]
+    F_05 = config["time_features_parameters"]["F_05"]
 
-    def __init__(self, filepath):
-        super(AreaFeatures, self).__init__(filepath)
+    def __init__(self, cop_x, cop_y):
+        super(AreaFeatures, self).__init__(cop_x, cop_y)
         self.area_features = self.compute_area_features()
 
     def compute_std_rd(self):
@@ -239,8 +239,8 @@ class HybridFeatures(AreaFeatures):
     Class that implements the time domain hybrid features computations derived from the COP positions
     """
 
-    def __init__(self, filepath):
-        super(HybridFeatures, self).__init__(filepath)
+    def __init__(self, cop_x, cop_y):
+        super(HybridFeatures, self).__init__(cop_x, cop_y)
         self.hybrid_features = self.compute_hybrid_features()
 
     def compute_sway_area(self):

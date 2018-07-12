@@ -4,18 +4,18 @@ from features import CopFeatures
 from scipy.signal import welch
 from utils import load_config
 
-config = load_config("process")
+config = load_config()
 
 
 class FrequencyFeatures(CopFeatures):
     """ Class that implements the frequency domain features derived from the COP positions """
 
     # Constants
-    fs = config["fs"]
-    nperseg = config["nperseg"]
+    fs = config["frequency_features_parameters"]["sampling_frequency"]
+    nperseg = config["frequency_features_parameters"]["nperseg"]
 
-    def __init__(self, filepath):
-        super(FrequencyFeatures, self).__init__(filepath)
+    def __init__(self, cop_x, cop_y):
+        super(FrequencyFeatures, self).__init__(cop_x, cop_y)
         self.spectral_density = self.compute_rd_power_spectral_density()
         self.frequency_features = self.compute_frequency_features()
 
@@ -53,14 +53,14 @@ class FrequencyFeatures(CopFeatures):
         return f_peak
 
     def compute_rd_power_frequency(self, threshold):
-        power = self.compute_total_power()
+        power = self.compute_rd_total_power()
         (f, psd) = self.compute_rd_power_spectral_density()
         f_power_index = np.where(power >= (threshold * power[-1]))
         f_power = f[f_power_index[0][0]]
 
         return f_power
 
-    def compute_frequeny_features(self):
+    def compute_frequency_features(self):
         """ Function to compute all the frequency features and store them in a dictionary """
 
         features = {}

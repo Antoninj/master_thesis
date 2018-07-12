@@ -45,7 +45,7 @@ class DataPipeline(object):
 
         self.data_reader.set_reader_filename(filepath)
         wbb_cop_positions = self.compute_wbb_cop_positions()
-        frequency = preprocessing_config["acquisition_frequency"]
+        frequency = config["preprocessing_parameters"]["acquisition_frequency"]
         preprocessed_cop_positions = self.preprocess_wbb_cop_positions(wbb_cop_positions, frequency)
 
         base_image_name = os.path.splitext(filepath)[0]
@@ -94,15 +94,13 @@ class DataPipeline(object):
 if __name__ == "__main__":
 
     # Load configuration files
-    test_config = load_config("test")
-    preprocessing_config = load_config("preprocess")
+    config = load_config()
 
     # WBB data test file
-    filepath_wbb = test_config["wbb raw data test file"]
+    filepath_wbb = config["test_files"]["wbb_raw_data"]
 
     # Force plate data test file
-    filepath_fp = test_config["fp raw data test file"]
-
+    filepath_fp = config["test_files"]["fp_raw_data"]
 
     # Command line argument parser to choose between wbb or force plate data
     parser = argparse.ArgumentParser(

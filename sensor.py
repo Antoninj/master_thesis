@@ -1,7 +1,7 @@
 import btk
 from utils import load_config
 
-config = load_config("sensor")
+config = load_config()
 
 
 class SensorDataReader(object):
@@ -12,8 +12,8 @@ class SensorDataReader(object):
     """
 
     # Constants
-    data_labels = config["data_points_labels"]
-    analog_labels = config["analog_labels"]
+    data_labels = config["sensor_labels"]["data_points_labels"]
+    analog_labels = config["sensor_labels"]["analog_labels"]
 
     def __init__(self):
         self.acquisition_reader = btk.btkAcquisitionFileReader()

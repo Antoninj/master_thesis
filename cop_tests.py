@@ -8,13 +8,13 @@ config = load_config()
 if __name__ == "__main__":
 
     # Load configuration file
-    config = load_config("test")
+    config = load_config()
 
     # WBB data test file
-    filepath_wbb = config["wbb raw data test file"]
+    filepath_wbb = config["test_files"]["wbb_raw_data"]
 
     # Force plate data test file
-    filepath_fp = config["fp raw data test file"]
+    filepath_fp = config["test_files"]["fp_raw_data"]
 
     # Command line argument parser to choose between wbb or force plate data
     parser = argparse.ArgumentParser(

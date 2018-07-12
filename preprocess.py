@@ -1,7 +1,7 @@
 import scipy.signal
 from utils import load_config
 
-config = load_config("preprocess")
+config = load_config()
 
 
 class DataPreprocessor(object):
@@ -11,12 +11,12 @@ class DataPreprocessor(object):
     More specifically, it relies on the implementations found in the latest release of the scipy signal processing package scipy.signal.
     """
 
-    up = config["upsampling_factor"]
-    down = config["downsampling_factor"]
-    order = config["order"]
-    fc = config["cutoff_frequency"]
-    detrending_type = config["detrending_type"]
-    threshold = config["cut_threshold"]
+    up = config["preprocessing_parameters"]["upsampling_factor"]
+    down = config["preprocessing_parameters"]["downsampling_factor"]
+    order = config["preprocessing_parameters"]["filter_order"]
+    fc = config["preprocessing_parameters"]["cutoff_frequency"]
+    detrending_type = config["preprocessing_parameters"]["detrending_type"]
+    threshold = config["preprocessing_parameters"]["cut_threshold"]
 
     def __init__(self):
         pass
