@@ -15,7 +15,6 @@ class CopFeatures(object):
     acquisition_frequency = config["preprocessing_parameters"]["acquisition_frequency"]
 
     def __init__(self, cop_x, cop_y):
-        #super(CopFeatures, self).__init__()
         self.cop_x = cop_x
         self.cop_y = cop_y
         self.cop_rd = self.compute_rd(self.cop_x, self.cop_x)

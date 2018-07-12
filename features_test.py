@@ -1,4 +1,4 @@
-from time_features import DistanceFeatures, AreaFeatures, HybridFeatures
+from time_features import TimeFeatures
 from frequency_features import FrequencyFeatures
 from utils import load_config
 import argparse
@@ -25,15 +25,8 @@ if __name__ == "__main__":
     if not freq:
 
         # Time features tests
-        distance_features = DistanceFeatures.from_file(wbb_cop_data)
-        distance_features.summary()
-
-        area_features = AreaFeatures.from_file(wbb_cop_data)
-        area_features.summary()
-
-        hybrid_features = HybridFeatures.from_file(wbb_cop_data)
-        hybrid_features.summary()
-
+        time_features = TimeFeatures.from_file(wbb_cop_data)
+        time_features.summary()
     else:
 
         # Frequency features tests

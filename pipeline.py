@@ -66,7 +66,7 @@ class DataPipeline(object):
 
     def preprocess_fp_cop_positions(self, cop_data, frequency):
         """
-        Function to preprocess the force plate data COP positions in the AP and ML directions and store them as a dictionarry
+        Function to preprocess the force plate data COP positions in the AP and ML directions and store them as a dictionary
         """
 
         labels = ["COP x", "COP y"]

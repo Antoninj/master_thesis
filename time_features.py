@@ -346,3 +346,24 @@ class HybridFeatures(AreaFeatures):
 
         for key, value in self.hybrid_features.items():
             print("{}: {}".format(key, value))
+
+
+class TimeFeatures(HybridFeatures):
+    """
+    Class that merges all the time domain features
+    """
+
+    def __init__(self, cop_x, cop_y):
+        super(TimeFeatures, self).__init__(cop_x, cop_y)
+        self.time_features = self.merge_time_features()
+
+    def merge_time_features(self):
+        """ Function to merge all the time domain features together """
+
+        return {**self.distance_features, **self.area_features, **self.hybrid_features}
+
+    def summary(self):
+        """ Function to print out a summary of the time features """
+
+        for key, value in self.time_features.items():
+            print("{}: {}".format(key, value))
