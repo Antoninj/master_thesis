@@ -30,5 +30,6 @@ def load_config(filename="config"):
 def save_as_json(data, filepath, name_extension):
     base_image_name = os.path.splitext(filepath)[0]
     filename = base_image_name + "_{}.json".format(name_extension)
+    print(filename)
     with open(filename, 'w') as outfile:
         json.dump(data, outfile, cls=NumpyEncoder, sort_keys=False, indent=4, ensure_ascii=False)
