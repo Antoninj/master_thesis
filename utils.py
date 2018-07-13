@@ -1,5 +1,6 @@
 import json
 import numpy as np
+import os
 
 
 class NumpyEncoder(json.JSONEncoder):
@@ -24,3 +25,10 @@ def load_config(filename="config"):
     with open("config/{}.json".format(filename)) as cfg:
         config = json.load(cfg)
     return config
+
+
+def save_as_json(data, filepath, name_extension):
+    base_image_name = os.path.splitext(filepath)[0]
+    filename = base_image_name + "_{}.json".format(name_extension)
+    with open(filename, 'w') as outfile:
+        json.dump(data, outfile, cls=NumpyEncoder, sort_keys=False, indent=4, ensure_ascii=False)

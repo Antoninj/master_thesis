@@ -32,8 +32,8 @@ class CopFeatures(object):
         with open(filepath) as json_data:
             cop_data = json.load(json_data)
 
-        cop_x = np.array(cop_data["COP x"])
-        cop_y = np.array(cop_data["COP y"])
+        cop_x = np.array(cop_data["COP_x"])
+        cop_y = np.array(cop_data["COP_y"])
 
         return cop_x, cop_y
 
