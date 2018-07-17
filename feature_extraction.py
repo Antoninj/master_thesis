@@ -1,10 +1,11 @@
 from pipeline import DataPipeline
 from utils import load_config, get_path_to_all_files
 import argparse
+from tqdm import tqdm
 
 
 def process_all_wbb_files(data_pipeline, files):
-    for file in files:
+    for file in tqdm(files):
         if "Vicon" not in file:
             cop_data_pipeline.save_features(file, balance_board=True)
 

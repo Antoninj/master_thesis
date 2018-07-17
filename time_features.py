@@ -214,7 +214,12 @@ class AreaFeatures(DistanceFeatures):
 
         std_ml = self.compute_std_ml()
         std_ap = self.compute_std_ap()
-        area_ce = 2 * np.pi * self.F_05 * sqrt(square(std_ml) * square(std_ap) - np.cov(self.cop_x, self.cop_y)[0][1])
+
+        print(square(square(std_ml)) + square(square(std_ap)) + 6 * square(std_ml) * square(std_ap) -
+              4 * square(np.cov(self.cop_x, self.cop_y)[0][1]) - (square(std_ml) + square(std_ap)))
+
+        area_ce = np.pi * self.F_05 * sqrt(square(square(std_ml)) + square(square(std_ap)) + 6 * square(std_ml) *
+                                           square(std_ap) - 4 * square(np.cov(self.cop_x, self.cop_y)[0][1]) - (square(std_ml) + square(std_ap)))
 
         return area_ce
 
@@ -253,7 +258,7 @@ class HybridFeatures(AreaFeatures):
         sway_values = []
         T = (self.cop_rd.size / self.acquisition_frequency)
         for i in range(len(self.cop_rd) - 1):
-            sway_values.append((self.cop_x[i + 1] * self.cop_y[i] - self.cop_x[i] * self.cop_y[i + 1]) / (2 * T))
+            sway_values.append(np.absolute(self.cop_x[i + 1] * self.cop_y[i] - self.cop_x[i] * self.cop_y[i + 1]) / (2 * T))
 
         sway_area = np.array(sway_values).sum()
 
@@ -325,7 +330,10 @@ class HybridFeatures(AreaFeatures):
 
         std_ml = self.compute_std_ml()
         std_ap = self.compute_std_ap()
-        d_fd_ce = sqrt(8 * self.F_05 * sqrt(square(std_ml) * square(std_ap) - np.cov(self.cop_x, self.cop_y)[0][1]))
+
+        #print(square(std_ml) * square(std_ap) - square(np.cov(self.cop_x, self.cop_y)[0][1]) + 2 * std_ml * std_ap)
+        d_fd_ce = sqrt(4 * self.F_05 * sqrt(square(square(std_ml)) + square(square(std_ap)) + 6 * square(std_ml) *
+                                            square(std_ap) - 4 * square(np.cov(self.cop_x, self.cop_y)[0][1]) - (square(std_ml) + square(std_ap))))
 
         return self.compute_fractal_dimension(d_fd_ce)
 
