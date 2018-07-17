@@ -28,8 +28,30 @@ def load_config(filename="config"):
 
 
 def save_as_json(data, filepath, name_extension):
-    base_image_name = os.path.splitext(filepath)[0]
-    filename = base_image_name + "_{}.json".format(name_extension)
-    print(filename)
+    filename = build_filename(filepath, name_extension)
     with open(filename, 'w') as outfile:
         json.dump(data, outfile, cls=NumpyEncoder, sort_keys=False, indent=4, ensure_ascii=False)
+
+
+def build_filename(filepath, name_extension):
+    base_name = os.path.splitext(filepath)[0]
+    filename = base_name.replace("BalanceBoard_Static", "results") + "_{}.json".format(name_extension)
+    dir_name = os.path.dirname(filename)
+    check_folder(dir_name)
+
+    return filename
+
+
+def check_folder(folder_name):
+    if not os.path.exists(folder_name):
+        os.makedirs(folder_name)
+
+
+def get_path_to_all_files(folder_name):
+    filepaths = []
+    for dirname, dirnames, filenames in os.walk(folder_name):
+        for filename in filenames:
+            if '.DS_Store' not in filename:
+                filepaths.append(os.path.join(dirname, filename))
+
+    return filepaths
