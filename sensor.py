@@ -30,14 +30,21 @@ class SensorDataReader(object):
         acq = self.acquisition_reader.GetOutput()
         if balance_board:
             labels = self.data_labels
-            points = [acq.GetPoint(label)
-                      for label in labels]
-            values = [point.GetValues() for point in points]
+            try:
+                points = [acq.GetPoint(label)
+                          for label in labels]
+                values = [point.GetValues() for point in points]
+            except RuntimeError:
+                raise
+
         else:
             labels = self.analog_labels
-            analogs = [acq.GetAnalog(label)
-                       for label in labels]
-            values = [analog.GetValues() for analog in analogs]
+            try:
+                analogs = [acq.GetAnalog(label)
+                           for label in labels]
+                values = [analog.GetValues() for analog in analogs]
+            except RuntimeError:
+                raise
 
         return dict(zip(labels, values))
 

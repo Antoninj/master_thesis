@@ -20,12 +20,22 @@ class DataPipeline(object):
         Function to read the acquisition file raw data and compute the COP positions in the AP and ML directions
         """
 
-        raw_data = self.data_reader.get_raw_data(balance_board)
-        cop_wbb_x = compute_cop_wbb_x(raw_data)
-        cop_wbb_y = compute_cop_wbb_y(raw_data)
-        cop_data = (cop_wbb_x, cop_wbb_y)
+        try:
+            raw_data = self.data_reader.get_raw_data(balance_board)
 
-        return cop_data
+            if balance_board:
+                cop_x = compute_cop_wbb_x(raw_data)
+                cop_y = compute_cop_wbb_y(raw_data)
+            else:
+                cop_x = compute_cop_fp_x(raw_data)
+                cop_y = compute_cop_fp_y(raw_data)
+
+            cop_data = (cop_x, cop_y)
+
+            return cop_data
+
+        except Exception:
+            raise
 
     def preprocess_cop_positions(self, cop_data, frequency, balance_board=False):
         """
@@ -44,15 +54,20 @@ class DataPipeline(object):
 
         self.data_reader.set_reader_filename(filepath)
 
-        # Compute COP positions
-        cop_positions = self.compute_cop_positions(balance_board)
+        try:
+            # Compute COP positions
+            cop_positions = self.compute_cop_positions(balance_board)
 
-        # Preprocess COP position
-        frequency = config["preprocessing_parameters"]["acquisition_frequency"]
-        preprocessed_cop_positions = self.preprocess_cop_positions(cop_positions, frequency, balance_board)
+            # Preprocess COP position
+            frequency = config["preprocessing_parameters"]["acquisition_frequency"]
+            preprocessed_cop_positions = self.preprocess_cop_positions(cop_positions, frequency, balance_board)
 
-        # Save cop data
-        save_as_json(preprocessed_cop_positions, filepath, "cop")
+            # Save cop data
+            save_as_json(preprocessed_cop_positions, filepath, "cop")
+
+        except Exception as err:
+            print("Empty acquisition file: {}".format(filepath))
+            print(err.args)
 
     def compute_time_features(self, cop_x, cop_y):
         """ Function to retrieve the time domain features """
@@ -75,18 +90,23 @@ class DataPipeline(object):
 
         self.data_reader.set_reader_filename(filepath)
 
-        # Compute COP positions
-        cop_positions = self.compute_cop_positions(balance_board)
+        try:
+            # Compute COP positions
+            cop_positions = self.compute_cop_positions(balance_board)
 
-        # Preprocess COP position
-        frequency = config["preprocessing_parameters"]["acquisition_frequency"]
-        preprocessed_cop_positions = self.preprocess_cop_positions(cop_positions, frequency, balance_board)
+            # Preprocess COP position
+            frequency = config["preprocessing_parameters"]["acquisition_frequency"]
+            preprocessed_cop_positions = self.preprocess_cop_positions(cop_positions, frequency, balance_board)
 
-        # Compute features
-        time_features = self.compute_time_features(preprocessed_cop_positions["COP_x"], preprocessed_cop_positions["COP_y"])
-        frequency_features = self.compute_frequency_features(preprocessed_cop_positions["COP_x"], preprocessed_cop_positions["COP_y"])
+            # Compute features
+            time_features = self.compute_time_features(preprocessed_cop_positions["COP_x"], preprocessed_cop_positions["COP_y"])
+            frequency_features = self.compute_frequency_features(preprocessed_cop_positions["COP_x"], preprocessed_cop_positions["COP_y"])
 
-        merged_features = {"time_features": time_features, "frequency_features": frequency_features}
+            merged_features = {"time_features": time_features, "frequency_features": frequency_features}
 
-        # Save features
-        save_as_json(merged_features, filepath, "features")
+            # Save features
+            save_as_json(merged_features, filepath, "features")
+
+        except Exception as err:
+            print("Empty acquisition file: {}".format(filepath))
+            print(err.args)

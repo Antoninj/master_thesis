@@ -40,17 +40,13 @@ if __name__ == "__main__":
         cop_wbb_x = compute_cop_wbb_x(raw_data)
         cop_wbb_y = compute_cop_wbb_y(raw_data)
 
-        print(len(cop_wbb_x))
-
         print("WBB COP x: {} \nWBB COP y: {}".format(cop_wbb_x, cop_wbb_y))
 
         preprocessed_data = data_preprocessor.preprocess(cop_wbb_x, 1000, True)
 
-        print(len(preprocessed_data))
-
         if plot:
             plt.figure()
-            # plt.plot(cop_wbb_x)
+            plt.plot(cop_wbb_x)
             plt.plot(preprocessed_data)
             plt.show()
 
@@ -59,22 +55,17 @@ if __name__ == "__main__":
         raw_data = data_reader.get_raw_data()
         analog_freq = data_reader.get_frequency()
 
-        print(raw_data["Fz1"], analog_freq)
-
+        #print(raw_data["Fz1"], analog_freq)
+        print(len(raw_data["Fz1"]))
         cop_fp_x = compute_cop_fp_x(raw_data)
         cop_fp_y = compute_cop_fp_y(raw_data)
 
-        print(len(cop_fp_x))
         print("FP COP x: {} \nFP COP y: {}".format(cop_fp_x, cop_fp_y))
 
-        #preprocessed_data = data_preprocessor.preprocess(cop_fp_x, analog_freq)
-
-        preprocessed_cop_fp_x = data_preprocessor.apply_filtering(cop_fp_x, analog_freq)
-        print(preprocessed_cop_fp_x)
-        #filtered_detrended = data_preprocessor.apply_detrending(preprocessed_cop_fp_x)
+        preprocessed_data = data_preprocessor.preprocess(cop_fp_x, analog_freq)
 
         if plot:
             plt.figure()
             plt.plot(cop_fp_x)
-            # plt.plot(preprocessed_cop_fp_x)
+            plt.plot(preprocessed_data)
             plt.show()

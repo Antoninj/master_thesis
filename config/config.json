@@ -27,12 +27,7 @@
             "Fy1",
             "Fz1",
             "Mx1",
-            "My1",
-            "Fx2",
-            "Fy2",
-            "Fz2",
-            "Mx2",
-            "My2"
+            "My1"
         ],
         "data_points_labels": [
             "BottomLeft Kg",

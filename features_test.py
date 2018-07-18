@@ -23,12 +23,11 @@ if __name__ == "__main__":
     plot = args.plot
 
     if not freq:
-
         # Time features tests
         time_features = TimeFeatures.from_file(wbb_cop_data)
         time_features.summary()
-    else:
 
+    else:
         # Frequency features tests
         freq_features = FrequencyFeatures.from_file(wbb_cop_data)
 

@@ -2,8 +2,12 @@ import numpy as np
 from numpy import mean, sqrt, square, diff
 from features import CopFeatures
 from utils import load_config
-
+import warnings
 config = load_config()
+
+# Set numpy error level to warning
+#np.seterr(all='warn')
+#warnings.filterwarnings('error')
 
 
 class DistanceFeatures(CopFeatures):
@@ -215,13 +219,18 @@ class AreaFeatures(DistanceFeatures):
         std_ml = self.compute_std_ml()
         std_ap = self.compute_std_ap()
 
-        print(square(square(std_ml)) + square(square(std_ap)) + 6 * square(std_ml) * square(std_ap) -
-              4 * square(np.cov(self.cop_x, self.cop_y)[0][1]) - (square(std_ml) + square(std_ap)))
+        # For debuging purposes
+        # print(square(square(std_ml)) + square(square(std_ap)) + 6 * square(std_ml) * square(std_ap) -
+        #     4 * square(np.cov(self.cop_x, self.cop_y)[0][1]) - (square(std_ml) + square(std_ap)))
 
-        area_ce = np.pi * self.F_05 * sqrt(square(square(std_ml)) + square(square(std_ap)) + 6 * square(std_ml) *
-                                           square(std_ap) - 4 * square(np.cov(self.cop_x, self.cop_y)[0][1]) - (square(std_ml) + square(std_ap)))
+        try:
+            area_ce = np.pi * self.F_05 * sqrt(square(square(std_ml)) + square(square(std_ap)) + 6 * square(std_ml) *
+                                               square(std_ap) - 4 * square(np.cov(self.cop_x, self.cop_y)[0][1]) - (square(std_ml) + square(std_ap)))
 
-        return area_ce
+            return area_ce
+
+        except Warning:
+            return "not defined"
 
     def compute_area_features(self):
         """ Function to compute all the area features and store them in a dictionary """
@@ -331,11 +340,14 @@ class HybridFeatures(AreaFeatures):
         std_ml = self.compute_std_ml()
         std_ap = self.compute_std_ap()
 
-        #print(square(std_ml) * square(std_ap) - square(np.cov(self.cop_x, self.cop_y)[0][1]) + 2 * std_ml * std_ap)
-        d_fd_ce = sqrt(4 * self.F_05 * sqrt(square(square(std_ml)) + square(square(std_ap)) + 6 * square(std_ml) *
-                                            square(std_ap) - 4 * square(np.cov(self.cop_x, self.cop_y)[0][1]) - (square(std_ml) + square(std_ap))))
+        try:
+            d_fd_ce = sqrt(4 * self.F_05 * sqrt(square(square(std_ml)) + square(square(std_ap)) + 6 * square(std_ml) *
+                                                square(std_ap) - 4 * square(np.cov(self.cop_x, self.cop_y)[0][1]) - (square(std_ml) + square(std_ap))))
 
-        return self.compute_fractal_dimension(d_fd_ce)
+            return self.compute_fractal_dimension(d_fd_ce)
+
+        except Warning:
+            return "not defined"
 
     def compute_hybrid_features(self):
         """ Function to compute all the hybrid features and store them in a dictionary """

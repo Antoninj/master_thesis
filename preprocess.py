@@ -57,9 +57,12 @@ class DataPreprocessor(object):
 
         return scipy.signal.detrend(input_signal, type=self.detrending_type)
 
-    def cut_data(self, input_signal):
+    def cut_data(self, input_signal, threshold=None):
 
-        return input_signal[self.threshold:]
+        if threshold:
+            return input_signal[threshold:]
+        else:
+            return input_signal[self.threshold:]
 
     def preprocess(self, input_signal, analog_frequency, balance_board=False):
         """
@@ -68,12 +71,13 @@ class DataPreprocessor(object):
         The resampling is only applied to the wii balance board data in order to match the force plate acquisition frequency.
         """
 
-        input_signal = self.cut_data(input_signal)
         if balance_board:
+            input_signal = self.cut_data(input_signal, 500)
             resampled_signal = self.apply_resampling(input_signal)
             filtered_signal = self.apply_filtering(
                 resampled_signal, analog_frequency)
         else:
+            input_signal = self.cut_data(input_signal, 5000)
             filtered_signal = self.apply_filtering(
                 input_signal, analog_frequency)
         preprocessed_signal = self.apply_detrending(filtered_signal)

@@ -1,7 +1,23 @@
 import numpy as np
+import pandas as pd
 from utils import load_config
+import warnings
 
 config = load_config()
+# Set numpy error level to warning
+np.seterr(all='warn')
+
+warnings.filterwarnings("ignore", message="numpy.dtype size changed")
+warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
+warnings.filterwarnings('error')
+
+
+def fill_zeros_with_last(arr):
+    prev = np.arange(len(arr))
+    prev[arr == 0] = 0
+    prev = np.maximum.accumulate(prev)
+
+    return arr[prev]
 
 
 def compute_cop_wbb_x(raw_data):
@@ -16,9 +32,13 @@ def compute_cop_wbb_x(raw_data):
     TL = raw_data["TopLeft Kg"][:, 0]
     BL = raw_data["BottomLeft Kg"][:, 0]
 
-    cop_wbb_x = np.array(lx / 2 * ((TR + BR) - (TL + BL)) / (TR + BR + TL + BL))
+    try:
+        cop_wbb_x = np.array((lx / 2) * ((TR + BR) - (TL + BL)) / (TR + BR + TL + BL))
 
-    return cop_wbb_x
+        return cop_wbb_x
+
+    except Warning:
+        return np.ones_like(TR)
 
 
 def compute_cop_wbb_y(raw_data):
@@ -33,25 +53,38 @@ def compute_cop_wbb_y(raw_data):
     TL = raw_data["TopLeft Kg"][:, 0]
     BL = raw_data["BottomLeft Kg"][:, 0]
 
-    cop_wbb_y = np.array(ly / 2 * ((TL + TR) - (BR + BL)) / (TR + BR + TL + BL))
+    try:
+        cop_wbb_y = np.array((ly / 2) * ((TL + TR) - (BR + BL)) / (TR + BR + TL + BL))
 
-    return cop_wbb_y
+        return cop_wbb_y
+
+    except Warning:
+        return np.ones_like(TR)
 
 
-def compute_cop_fp_x(raw_data):
+def compute_cop_fp_x(raw_data, debug=False):
     """ Function to compute the x coordinate of the force plate center of pressure """
 
     # Force plate heigth (in mm)
     dz = config["wbb_parameters"]["height"]
 
     # Force plate sensor values
-    Fx = raw_data["Fx1"]
-    My = raw_data["My1"]
-    Fz = raw_data["Fz1"]
+    Fx = raw_data["Fx1"].flatten()
+    My = raw_data["My1"].flatten()
+    Fz = raw_data["Fz1"].flatten()
 
-    cop_fp_x = -(My + dz * Fx) / Fz
+    Fx = pd.DataFrame(Fx)[0].replace(to_replace=0, value=1).values
+    My = pd.DataFrame(My)[0].replace(to_replace=0, value=1).values
+    Fz = pd.DataFrame(Fz)[0].replace(to_replace=0, value=1).values
 
-    return cop_fp_x.flatten()
+    if debug:
+        print(Fx)
+        #print(np.where(Fx == 0)[0])
+        # print(Fx[0:600])
+
+    cop_fp_x = -(My + dz * Fx) / (Fz)
+
+    return cop_fp_x
 
 
 def compute_cop_fp_y(raw_data):
@@ -61,10 +94,14 @@ def compute_cop_fp_y(raw_data):
     dz = config["wbb_parameters"]["height"]
 
     # Force plate sensor values
-    Fy = raw_data["Fy1"]
-    Mx = raw_data["Mx1"]
-    Fz = raw_data["Fz1"]
+    Fy = raw_data["Fy1"].flatten()
+    Mx = raw_data["Mx1"].flatten()
+    Fz = raw_data["Fz1"].flatten()
 
-    cop_fp_y = (Mx + dz * Fy) / Fz
+    Fy = pd.DataFrame(Fy)[0].replace(to_replace=0, value=1).values
+    Mx = pd.DataFrame(Mx)[0].replace(to_replace=0, value=1).values
+    Fz = pd.DataFrame(Fz)[0].replace(to_replace=0, value=1).values
 
-    return cop_fp_y.flatten()
+    cop_fp_y = (Mx - dz * Fy) / (Fz)
+
+    return cop_fp_y

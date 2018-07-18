@@ -11,8 +11,9 @@ def process_all_wbb_files(data_pipeline, files):
 
 
 def process_all_fp_files(data_pipeline, files):
-    for file in files:
-        if "BalanceBoard" not in file:
+    for file in tqdm(files):
+        if "Vicon" in file:
+            #print(file)
             cop_data_pipeline.save_features(file)
 
 
@@ -43,5 +44,4 @@ if __name__ == "__main__":
     if WBB:
         process_all_wbb_files(cop_data_pipeline, filepaths)
     else:
-        pass
-        #process_all_fp_files(cop_data_pipeline, filepaths)
+        process_all_fp_files(cop_data_pipeline, filepaths)
