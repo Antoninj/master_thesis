@@ -1,9 +1,13 @@
+# Built-in modules imports
 from sensor import SensorDataReader
 from preprocess import DataPreprocessor
 from time_features import TimeFeatures
 from frequency_features import FrequencyFeatures
 from cop import *
 from utils import save_as_json
+
+# Third-party module imports
+import logging
 
 
 class DataPipeline(object):

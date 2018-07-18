@@ -1,7 +1,10 @@
-import scipy.signal
+# Built-in modules imports
 from utils import load_config
-
 config = load_config()
+
+# Third-party module imports
+import logging
+import scipy.signal
 
 
 class DataPreprocessor(object):

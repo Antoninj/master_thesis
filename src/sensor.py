@@ -1,5 +1,15 @@
+# Built-in modules imports
 import btk
 from utils import load_config
+
+# Third-party modules imports
+import logging
+
+logging.basicConfig(
+    filename="log/test.log",
+    level=logging.DEBUG,
+    format="%(asctime)s:%(levelname)s:%(message)s"
+)
 
 config = load_config()
 

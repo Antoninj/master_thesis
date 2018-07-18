@@ -1,6 +1,9 @@
+# Built-in modules imports
+from utils import load_config
+
+# Third-party module imports
 import numpy as np
 import pandas as pd
-from utils import load_config
 import warnings
 
 config = load_config()

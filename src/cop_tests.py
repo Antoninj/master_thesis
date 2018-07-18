@@ -1,8 +1,12 @@
+# Third-party module imports
+import logging
+from matplotlib import pyplot as plt
+from argparse import ArgumentParser
+
+# Built-in modules imports
 from sensor import SensorDataReader
 from preprocess import DataPreprocessor
 from cop import *
-from matplotlib import pyplot as plt
-import argparse
 
 if __name__ == "__main__":
 
@@ -16,7 +20,7 @@ if __name__ == "__main__":
     filepath_fp = config["test_files"]["fp_raw_data"]
 
     # Command line argument parser to choose between wbb or force plate data
-    parser = argparse.ArgumentParser(
+    parser = ArgumentParser(
         description="")
     parser.add_argument("-w", "--wbb", action='store_true', help="Process WBB data")
     parser.add_argument("-p", "--plot", action='store_true', help="Plot data")

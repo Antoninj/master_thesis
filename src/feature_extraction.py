@@ -1,6 +1,9 @@
+# Built-in modules imports
 from pipeline import DataPipeline
 from utils import load_config, get_path_to_all_files
-import argparse
+
+# Third-party module imports
+from argparse import ArgumentParser
 from tqdm import tqdm
 
 
@@ -29,7 +32,7 @@ if __name__ == "__main__":
     results_folder = config["results_folder"]
 
     # Command line argument parser to choose between wbb or force plate data
-    parser = argparse.ArgumentParser(
+    parser = ArgumentParser(
         description="")
     parser.add_argument("-w", "--wbb", action='store_true', help="Process WBB data")
     args = parser.parse_args()

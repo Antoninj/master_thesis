@@ -1,8 +1,12 @@
-import numpy as np
-from numpy import mean, sqrt, square, diff
+# Built-in modules imports
 from features import CopFeatures
 from utils import load_config
+
+# Third-party modules imports
+import numpy as np
+from numpy import mean, sqrt, square, diff
 import warnings
+
 config = load_config()
 
 # Set numpy error level to warning

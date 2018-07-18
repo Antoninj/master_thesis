@@ -1,6 +1,9 @@
+# Built-in modules imports
+from utils import load_config
+
+# Third-party module imports
 import numpy as np
 import json
-from utils import load_config
 
 config = load_config()
 

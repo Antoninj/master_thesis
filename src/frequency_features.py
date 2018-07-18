@@ -1,9 +1,11 @@
+# Built-in modules imports
+from features import CopFeatures
+from utils import load_config
+
+# Third-party module imports
 from scipy.signal import welch
 from scipy.integrate import cumtrapz
 import numpy as np
-
-from features import CopFeatures
-from utils import load_config
 
 config = load_config()
 
