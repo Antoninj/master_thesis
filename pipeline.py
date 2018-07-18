@@ -58,7 +58,7 @@ class DataPipeline(object):
             # Compute COP positions
             cop_positions = self.compute_cop_positions(balance_board)
 
-            # Preprocess COP position
+            # Preprocess COP positions
             frequency = config["preprocessing_parameters"]["acquisition_frequency"]
             preprocessed_cop_positions = self.preprocess_cop_positions(cop_positions, frequency, balance_board)
 
@@ -94,7 +94,7 @@ class DataPipeline(object):
             # Compute COP positions
             cop_positions = self.compute_cop_positions(balance_board)
 
-            # Preprocess COP position
+            # Preprocess COP positions
             frequency = config["preprocessing_parameters"]["acquisition_frequency"]
             preprocessed_cop_positions = self.preprocess_cop_positions(cop_positions, frequency, balance_board)
 

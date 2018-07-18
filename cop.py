@@ -32,6 +32,11 @@ def compute_cop_wbb_x(raw_data):
     TL = raw_data["TopLeft Kg"][:, 0]
     BL = raw_data["BottomLeft Kg"][:, 0]
 
+    TR = pd.DataFrame(TR)[0].replace(to_replace=0, value=1).values
+    BR = pd.DataFrame(BR)[0].replace(to_replace=0, value=1).values
+    TL = pd.DataFrame(TL)[0].replace(to_replace=0, value=1).values
+    BL = pd.DataFrame(BL)[0].replace(to_replace=0, value=1).values
+
     try:
         cop_wbb_x = np.array((lx / 2) * ((TR + BR) - (TL + BL)) / (TR + BR + TL + BL))
 
@@ -52,6 +57,11 @@ def compute_cop_wbb_y(raw_data):
     BR = raw_data["BottomRight Kg"][:, 0]
     TL = raw_data["TopLeft Kg"][:, 0]
     BL = raw_data["BottomLeft Kg"][:, 0]
+
+    TR = pd.DataFrame(TR)[0].replace(to_replace=0, value=1).values
+    BR = pd.DataFrame(BR)[0].replace(to_replace=0, value=1).values
+    TL = pd.DataFrame(TL)[0].replace(to_replace=0, value=1).values
+    BL = pd.DataFrame(BL)[0].replace(to_replace=0, value=1).values
 
     try:
         cop_wbb_y = np.array((ly / 2) * ((TL + TR) - (BR + BL)) / (TR + BR + TL + BL))
@@ -79,8 +89,8 @@ def compute_cop_fp_x(raw_data, debug=False):
 
     if debug:
         print(Fx)
-        #print(np.where(Fx == 0)[0])
-        # print(Fx[0:600])
+        #print(np.where(FZ == 0)[0])
+        # print(FZ[0:600])
 
     cop_fp_x = -(My + dz * Fx) / (Fz)
 
