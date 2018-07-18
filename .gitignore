@@ -7,8 +7,16 @@
 
 #Others
 __pycache__
-BalanceBoard_Static
 btk-core-0.3.0_src
 btk.py
 _btk.so
-results
+*.pyc
+__pycache__
+*.ipynb
+
+# Data and results
+src/results
+src/BalanceBoard_Static
+
+# linter config file
+.pylintrc

@@ -11,7 +11,6 @@ class SensorDataReader(object):
     The locally compiled and installed binaries of the biomechanical toolkit python wrapper (http://biomechanical-toolkit.github.io/docs/Wrapping/Python/index.html) are used to read and extract the data.
     """
 
-    # Constants
     data_labels = config["sensor_labels"]["data_points_labels"]
     analog_labels = config["sensor_labels"]["analog_labels"]
 

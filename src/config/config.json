@@ -37,11 +37,11 @@
         ]
     },
     "test_files": {
-        "wbb_raw_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/code/BalanceBoard_Static/Sujet1/Session1/BalanceBoard/1.c3d",
-        "fp_raw_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/code/BalanceBoard_Static/Sujet1/Session1/Vicon/1.c3d",
-        "wbb_cop_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/code/results/Sujet1/Session1/BalanceBoard/1_cop.json",
-        "fp_cop_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/code/results/Sujet1/Session1/Vicon/1_cop.c3d"
+        "wbb_raw_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/BalanceBoard_Static/Sujet1/Session1/BalanceBoard/1.c3d",
+        "fp_raw_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/BalanceBoard_Static/Sujet1/Session1/Vicon/1.c3d",
+        "wbb_cop_data": "/Users/Antonin/Documents/VUB/semester 4/thsis/validation study/src/results/Sujet1/Session1/BalanceBoard/1_cop.json",
+        "fp_cop_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/results/Sujet1/Session1/Vicon/1_cop.c3d"
     },
-    "results_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/code/results",
-    "data_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/code/BalanceBoard_Static"
+    "results_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/results",
+    "data_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/BalanceBoard_Static"
 }
