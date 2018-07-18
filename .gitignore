@@ -13,6 +13,7 @@ _btk.so
 *.pyc
 __pycache__
 *.ipynb
+.gitignore
 
 # Data and results
 src/results
