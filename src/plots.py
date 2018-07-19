@@ -1,5 +1,6 @@
-import json
+# Built-in modules imports
 from time_features import TimeFeatures
+
 
 class TimeFeaturePlots(TimeFeatures):
     def __init__(self, cop_x, cop_y):

@@ -11,7 +11,7 @@ config = load_config()
 
 
 class FrequencyFeatures(CopFeatures):
-    """ Class that implements the frequency domain features derived from the COP positions """
+    """Class that implements the frequency domain features derived from the COP positions."""
 
     fs = config["frequency_features_parameters"]["sampling_frequency"]
     nperseg = config["frequency_features_parameters"]["nperseg"]
@@ -122,7 +122,7 @@ class FrequencyFeatures(CopFeatures):
         return f_power
 
     def compute_frequency_features(self):
-        """ Function to compute all the frequency features and store them in a dictionary """
+        """Compute all the frequency features and store them in a dictionary."""
 
         features = {}
         features["Rd Total power"] = self.compute_rd_total_power()
@@ -141,7 +141,7 @@ class FrequencyFeatures(CopFeatures):
         return features
 
     def summary(self):
-        """ Function to print out a summary of the frequency features """
+        """Print out a summary of the frequency features to standard output."""
 
         for key, value in self.frequency_features.items():
             print("{}: {}".format(key, value))

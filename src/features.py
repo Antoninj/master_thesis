@@ -10,7 +10,7 @@ config = load_config()
 
 class CopFeatures(object):
     """
-    Base class for COP based features computations
+    Base class for COP based features computations.
 
     This class doesn't implement any feature computations and is simply responsible for parsing the COP data that will be used in COP based features computations in both the time and frequency domains.
     """
@@ -30,7 +30,7 @@ class CopFeatures(object):
 
     @staticmethod
     def parse_cop_data(filepath):
-        """ Function to parse cop data from an input file """
+        """Parse cop data from an input file."""
 
         with open(filepath) as json_data:
             cop_data = json.load(json_data)

@@ -245,7 +245,7 @@ class btkEvent(_object):
      - The value 0 is for general event;
      - Value 1 corresponds to the foot strike event;
      - Value 2 for the foot off. Without the use of these values.
-    It is known that Workstation and Nexus put all events in general (default value is 0). 
+    It is known that Workstation and Nexus put all events in general (default value is 0).
     For Polygon, one user reported that some points had their values set to 0.
 
     For example, a Heel Strike event on the left leg or the subject John Doe at frame 143 can be set by
@@ -304,7 +304,7 @@ class btkEvent(_object):
          - The value 0 is for general event;
          - Value 1 corresponds to the foot strike event;
          - Value 2 for the foot off. Without the use of these values.
-        It is known that Workstation and Nexus put all events in general (default value is 0). 
+        It is known that Workstation and Nexus put all events in general (default value is 0).
         For Polygon, one user reported that some points had their values set to 0.
 
         For example, a Heel Strike event on the left leg or the subject John Doe at frame 143 can be set by
@@ -523,8 +523,8 @@ class btkAnalog(_object):
      - btk.btkAnalog.PlusMinus1Dot25: gain for the range +/- 1.25 volts;
      - btk.btkAnalog.PlusMinus1: gain for the range +/- 1 volts;.
 
-    Note: The informations associated (unit, scale, offset, gain) are useful for other classes/methods. 
-    For example, when you save an acquisition in a file, analog's data are generally unscaled and written as integer, 
+    Note: The informations associated (unit, scale, offset, gain) are useful for other classes/methods.
+    For example, when you save an acquisition in a file, analog's data are generally unscaled and written as integer,
     then the scale and offset are important.
     """
 
@@ -568,8 +568,8 @@ class btkAnalog(_object):
          - btk.btkAnalog.PlusMinus1Dot25: gain for the range +/- 1.25 volts;
          - btk.btkAnalog.PlusMinus1: gain for the range +/- 1 volts;.
 
-        Note: The informations associated (unit, scale, offset, gain) are useful for other classes/methods. 
-        For example, when you save an acquisition in a file, analog's data are generally unscaled and written as integer, 
+        Note: The informations associated (unit, scale, offset, gain) are useful for other classes/methods.
+        For example, when you save an acquisition in a file, analog's data are generally unscaled and written as integer,
         then the scale and offset are important.
         """
         this = _btk.new_btkAnalog(*args)
@@ -898,11 +898,11 @@ class btkPoint(_object):
     """
 
     The coordinates of the point are generally measured by an acquisition system. For each frame, the
-    3D value has a residual. It can provide informations on the quality of these 3D data 
-    (residual associated with the reconstruction of the marker). 
+    3D value has a residual. It can provide informations on the quality of these 3D data
+    (residual associated with the reconstruction of the marker).
 
-    This class is also used to represent angles, forces, moments, powers and scalars. 
-    To know/set the type of the point, you can use the methods GetType() and SetType(). 
+    This class is also used to represent angles, forces, moments, powers and scalars.
+    To know/set the type of the point, you can use the methods GetType() and SetType().
 
     The type has a limited range of possible values and are listed in the following enumeration:
      - btk.btkPoint.Marker: Set the point object as a marker;
@@ -914,7 +914,7 @@ class btkPoint(_object):
      - btk.btkPoint.Reaction: Special type to indicate the point corresponds to one part of a wrench (not really used);
 
     Note: In some case the values at specific frames are invalid (mainly due to marker's occlusion).
-    To detect if the frame is invalid, you can check the residual which will be 
+    To detect if the frame is invalid, you can check the residual which will be
     set to the value -1. It is the same thing if you want to set the frame as invalid. You can set
     the values of the frames to 0 and the associated residual to -1.
 
@@ -943,11 +943,11 @@ class btkPoint(_object):
 
 
         The coordinates of the point are generally measured by an acquisition system. For each frame, the
-        3D value has a residual. It can provide informations on the quality of these 3D data 
-        (residual associated with the reconstruction of the marker). 
+        3D value has a residual. It can provide informations on the quality of these 3D data
+        (residual associated with the reconstruction of the marker).
 
-        This class is also used to represent angles, forces, moments, powers and scalars. 
-        To know/set the type of the point, you can use the methods GetType() and SetType(). 
+        This class is also used to represent angles, forces, moments, powers and scalars.
+        To know/set the type of the point, you can use the methods GetType() and SetType().
 
         The type has a limited range of possible values and are listed in the following enumeration:
          - btk.btkPoint.Marker: Set the point object as a marker;
@@ -959,7 +959,7 @@ class btkPoint(_object):
          - btk.btkPoint.Reaction: Special type to indicate the point corresponds to one part of a wrench (not really used);
 
         Note: In some case the values at specific frames are invalid (mainly due to marker's occlusion).
-        To detect if the frame is invalid, you can check the residual which will be 
+        To detect if the frame is invalid, you can check the residual which will be
         set to the value -1. It is the same thing if you want to set the frame as invalid. You can set
         the values of the frames to 0 and the associated residual to -1.
 
@@ -1372,7 +1372,7 @@ class btkForcePlatform(_object):
         elif (len(args) == 3):
             self._set_corner_2(*args)
         else:
-            self._set_corner_3(*args) 
+            self._set_corner_3(*args)
 
     __swig_destroy__ = _btk.delete_btkForcePlatform
     __del__ = lambda self: None
@@ -1612,7 +1612,7 @@ def btkForcePlatformType4():
     btkForcePlatformType4() -> btkForcePlatform
 
 
-    Force platform composed of 6 channels and a 6 columns by 6 rows calibration matrix. 
+    Force platform composed of 6 channels and a 6 columns by 6 rows calibration matrix.
     The definition of the channels are the same than the force platform Type 2.
     """
     return _btk.btkForcePlatformType4()
@@ -1622,7 +1622,7 @@ def btkForcePlatformType5():
     btkForcePlatformType5() -> btkForcePlatform
 
 
-    Force platform composed of 8 channels and a 8 columns by 6 rows calibration matrix. 
+    Force platform composed of 8 channels and a 8 columns by 6 rows calibration matrix.
     The definition of the channels are the same than the force platform Type 3.
     """
     return _btk.btkForcePlatformType5()
@@ -1794,7 +1794,7 @@ class btkIMU(_object):
 
     Container of analog channels representing an inertial measurement unit (IMU).
 
-    This class proposes to store any number of analog channels but the 6 first channels could be 
+    This class proposes to store any number of analog channels but the 6 first channels could be
     used for 3 accelerometers and 3 gyroscopes as some convenient methods are proposed in this way
     (see SetChannels(), GetAccelerometerX(), GetAccelerometerY(), GetAccelerometerZ(), GetGyroscopeX(), GetGyroscopeY(), GetGyroscopeZ()).
 
@@ -4458,7 +4458,7 @@ class btkMetaData(_object):
         """
         HasChildren(self) -> bool
 
-        Checks if the entry has children 
+        Checks if the entry has children
         """
         return _btk.btkMetaData_HasChildren(self)
 
@@ -4467,7 +4467,7 @@ class btkMetaData(_object):
         """
         GetChildNumber(self) -> int
 
-        Returns the number of children 
+        Returns the number of children
         """
         return _btk.btkMetaData_GetChildNumber(self)
 
@@ -4618,7 +4618,7 @@ class btkAcquisition(_object):
      - Scalar: millimeters ;
      - Reaction: (nothing).
 
-    After the creation of the acquisition, you should use the Init() method to populate the acquisition. 
+    After the creation of the acquisition, you should use the Init() method to populate the acquisition.
 
     The member used for the maximum interpolation gap is only for information and is not used in the acquisition. It could be used later in a filter to fill gap.
 
@@ -4664,7 +4664,7 @@ class btkAcquisition(_object):
          - Scalar: millimeters ;
          - Reaction: (nothing).
 
-        After the creation of the acquisition, you should use the Init() method to populate the acquisition. 
+        After the creation of the acquisition, you should use the Init() method to populate the acquisition.
 
         The member used for the maximum interpolation gap is only for information and is not used in the acquisition. It could be used later in a filter to fill gap.
 
@@ -5484,7 +5484,7 @@ class btkAcquisitionFileIO(_object):
         """
         CanWriteFile(self, filename) -> bool
 
-        Checks if the given filename can be write by this AcquisitionFileIO. 
+        Checks if the given filename can be write by this AcquisitionFileIO.
         This method should try to determine if the file's suffix corresponds to one of the supported file's suffixes by this btkAcquisitionFileIO.
         """
         return _btk.btkAcquisitionFileIO_CanWriteFile(self, filename)
@@ -5520,7 +5520,7 @@ class btkAcquisitionFileReader(_object):
     First, you can set it manually by using the method btkAcquisitionFileReader::SetAcquisitionIO(),
     Second, the correct object can be detected automatically, by checking in each registered btkAcquisitionFileIO if it can read or not the file.
 
-    The use of the manual setting should be only used if you want to read a file with a selected file format. To go back to the automatic mode 
+    The use of the manual setting should be only used if you want to read a file with a selected file format. To go back to the automatic mode
     from the manual mode, you only have to use the method btkAcquisitionFileReader::SetAcquisitionIO() without any argument.
     """
 
@@ -5542,7 +5542,7 @@ class btkAcquisitionFileReader(_object):
         First, you can set it manually by using the method btkAcquisitionFileReader::SetAcquisitionIO(),
         Second, the correct object can be detected automatically, by checking in each registered btkAcquisitionFileIO if it can read or not the file.
 
-        The use of the manual setting should be only used if you want to read a file with a selected file format. To go back to the automatic mode 
+        The use of the manual setting should be only used if you want to read a file with a selected file format. To go back to the automatic mode
         from the manual mode, you only have to use the method btkAcquisitionFileReader::SetAcquisitionIO() without any argument.
         """
         this = _btk.new_btkAcquisitionFileReader()
@@ -5838,13 +5838,13 @@ class btkC3DFileIO(btkAcquisitionFileIO):
     Interface to read/write C3D files.
 
     All the informations related to the acquisition are stored in the output object.
-    Few data, like the byte order, the points' scale, the analog universal scale, the integer analog storage format are 
-    available as member of this class. These informations are extracted when a C3D file is read or can be 
+    Few data, like the byte order, the points' scale, the analog universal scale, the integer analog storage format are
+    available as member of this class. These informations are extracted when a C3D file is read or can be
     filled/modified to write a new C3D file. All these members can be accessed or modified using dedicated methods.
 
-    Compared to the C3DServer API, all the data in BTK extracted from a C3D file are already scaled and available in the 
-    children of the output Acquisition. You don't need to access to the groups/parameters for that. However, if you have 
-    some custom parameters, then you can access them from the metadata stored in the output Acquisition using the method 
+    Compared to the C3DServer API, all the data in BTK extracted from a C3D file are already scaled and available in the
+    children of the output Acquisition. You don't need to access to the groups/parameters for that. However, if you have
+    some custom parameters, then you can access them from the metadata stored in the output Acquisition using the method
     btkAcquisition::GetMetadata().
 
     Moreover, there are several options to create a C3D file from an acquisition:
@@ -5882,13 +5882,13 @@ class btkC3DFileIO(btkAcquisitionFileIO):
         Interface to read/write C3D files.
 
         All the informations related to the acquisition are stored in the output object.
-        Few data, like the byte order, the points' scale, the analog universal scale, the integer analog storage format are 
-        available as member of this class. These informations are extracted when a C3D file is read or can be 
+        Few data, like the byte order, the points' scale, the analog universal scale, the integer analog storage format are
+        available as member of this class. These informations are extracted when a C3D file is read or can be
         filled/modified to write a new C3D file. All these members can be accessed or modified using dedicated methods.
 
-        Compared to the C3DServer API, all the data in BTK extracted from a C3D file are already scaled and available in the 
-        children of the output Acquisition. You don't need to access to the groups/parameters for that. However, if you have 
-        some custom parameters, then you can access them from the metadata stored in the output Acquisition using the method 
+        Compared to the C3DServer API, all the data in BTK extracted from a C3D file are already scaled and available in the
+        children of the output Acquisition. You don't need to access to the groups/parameters for that. However, if you have
+        some custom parameters, then you can access them from the metadata stored in the output Acquisition using the method
         btkAcquisition::GetMetadata().
 
         Moreover, there are several options to create a C3D file from an acquisition:
@@ -6109,7 +6109,7 @@ class btkC3DFileIO(btkAcquisitionFileIO):
         """
         CanWriteFile(self, filename) -> bool
 
-        Checks if the given filename can be write by this AcquisitionFileIO. 
+        Checks if the given filename can be write by this AcquisitionFileIO.
         This method should try to determine if the file's suffix corresponds to one of the supported file's suffixes by this btkAcquisitionFileIO.
         """
         return _btk.btkC3DFileIO_CanWriteFile(self, filename)
@@ -6275,7 +6275,7 @@ class btkANBFileIO(btkAcquisitionFileIO):
         """
         CanWriteFile(self, filename) -> bool
 
-        Checks if the given filename can be write by this AcquisitionFileIO. 
+        Checks if the given filename can be write by this AcquisitionFileIO.
         This method should try to determine if the file's suffix corresponds to one of the supported file's suffixes by this btkAcquisitionFileIO.
         """
         return _btk.btkANBFileIO_CanWriteFile(self, filename)
@@ -6459,7 +6459,7 @@ class btkANCFileIO(btkAcquisitionFileIO):
         """
         CanWriteFile(self, filename) -> bool
 
-        Checks if the given filename can be write by this AcquisitionFileIO. 
+        Checks if the given filename can be write by this AcquisitionFileIO.
         This method should try to determine if the file's suffix corresponds to one of the supported file's suffixes by this btkAcquisitionFileIO.
         """
         return _btk.btkANCFileIO_CanWriteFile(self, filename)
@@ -6625,7 +6625,7 @@ class btkANGFileIO(btkAcquisitionFileIO):
         """
         CanWriteFile(self, filename) -> bool
 
-        Checks if the given filename can be write by this AcquisitionFileIO. 
+        Checks if the given filename can be write by this AcquisitionFileIO.
         This method should try to determine if the file's suffix corresponds to one of the supported file's suffixes by this btkAcquisitionFileIO.
         """
         return _btk.btkANGFileIO_CanWriteFile(self, filename)
@@ -6791,7 +6791,7 @@ class btkCALForcePlateFileIO(btkAcquisitionFileIO):
         """
         CanWriteFile(self, filename) -> bool
 
-        Checks if the given filename can be write by this AcquisitionFileIO. 
+        Checks if the given filename can be write by this AcquisitionFileIO.
         This method should try to determine if the file's suffix corresponds to one of the supported file's suffixes by this btkAcquisitionFileIO.
         """
         return _btk.btkCALForcePlateFileIO_CanWriteFile(self, filename)
@@ -6957,7 +6957,7 @@ class btkCLBFileIO(btkAcquisitionFileIO):
         """
         CanWriteFile(self, filename) -> bool
 
-        Checks if the given filename can be write by this AcquisitionFileIO. 
+        Checks if the given filename can be write by this AcquisitionFileIO.
         This method should try to determine if the file's suffix corresponds to one of the supported file's suffixes by this btkAcquisitionFileIO.
         """
         return _btk.btkCLBFileIO_CanWriteFile(self, filename)
@@ -7123,7 +7123,7 @@ class btkDelsysEMGFileIO(btkAcquisitionFileIO):
         """
         CanWriteFile(self, filename) -> bool
 
-        Checks if the given filename can be write by this AcquisitionFileIO. 
+        Checks if the given filename can be write by this AcquisitionFileIO.
         This method should try to determine if the file's suffix corresponds to one of the supported file's suffixes by this btkAcquisitionFileIO.
         """
         return _btk.btkDelsysEMGFileIO_CanWriteFile(self, filename)
@@ -7289,7 +7289,7 @@ class btkMDFFileIO(btkAcquisitionFileIO):
         """
         CanWriteFile(self, filename) -> bool
 
-        Checks if the given filename can be write by this AcquisitionFileIO. 
+        Checks if the given filename can be write by this AcquisitionFileIO.
         This method should try to determine if the file's suffix corresponds to one of the supported file's suffixes by this btkAcquisitionFileIO.
         """
         return _btk.btkMDFFileIO_CanWriteFile(self, filename)
@@ -7455,7 +7455,7 @@ class btkEMFFileIO(btkAcquisitionFileIO):
         """
         CanWriteFile(self, filename) -> bool
 
-        Checks if the given filename can be write by this AcquisitionFileIO. 
+        Checks if the given filename can be write by this AcquisitionFileIO.
         This method should try to determine if the file's suffix corresponds to one of the supported file's suffixes by this btkAcquisitionFileIO.
         """
         return _btk.btkEMFFileIO_CanWriteFile(self, filename)
@@ -7621,7 +7621,7 @@ class btkEMxFileIO(btkAcquisitionFileIO):
         """
         CanWriteFile(self, filename) -> bool
 
-        Checks if the given filename can be write by this AcquisitionFileIO. 
+        Checks if the given filename can be write by this AcquisitionFileIO.
         This method should try to determine if the file's suffix corresponds to one of the supported file's suffixes by this btkAcquisitionFileIO.
         """
         return _btk.btkEMxFileIO_CanWriteFile(self, filename)
@@ -7787,7 +7787,7 @@ class btkGRxFileIO(btkAcquisitionFileIO):
         """
         CanWriteFile(self, filename) -> bool
 
-        Checks if the given filename can be write by this AcquisitionFileIO. 
+        Checks if the given filename can be write by this AcquisitionFileIO.
         This method should try to determine if the file's suffix corresponds to one of the supported file's suffixes by this btkAcquisitionFileIO.
         """
         return _btk.btkGRxFileIO_CanWriteFile(self, filename)
@@ -7953,7 +7953,7 @@ class btkMOMFileIO(btkAcquisitionFileIO):
         """
         CanWriteFile(self, filename) -> bool
 
-        Checks if the given filename can be write by this AcquisitionFileIO. 
+        Checks if the given filename can be write by this AcquisitionFileIO.
         This method should try to determine if the file's suffix corresponds to one of the supported file's suffixes by this btkAcquisitionFileIO.
         """
         return _btk.btkMOMFileIO_CanWriteFile(self, filename)
@@ -8119,7 +8119,7 @@ class btkPWRFileIO(btkAcquisitionFileIO):
         """
         CanWriteFile(self, filename) -> bool
 
-        Checks if the given filename can be write by this AcquisitionFileIO. 
+        Checks if the given filename can be write by this AcquisitionFileIO.
         This method should try to determine if the file's suffix corresponds to one of the supported file's suffixes by this btkAcquisitionFileIO.
         """
         return _btk.btkPWRFileIO_CanWriteFile(self, filename)
@@ -8285,7 +8285,7 @@ class btkRAxFileIO(btkAcquisitionFileIO):
         """
         CanWriteFile(self, filename) -> bool
 
-        Checks if the given filename can be write by this AcquisitionFileIO. 
+        Checks if the given filename can be write by this AcquisitionFileIO.
         This method should try to determine if the file's suffix corresponds to one of the supported file's suffixes by this btkAcquisitionFileIO.
         """
         return _btk.btkRAxFileIO_CanWriteFile(self, filename)
@@ -8451,7 +8451,7 @@ class btkRICFileIO(btkAcquisitionFileIO):
         """
         CanWriteFile(self, filename) -> bool
 
-        Checks if the given filename can be write by this AcquisitionFileIO. 
+        Checks if the given filename can be write by this AcquisitionFileIO.
         This method should try to determine if the file's suffix corresponds to one of the supported file's suffixes by this btkAcquisitionFileIO.
         """
         return _btk.btkRICFileIO_CanWriteFile(self, filename)
@@ -8617,7 +8617,7 @@ class btkTDFFileIO(btkAcquisitionFileIO):
         """
         CanWriteFile(self, filename) -> bool
 
-        Checks if the given filename can be write by this AcquisitionFileIO. 
+        Checks if the given filename can be write by this AcquisitionFileIO.
         This method should try to determine if the file's suffix corresponds to one of the supported file's suffixes by this btkAcquisitionFileIO.
         """
         return _btk.btkTDFFileIO_CanWriteFile(self, filename)
@@ -8783,7 +8783,7 @@ class btkTRBFileIO(btkAcquisitionFileIO):
         """
         CanWriteFile(self, filename) -> bool
 
-        Checks if the given filename can be write by this AcquisitionFileIO. 
+        Checks if the given filename can be write by this AcquisitionFileIO.
         This method should try to determine if the file's suffix corresponds to one of the supported file's suffixes by this btkAcquisitionFileIO.
         """
         return _btk.btkTRBFileIO_CanWriteFile(self, filename)
@@ -8949,7 +8949,7 @@ class btkTRCFileIO(btkAcquisitionFileIO):
         """
         CanWriteFile(self, filename) -> bool
 
-        Checks if the given filename can be write by this AcquisitionFileIO. 
+        Checks if the given filename can be write by this AcquisitionFileIO.
         This method should try to determine if the file's suffix corresponds to one of the supported file's suffixes by this btkAcquisitionFileIO.
         """
         return _btk.btkTRCFileIO_CanWriteFile(self, filename)
@@ -9115,7 +9115,7 @@ class btkXLSOrthoTrakFileIO(btkAcquisitionFileIO):
         """
         CanWriteFile(self, filename) -> bool
 
-        Checks if the given filename can be write by this AcquisitionFileIO. 
+        Checks if the given filename can be write by this AcquisitionFileIO.
         This method should try to determine if the file's suffix corresponds to one of the supported file's suffixes by this btkAcquisitionFileIO.
         """
         return _btk.btkXLSOrthoTrakFileIO_CanWriteFile(self, filename)
@@ -9281,7 +9281,7 @@ class btkXMOVEFileIO(btkAcquisitionFileIO):
         """
         CanWriteFile(self, filename) -> bool
 
-        Checks if the given filename can be write by this AcquisitionFileIO. 
+        Checks if the given filename can be write by this AcquisitionFileIO.
         This method should try to determine if the file's suffix corresponds to one of the supported file's suffixes by this btkAcquisitionFileIO.
         """
         return _btk.btkXMOVEFileIO_CanWriteFile(self, filename)
@@ -9330,11 +9330,11 @@ class btkAcquisitionUnitConverter(_object):
      - degree (deg);
     The known unit for the power are:
      - watt (W);
-    Moreover, the metadata known to be influenced by these unit (FORCE_PLATFORM, 
+    Moreover, the metadata known to be influenced by these unit (FORCE_PLATFORM,
     SEG) are also converted. The metadata POINT:*UNITS are not updated as they are not
     used in BTK (instead, you can use the method btkAcquisition::GetPointUnit()).
 
-    Use the method btkAcquisitionUnitConverter::SetUnit() with the following enumeration 
+    Use the method btkAcquisitionUnitConverter::SetUnit() with the following enumeration
     value to select the wanted units:
      - btk.btkAcquisitionUnitConverter.Length
      - btk.btkAcquisitionUnitConverter.Angle
@@ -9342,8 +9342,8 @@ class btkAcquisitionUnitConverter(_object):
      - btk.btkAcquisitionUnitConverter.Moment
      - btk.btkAcquisitionUnitConverter.Power
 
-    By default, the data will be converted in millimeter, newton, newton by millimeter, 
-    degree and watt. Even if you could convert trajectories and moments with the desired 
+    By default, the data will be converted in millimeter, newton, newton by millimeter,
+    degree and watt. Even if you could convert trajectories and moments with the desired
     units, it is recommended to use the same length unit (i.e. mm and Nmm or m with Nm).
     """
 
@@ -9383,11 +9383,11 @@ class btkAcquisitionUnitConverter(_object):
          - degree (deg);
         The known unit for the power are:
          - watt (W);
-        Moreover, the metadata known to be influenced by these unit (FORCE_PLATFORM, 
+        Moreover, the metadata known to be influenced by these unit (FORCE_PLATFORM,
         SEG) are also converted. The metadata POINT:*UNITS are not updated as they are not
         used in BTK (instead, you can use the method btkAcquisition::GetPointUnit()).
 
-        Use the method btkAcquisitionUnitConverter::SetUnit() with the following enumeration 
+        Use the method btkAcquisitionUnitConverter::SetUnit() with the following enumeration
         value to select the wanted units:
          - btk.btkAcquisitionUnitConverter.Length
          - btk.btkAcquisitionUnitConverter.Angle
@@ -9395,8 +9395,8 @@ class btkAcquisitionUnitConverter(_object):
          - btk.btkAcquisitionUnitConverter.Moment
          - btk.btkAcquisitionUnitConverter.Power
 
-        By default, the data will be converted in millimeter, newton, newton by millimeter, 
-        degree and watt. Even if you could convert trajectories and moments with the desired 
+        By default, the data will be converted in millimeter, newton, newton by millimeter,
+        degree and watt. Even if you could convert trajectories and moments with the desired
         units, it is recommended to use the same length unit (i.e. mm and Nmm or m with Nm).
         """
         this = _btk.new_btkAcquisitionUnitConverter()
@@ -9947,7 +9947,7 @@ btkWrenchCollectionDownsampleFilter_swigregister(btkWrenchCollectionDownsampleFi
 class btkForcePlatformsExtractor(_object):
     """
 
-    Based on the content of the metadata FORCE_PLATFORM and the analog channels stored in the given 
+    Based on the content of the metadata FORCE_PLATFORM and the analog channels stored in the given
     acquisition, this filter creates a collection of btkForcePlatform returned in the output.
 
     Depending of the type of the force platform, the analog channels' data are transformed to take into account a calibration matrix.
@@ -9989,7 +9989,7 @@ class btkForcePlatformsExtractor(_object):
         __init__(self) -> btkForcePlatformsExtractor
 
 
-        Based on the content of the metadata FORCE_PLATFORM and the analog channels stored in the given 
+        Based on the content of the metadata FORCE_PLATFORM and the analog channels stored in the given
         acquisition, this filter creates a collection of btkForcePlatform returned in the output.
 
         Depending of the type of the force platform, the analog channels' data are transformed to take into account a calibration matrix.
@@ -10266,12 +10266,12 @@ class btkGroundReactionWrenchFilter(_object):
     Transform force platform data into ground reaction wrenches.
 
     Theses wrenches are expressed in the global frame. The point of application (PWA)
-    of each wrench is calculated from the paper of Shimba (1984). 
+    of each wrench is calculated from the paper of Shimba (1984).
     Compared to the center of pressure (COP), the PWA take into account all the forces
     and moments (and does not assume any null forces).
 
     Note: For gait analysis, the COP and PWA are very similar.
-    Because the computation of the PWA (as the COP) is sensitive to small (vertical) forces, the methods 
+    Because the computation of the PWA (as the COP) is sensitive to small (vertical) forces, the methods
     SetThresholdValue and SetThresholdState() are provided to not compute the PWA if the vertical forces is
     the threshold. You first need to set the value and then activate the threshold method.
     By default, this threshold is not activated and the values is set to 0.
@@ -10298,12 +10298,12 @@ class btkGroundReactionWrenchFilter(_object):
         Transform force platform data into ground reaction wrenches.
 
         Theses wrenches are expressed in the global frame. The point of application (PWA)
-        of each wrench is calculated from the paper of Shimba (1984). 
+        of each wrench is calculated from the paper of Shimba (1984).
         Compared to the center of pressure (COP), the PWA take into account all the forces
         and moments (and does not assume any null forces).
 
         Note: For gait analysis, the COP and PWA are very similar.
-        Because the computation of the PWA (as the COP) is sensitive to small (vertical) forces, the methods 
+        Because the computation of the PWA (as the COP) is sensitive to small (vertical) forces, the methods
         SetThresholdValue and SetThresholdState() are provided to not compute the PWA if the vertical forces is
         the threshold. You first need to set the value and then activate the threshold method.
         By default, this threshold is not activated and the values is set to 0.
@@ -10473,7 +10473,7 @@ btkGroundReactionWrenchFilter_swigregister(btkGroundReactionWrenchFilter)
 class btkIMUsExtractor(_object):
     """
 
-    Extracts inertial measurement units (IMUs) from a btkAcquisition object. 
+    Extracts inertial measurement units (IMUs) from a btkAcquisition object.
 
     Based on the content of the metadata IMU and the analog channels stored in the given acquisition(s),
     this filter creates a collection of btkIMU returned in the output.
@@ -10502,7 +10502,7 @@ class btkIMUsExtractor(_object):
         __init__(self) -> btkIMUsExtractor
 
 
-        Extracts inertial measurement units (IMUs) from a btkAcquisition object. 
+        Extracts inertial measurement units (IMUs) from a btkAcquisition object.
 
         Based on the content of the metadata IMU and the analog channels stored in the given acquisition(s),
         this filter creates a collection of btkIMU returned in the output.
@@ -10626,11 +10626,11 @@ class btkMergeAcquisitionFilter(_object):
 
     The difference between the merging or the concatenating depends of the acquisitions' informations.
 
-    If the acquisitions are exactly the same (same label for points and analog channels) and the first 
-    frame of the n+1th acquisition corresponds to the last frame of the nth acquisition, then the 
-    acquisitions are merged, otherwise, the data are concatenated. Merged acquisitions means that the 
+    If the acquisitions are exactly the same (same label for points and analog channels) and the first
+    frame of the n+1th acquisition corresponds to the last frame of the nth acquisition, then the
+    acquisitions are merged, otherwise, the data are concatenated. Merged acquisitions means that the
     output will have the same number of points, analog channels, events than each output but the number
-    of frames corresponds to the sum of the input's frame number. 
+    of frames corresponds to the sum of the input's frame number.
 
     Rules to merge/concatenate acquisitions are:
      - Must have the same acquisition frequency (or 0).
@@ -10642,7 +10642,7 @@ class btkMergeAcquisitionFilter(_object):
      - The first input which has analog channels is used to set the analog resolution of the output.
 
     Actions during the merging/concatenation:
-     - If the first frame of the nth acquisition correspond to the last frame + 1 of the nth-1 acquisition, 
+     - If the first frame of the nth acquisition correspond to the last frame + 1 of the nth-1 acquisition,
        AND the points / analog channels correspond exactly, then acquisitions are truncated.
      - If the first frame of two inputs are not the same, the final acquisition is adapted to contain the number of frames plus
        the difference between the first frame of each input.
@@ -10675,11 +10675,11 @@ class btkMergeAcquisitionFilter(_object):
 
         The difference between the merging or the concatenating depends of the acquisitions' informations.
 
-        If the acquisitions are exactly the same (same label for points and analog channels) and the first 
-        frame of the n+1th acquisition corresponds to the last frame of the nth acquisition, then the 
-        acquisitions are merged, otherwise, the data are concatenated. Merged acquisitions means that the 
+        If the acquisitions are exactly the same (same label for points and analog channels) and the first
+        frame of the n+1th acquisition corresponds to the last frame of the nth acquisition, then the
+        acquisitions are merged, otherwise, the data are concatenated. Merged acquisitions means that the
         output will have the same number of points, analog channels, events than each output but the number
-        of frames corresponds to the sum of the input's frame number. 
+        of frames corresponds to the sum of the input's frame number.
 
         Rules to merge/concatenate acquisitions are:
          - Must have the same acquisition frequency (or 0).
@@ -10691,7 +10691,7 @@ class btkMergeAcquisitionFilter(_object):
          - The first input which has analog channels is used to set the analog resolution of the output.
 
         Actions during the merging/concatenation:
-         - If the first frame of the nth acquisition correspond to the last frame + 1 of the nth-1 acquisition, 
+         - If the first frame of the nth acquisition correspond to the last frame + 1 of the nth-1 acquisition,
            AND the points / analog channels correspond exactly, then acquisitions are truncated.
          - If the first frame of two inputs are not the same, the final acquisition is adapted to contain the number of frames plus
            the difference between the first frame of each input.
@@ -10836,7 +10836,7 @@ class btkSeparateKnownVirtualMarkersFilter(_object):
      - other virtual markers (CenterOfMass, ...)
      - other points (angle, force, moment, power, ...)
 
-    To select the output corresponding to the chosen category, you can use the method GetOutput() 
+    To select the output corresponding to the chosen category, you can use the method GetOutput()
     with one of these enum values: AllMarkers, Markers, VirtualReferenceFrames, VirtualMarkers, OtherPoints.
 
     By default, the list of labels known as virtual markers used for frame is:
@@ -10894,7 +10894,7 @@ class btkSeparateKnownVirtualMarkersFilter(_object):
          - other virtual markers (CenterOfMass, ...)
          - other points (angle, force, moment, power, ...)
 
-        To select the output corresponding to the chosen category, you can use the method GetOutput() 
+        To select the output corresponding to the chosen category, you can use the method GetOutput()
         with one of these enum values: AllMarkers, Markers, VirtualReferenceFrames, VirtualMarkers, OtherPoints.
 
         By default, the list of labels known as virtual markers used for frame is:
@@ -11270,12 +11270,12 @@ class btkSubAcquisitionFilter(_object):
      - The mapping between the force plates and the side (left, right, general)  of the events detected (see SetForceplateContextMapping()).
      - The region of interest where to detect the events (see SetRegionOfInterest()).
 
-    The algorithm works as following: Based on the region of interest, the maximum is searched. 
-    If the maximum is higher than the threshold set, then the frame of the value on the left side of 
-    this maximum lower than the threshold is used to create a heel strike event. On the other hand, 
+    The algorithm works as following: Based on the region of interest, the maximum is searched.
+    If the maximum is higher than the threshold set, then the frame of the value on the left side of
+    this maximum lower than the threshold is used to create a heel strike event. On the other hand,
     the value on the right side of the maximum lower than the threshold is used to create a toe-off event.
 
-    Note: The design of this class is not perfect as it cannot be used in a pipeline without 
+    Note: The design of this class is not perfect as it cannot be used in a pipeline without
     to update the part before to know some acquisition's information (first frame, sample frequency, subject's name).
     This class (or the pipeline mechanism) could be modified in a future version of BTK to make up this problem.
     """
@@ -11308,12 +11308,12 @@ class btkSubAcquisitionFilter(_object):
          - The mapping between the force plates and the side (left, right, general)  of the events detected (see SetForceplateContextMapping()).
          - The region of interest where to detect the events (see SetRegionOfInterest()).
 
-        The algorithm works as following: Based on the region of interest, the maximum is searched. 
-        If the maximum is higher than the threshold set, then the frame of the value on the left side of 
-        this maximum lower than the threshold is used to create a heel strike event. On the other hand, 
+        The algorithm works as following: Based on the region of interest, the maximum is searched.
+        If the maximum is higher than the threshold set, then the frame of the value on the left side of
+        this maximum lower than the threshold is used to create a heel strike event. On the other hand,
         the value on the right side of the maximum lower than the threshold is used to create a toe-off event.
 
-        Note: The design of this class is not perfect as it cannot be used in a pipeline without 
+        Note: The design of this class is not perfect as it cannot be used in a pipeline without
         to update the part before to know some acquisition's information (first frame, sample frequency, subject's name).
         This class (or the pipeline mechanism) could be modified in a future version of BTK to make up this problem.
         """
@@ -11647,7 +11647,7 @@ class btkWrenchDirectionAngleFilter(_object):
      - Angle xOz: set in the Y component of the output ;
      - Angle xOy: set in the Z component of the output.
 
-    The output angles are expressed in degrees and the range is between 0 and 360 degrees. 
+    The output angles are expressed in degrees and the range is between 0 and 360 degrees.
     Then a shift from 360 to 0 is possible if the force turns around itself.
     """
 
@@ -11669,7 +11669,7 @@ class btkWrenchDirectionAngleFilter(_object):
          - Angle xOz: set in the Y component of the output ;
          - Angle xOy: set in the Z component of the output.
 
-        The output angles are expressed in degrees and the range is between 0 and 360 degrees. 
+        The output angles are expressed in degrees and the range is between 0 and 360 degrees.
         Then a shift from 360 to 0 is possible if the force turns around itself.
         """
         this = _btk.new_btkWrenchDirectionAngleFilter()

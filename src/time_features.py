@@ -10,13 +10,13 @@ import warnings
 config = load_config()
 
 # Set numpy error level to warning
-#np.seterr(all='warn')
-#warnings.filterwarnings('error')
+# np.seterr(all='warn')
+# warnings.filterwarnings('error')
 
 
 class DistanceFeatures(CopFeatures):
     """
-    Class that implements the time domain distance features computations derived from the COP positions
+    Class that implements the time domain distance features computations derived from the COP positions.
     """
 
     def __init__(self, cop_x, cop_y):
@@ -25,46 +25,46 @@ class DistanceFeatures(CopFeatures):
 
     @staticmethod
     def compute_mean_distance(array):
-        """ Helper function to compute the mean value of an array using the numpy mean implementation """
+        """Compute the mean value of an array using the numpy mean implementation."""
 
         return array.mean()
 
     def compute_rd_mean_distance(self):
-        """ Compute the average distance from the mean COP """
+        """Compute the average distance from the mean COP."""
 
         return self.compute_mean_distance(self.cop_rd)
 
     def compute_ml_mean_distance(self):
-        """ Compute the average ML distance from the mean COP """
+        """Compute the average ML distance from the mean COP."""
 
         return self.compute_mean_distance(np.absolute(self.cop_x))
 
     def compute_ap_mean_distance(self):
-        """ Compute the average AP distance from the mean COP """
+        """Compute the average AP distance from the mean COP."""
 
         return self.compute_mean_distance(np.absolute(self.cop_y))
 
     @staticmethod
     def compute_rms_distance(array):
         """
-        Helper function to compute the root mean square value of an array using the numpy mean, root and square  implementations.
+        Compute the root mean square value of an array using the numpy mean, root and square  implementations.
         """
 
         rms_distance = sqrt(mean(square(array)))
         return rms_distance
 
     def compute_rd_rms_distance(self):
-        """ Compute the root mean square distance from the mean COP """
+        """Compute the root mean square distance from the mean COP."""
 
         return self.compute_rms_distance(self.cop_rd)
 
     def compute_ml_rms_distance(self):
-        """ Compute the root mean square ML distance from the mean COP """
+        """Compute the root mean square ML distance from the mean COP."""
 
         return self.compute_rms_distance(self.cop_x)
 
     def compute_ap_rms_distance(self):
-        """ Compute the root mean square AP distance from the mean COP """
+        """Compute the root mean square AP distance from the mean COP."""
 
         return self.compute_rms_distance(self.cop_y)
 
@@ -77,12 +77,12 @@ class DistanceFeatures(CopFeatures):
         return path_length
 
     def compute_rd_path_length(self):
-        """ Compute the total length of the COP path """
+        """Compute the total length of the COP path."""
 
         return self.compute_path_length(self.cop_x, self.cop_y)
 
     def compute_ml_path_length(self):
-        """ Compute the total length of the COP path in the ML direction """
+        """Compute the total length of the COP path in the ML direction."""
 
         distances = np.absolute(diff(self.cop_x, axis=0))
         path_length = distances.sum()
@@ -90,7 +90,7 @@ class DistanceFeatures(CopFeatures):
         return path_length
 
     def compute_ap_path_length(self):
-        """ Compute the total length of the COP path in the AP direction """
+        """Compute the total length of the COP path in the AP direction."""
 
         distances = np.absolute(np.diff(self.cop_y, axis=0))
         path_length = distances.sum()
@@ -98,19 +98,19 @@ class DistanceFeatures(CopFeatures):
         return path_length
 
     def compute_rd_mean_velocity(self):
-        """ Compute the average velocity of the COP """
+        """Compute the average velocity of the COP."""
 
         mean_velocity = (self.compute_rd_path_length()) / (self.cop_rd.size / self.acquisition_frequency)
         return mean_velocity
 
     def compute_ml_mean_velocity(self):
-        """ Compute the average velocity of the COP in the ML direction """
+        """Compute the average velocity of the COP in the ML direction."""
 
         mean_velocity = (self.compute_ml_path_length()) / (self.cop_x.size / self.acquisition_frequency)
         return mean_velocity
 
     def compute_ap_mean_velocity(self):
-        """ Compute the average velocity of the COP in the AP direction """
+        """Compute the average velocity of the COP in the AP direction."""
 
         mean_velocity = (self.compute_ap_path_length()) / (self.cop_y.size / self.acquisition_frequency)
         return mean_velocity
@@ -118,31 +118,30 @@ class DistanceFeatures(CopFeatures):
     @staticmethod
     def compute_range(min_value, max_value):
         """
-        Helper function to compute the range
+        Compute the range.
 
         The range is the maximum distance between any two points on the COP path.
-
         """
 
         return np.absolute(min_value - max_value)
 
     def compute_rd_range(self):
-        """ Compute the range of the resultant distance time series """
+        """Compute the range of the resultant distance time series."""
 
         return self.compute_range(self.cop_rd.min(), self.cop_rd.max())
 
     def compute_ml_range(self):
-        """ Compute the range in the ML direction """
+        """Compute the range in the ML direction."""
 
         return self.compute_range(self.cop_x.min(), self.cop_x.max())
 
     def compute_ap_range(self):
-        """ Compute the range in the AP direction """
+        """Compute the range in the AP direction."""
 
         return self.compute_range(self.cop_y.min(), self.cop_y.max())
 
     def compute_distance_features(self):
-        """ Function to compute all the distance features and store them in a dictionary """
+        """Compute all the distance features and store them in a dictionary."""
 
         features = {}
         features["Rd mean distance"] = self.compute_rd_mean_distance()
@@ -164,7 +163,7 @@ class DistanceFeatures(CopFeatures):
         return features
 
     def summary(self):
-        """ Function to print out a summary of the distance features """
+        """Print out a summary of the distance features to standard output."""
 
         for key, value in self.distance_features.items():
             print("{}: {}".format(key, value))
@@ -172,7 +171,7 @@ class DistanceFeatures(CopFeatures):
 
 class AreaFeatures(DistanceFeatures):
     """
-    Class that implements the time domain area features computations derived from the COP positions
+    Class that implements the time domain area features computations derived from the COP positions.
     """
 
     # Constants
@@ -184,26 +183,26 @@ class AreaFeatures(DistanceFeatures):
         self.area_features = self.compute_area_features()
 
     def compute_std_rd(self):
-        """ Compute the standard deviation of the resultant distance time series """
+        """Compute the standard deviation of the resultant distance time series."""
 
         std_rd = sqrt(square(self.distance_features["Rd rms distance"]) - square(self.distance_features["Rd mean distance"]))
         return std_rd
 
     def compute_std_ml(self):
-        """ Compute the standard deviation of the ML time series """
+        """Compute the standard deviation of the ML time series."""
 
         std_ml = sqrt(square(self.distance_features["ml rms distance"]) - square(self.distance_features["ml mean distance"]))
         return std_ml
 
     def compute_std_ap(self):
-        """ Compute the standard deviation of the AP time series  """
+        """Compute the standard deviation of the AP time series."""
 
         std_ap = sqrt(square(self.distance_features["ap rms distance"]) - square(self.distance_features["ap mean distance"]))
         return std_ap
 
     def compute_confidence_circle_area(self):
         """
-        Function to compute the 95% confidence circle area (AREA-CC)
+        Compute the 95% confidence circle area (AREA-CC).
 
         It is the area of a circle with a radius equal to the one-sided 95% confidence limit of the RD time series.
         """
@@ -215,7 +214,7 @@ class AreaFeatures(DistanceFeatures):
 
     def compute_confidence_elipse_area(self):
         """
-        Function to compute the 95% confidence elipse area (AREA-CE)
+        Compute the 95% confidence elipse area (AREA-CE).
 
         It is the area of the 95% bivariate confidence ellipse, which is expected to enclose approximately 95% of the points on the COP path.
         """
@@ -237,7 +236,7 @@ class AreaFeatures(DistanceFeatures):
             return "not defined"
 
     def compute_area_features(self):
-        """ Function to compute all the area features and store them in a dictionary """
+        """Compute all the area features and store them in a dictionary."""
 
         features = {}
         features["95% confidence circle area"] = self.compute_confidence_circle_area()
@@ -246,7 +245,7 @@ class AreaFeatures(DistanceFeatures):
         return features
 
     def summary(self):
-        """ Function to print out a summary of the area features """
+        """Print out a summary of the area features to standard output."""
 
         for key, value in self.area_features.items():
             print("{}: {}".format(key, value))
@@ -254,7 +253,7 @@ class AreaFeatures(DistanceFeatures):
 
 class HybridFeatures(AreaFeatures):
     """
-    Class that implements the time domain hybrid features computations derived from the COP positions
+    Class that implements the time domain hybrid features computations derived from the COP positions.
     """
 
     def __init__(self, cop_x, cop_y):
@@ -263,7 +262,7 @@ class HybridFeatures(AreaFeatures):
 
     def compute_sway_area(self):
         """
-        Function that computes the sway area
+        Compute the sway area.
 
         Sway area estimates the area enclosed by the COP path per unit of time.
         """
@@ -279,7 +278,7 @@ class HybridFeatures(AreaFeatures):
 
     def compute_mean_frequency(self):
         """
-        Function to compute the mean frequency
+        Compute the mean frequency.
 
         The mean frequency (MFREQ) is the rotational frequency,in revolutions per second or Hz, of the COP if it had traveled the total excursions around a circle with a radius of the mean distance.
         """
@@ -290,7 +289,7 @@ class HybridFeatures(AreaFeatures):
 
     def compute_mean_frequency_ml(self):
         """
-        Function to compute the mean frequency in the ML direction
+        Compute the mean frequency in the ML direction.
 
         The mean frequency-ML is the frequency, in Hz, of a sinusoidal oscillation with an average value of the mean distance-ML and a total path length of total excursions-ML.
         """
@@ -301,7 +300,7 @@ class HybridFeatures(AreaFeatures):
 
     def compute_mean_frequency_ap(self):
         """
-        Function to compute the mean frequency in the AP direction
+        Compute the mean frequency in the AP direction.
 
         The mean frequency-AP is the frequency, in Hz, of a sinusoidal oscillation with an average value of the mean distance-AP and a total path length of total excursions-AP.
         """
@@ -312,7 +311,7 @@ class HybridFeatures(AreaFeatures):
 
     def compute_fractal_dimension(self, d):
         """
-        Function to compute the fractal dimension (FD)
+        Compute the fractal dimension (FD).
 
         The fractal dimension (FD) is a unitless measure of the degree to which a curve fills the metric space which it encompasses.
         """
@@ -324,9 +323,9 @@ class HybridFeatures(AreaFeatures):
 
     def compute_fractal_dimension_cc(self):
         """
-        Function to compute the fractal dimension-CC
+        Compute the fractal dimension-CC.
 
-        Fractal dimension-CC is based on the 95% confidence circle.
+        The fractal dimension-CC is based on the 95% confidence circle.
         """
 
         std_rd = self.compute_std_rd()
@@ -336,9 +335,9 @@ class HybridFeatures(AreaFeatures):
 
     def compute_fractal_dimension_ce(self):
         """
-        Function to compute the fractal dimension-CE
+        Compute the fractal dimension-CE.
 
-        Fractal dimension-CE is based on the 95% confidence elipse.
+        The fractal dimension-CE is based on the 95% confidence elipse.
         """
 
         std_ml = self.compute_std_ml()
@@ -354,7 +353,7 @@ class HybridFeatures(AreaFeatures):
             return "not defined"
 
     def compute_hybrid_features(self):
-        """ Function to compute all the hybrid features and store them in a dictionary """
+        """Compute all the hybrid features and store them in a dictionary."""
 
         features = {}
         features["Sway area"] = self.compute_sway_area()
@@ -366,7 +365,7 @@ class HybridFeatures(AreaFeatures):
         return features
 
     def summary(self):
-        """ Function to print out a summary of the hybrid features """
+        """Print out a summary of the hybrid features to standard output."""
 
         for key, value in self.hybrid_features.items():
             print("{}: {}".format(key, value))
@@ -374,7 +373,7 @@ class HybridFeatures(AreaFeatures):
 
 class TimeFeatures(HybridFeatures):
     """
-    Class that merges all the time domain features
+    Class that merges all the time domain features.
     """
 
     def __init__(self, cop_x, cop_y):
@@ -382,12 +381,12 @@ class TimeFeatures(HybridFeatures):
         self.time_features = self.merge_time_features()
 
     def merge_time_features(self):
-        """ Function to merge all the time domain features together """
+        """Merge all the time domain features together."""
 
         return {**self.distance_features, **self.area_features, **self.hybrid_features}
 
     def summary(self):
-        """ Function to print out a summary of the time features """
+        """Print out a summary of the time features to standard output. """
 
         for key, value in self.time_features.items():
             print("{}: {}".format(key, value))

@@ -26,7 +26,7 @@ class DataPreprocessor(object):
 
     def apply_resampling(self, input_signal):
         """
-        Function to resample the input signal using polyphase resampling.
+        Resample the input signal using polyphase resampling.
 
         Scipy documentation: https://docs.scipy.org/doc/scipy-1.1.0/reference/generated/scipy.signal.resample_poly.html#scipy.signal.resample_poly
         """
@@ -35,7 +35,7 @@ class DataPreprocessor(object):
 
     def apply_filtering(self, input_signal, analog_frequency):
         """
-        Function to create and apply a low pass butterworth filter. The order and the cutoff frequencies of the filter can be specified through the configuration file.
+        Create and apply a low pass butterworth filter. The order and the cutoff frequencies of the filter can be specified through the configuration file.
 
         Scipy documentation: https://docs.scipy.org/doc/scipy-1.1.0/reference/generated/scipy.signal.butter.html#scipy.signal.butter
 
@@ -53,7 +53,7 @@ class DataPreprocessor(object):
 
     def apply_detrending(self, input_signal):
         """
-        Function to detrend the input signal by removing a linear trend or just the mean of the signal
+        Detrend the input signal by removing a linear trend or just the mean of the signal.
 
         Scipy documentation: https://docs.scipy.org/doc/scipy-1.1.0/reference/generated/scipy.signal.detrend.html#scipy.signal.detrend.
         """
@@ -61,6 +61,7 @@ class DataPreprocessor(object):
         return scipy.signal.detrend(input_signal, type=self.detrending_type)
 
     def cut_data(self, input_signal, threshold=None):
+        """Cut beginning of the input signal based on a given threshold."""
 
         if threshold:
             return input_signal[threshold:]
@@ -69,7 +70,7 @@ class DataPreprocessor(object):
 
     def preprocess(self, input_signal, analog_frequency, balance_board=False):
         """
-        Wrapper function that applies all the preprocessing steps at once
+        Pipeline all the preprocessing steps.
 
         The resampling is only applied to the wii balance board data in order to match the force plate acquisition frequency.
         """

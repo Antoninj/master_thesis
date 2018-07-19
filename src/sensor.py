@@ -5,11 +5,13 @@ from utils import load_config
 # Third-party modules imports
 import logging
 
+"""
 logging.basicConfig(
     filename="log/test.log",
     level=logging.DEBUG,
     format="%(asctime)s:%(levelname)s:%(message)s"
 )
+"""
 
 config = load_config()
 
@@ -28,13 +30,13 @@ class SensorDataReader(object):
         self.acquisition_reader = btk.btkAcquisitionFileReader()
 
     def set_reader_filename(self, filepath):
-        """ Function to change the current acquisition file used by the file reader """
+        """Change the current acquisition file used by the file reader."""
 
         self.acquisition_reader.SetFilename(filepath)
         self.acquisition_reader.Update()
 
     def get_raw_data(self, balance_board=False):
-        """ Function to extract and aggregate raw sensor data of interest """
+        """Extract and aggregate raw sensor data of interest."""
 
         acq = self.acquisition_reader.GetOutput()
         if balance_board:
@@ -58,7 +60,7 @@ class SensorDataReader(object):
         return dict(zip(labels, values))
 
     def get_frequency(self, point=False):
-        """ Function to extract analog/point frequencies """
+        """Extract analog/point frequencies."""
 
         acq = self.acquisition_reader.GetOutput()
         if point:

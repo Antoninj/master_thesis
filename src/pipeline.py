@@ -12,7 +12,7 @@ import logging
 
 class DataPipeline(object):
     """
-    Class that pipelines all the different data processing steps from acquisition file reading to feature extraction
+    Class that pipelines all the different data processing steps from acquisition file reading to feature extraction.
     """
 
     def __init__(self):
@@ -21,7 +21,7 @@ class DataPipeline(object):
 
     def compute_cop_positions(self, balance_board=False):
         """
-        Function to read the acquisition file raw data and compute the COP positions in the AP and ML directions
+        Read the acquisition file raw data and compute the COP positions in the AP and ML directions.
         """
 
         try:
@@ -43,7 +43,7 @@ class DataPipeline(object):
 
     def preprocess_cop_positions(self, cop_data, frequency, balance_board=False):
         """
-        Function to preprocess the COP positions in the AP and ML directions and store them as a dictionarry
+        Preprocess the COP positions in the AP and ML directions and store them as a dictionary.
         """
 
         labels = ["COP_x", "COP_y"]
@@ -53,7 +53,7 @@ class DataPipeline(object):
 
     def save_cop_positions(self, filepath, balance_board=False):
         """
-        Wrapper function that pipelines the COP computations and preprocessing steps and saves the results to a json file
+        Pipeline the COP computations and preprocessing steps and save the results to a json file.
         """
 
         self.data_reader.set_reader_filename(filepath)
@@ -74,14 +74,14 @@ class DataPipeline(object):
             print(err.args)
 
     def compute_time_features(self, cop_x, cop_y):
-        """ Function to retrieve the time domain features """
+        """Retrieve the time domain features."""
 
         time_features = TimeFeatures(cop_x, cop_y)
 
         return time_features.time_features
 
     def compute_frequency_features(self, cop_x, cop_y):
-        """ Function to retrieve the frequency domain features """
+        """Retrieve the frequency domain features."""
 
         frequency_features = FrequencyFeatures(cop_x, cop_y)
 
@@ -89,7 +89,7 @@ class DataPipeline(object):
 
     def save_features(self, filepath, balance_board=False):
         """
-        Wrapper function that pipelines the COP computations, preprocessing and feature extraction steps and saves the results to a json file
+        Pipeline the COP computations, preprocessing and feature extraction steps and save the results to a json file.
         """
 
         self.data_reader.set_reader_filename(filepath)

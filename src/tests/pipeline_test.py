@@ -1,6 +1,7 @@
-from pipeline import DataPipeline
-from utils import load_config
-import argparse
+# Third-party module imports
+from argparse import ArgumentParser
+
+from context import *
 
 if __name__ == "__main__":
 
@@ -14,7 +15,7 @@ if __name__ == "__main__":
     filepath_fp = config["test_files"]["fp_raw_data"]
 
     # Command line argument parser to choose between wbb or force plate data
-    parser = argparse.ArgumentParser(
+    parser = ArgumentParser(
         description="")
     parser.add_argument("-w", "--wbb", action='store_true', help="Process WBB data")
     args = parser.parse_args()

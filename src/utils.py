@@ -5,7 +5,7 @@ import os
 
 
 class NumpyEncoder(json.JSONEncoder):
-    """ Special json encoder for numpy types """
+    """Special json encoder for numpy types."""
 
     def default(self, obj):
         if isinstance(obj, (np.int_, np.intc, np.intp, np.int8,
@@ -21,20 +21,25 @@ class NumpyEncoder(json.JSONEncoder):
 
 
 def load_config(filename="config"):
-    """ Function to load a configuration file """
+    """Load a configuration file."""
 
-    with open("config/{}.json".format(filename)) as cfg:
+    path = os.path.abspath(os.path.dirname(__file__))
+    with open("{}/config/{}.json".format(path, filename)) as cfg:
         config = json.load(cfg)
     return config
 
 
 def save_as_json(data, filepath, name_extension):
+    """Save results data to json format."""
+
     filename = build_filename(filepath, name_extension)
     with open(filename, 'w') as outfile:
         json.dump(data, outfile, cls=NumpyEncoder, sort_keys=False, indent=4, ensure_ascii=False)
 
 
 def build_filename(filepath, name_extension):
+    """Build a custom destination filepath."""
+
     base_name = os.path.splitext(filepath)[0]
     filename = base_name.replace("BalanceBoard_Static", "results") + "_{}.json".format(name_extension)
     dir_name = os.path.dirname(filename)
@@ -44,11 +49,14 @@ def build_filename(filepath, name_extension):
 
 
 def check_folder(folder_name):
+    """Check if a folder exists, and if not, create it."""
     if not os.path.exists(folder_name):
         os.makedirs(folder_name)
 
 
 def get_path_to_all_files(folder_name):
+    """Recursively get all filepaths from a directory tree."""
+
     filepaths = []
     for dirname, dirnames, filenames in os.walk(folder_name):
         for filename in filenames:
@@ -56,3 +64,4 @@ def get_path_to_all_files(folder_name):
                 filepaths.append(os.path.join(dirname, filename))
 
     return filepaths
+

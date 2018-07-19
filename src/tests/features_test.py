@@ -1,8 +1,9 @@
-from time_features import TimeFeatures
-from frequency_features import FrequencyFeatures
-from utils import load_config
-import argparse
+# Third-party module imports
+import logging
+from argparse import ArgumentParser
 from matplotlib import pyplot as plt
+
+from context import *
 
 if __name__ == "__main__":
 
@@ -13,7 +14,7 @@ if __name__ == "__main__":
     wbb_cop_data = config["test_files"]["wbb_cop_data"]
 
     # Command line argument parser to choose between frequency or time domain features
-    parser = argparse.ArgumentParser(
+    parser = ArgumentParser(
         description="")
     parser.add_argument("-f", "--freq", action='store_true', help="Compute frequency features")
     parser.add_argument("-p", "--plot", action='store_true', help="Plot results")

@@ -25,6 +25,7 @@ def fill_zeros_with_last(arr):
 
 def compute_cop_wbb_x(raw_data):
     """Compute the x coordinate of the WBB center of pressure."""
+
     # Wbb width (in mm)
     lx = config["wbb_parameters"]["width"] * 10
 
@@ -49,7 +50,7 @@ def compute_cop_wbb_x(raw_data):
 
 
 def compute_cop_wbb_y(raw_data):
-    """ Function to compute the y coordinate of the WBB center of pressure """
+    """Compute the y coordinate of the WBB center of pressure."""
 
     # Wbb length (in mm)
     ly = config["wbb_parameters"]["length"] * 10
@@ -75,7 +76,7 @@ def compute_cop_wbb_y(raw_data):
 
 
 def compute_cop_fp_x(raw_data, debug=False):
-    """Function to compute the x coordinate of the force plate center of pressure."""
+    """Compute the x coordinate of the force plate center of pressure."""
 
     # Force plate heigth (in mm)
     dz = config["wbb_parameters"]["height"]
