@@ -4,7 +4,6 @@ from utils import load_config
 
 # Third-party modules imports
 import numpy as np
-from numpy import mean, sqrt, square, diff
 import warnings
 
 config = load_config()
@@ -47,10 +46,10 @@ class DistanceFeatures(CopFeatures):
     @staticmethod
     def compute_rms_distance(array):
         """
-        Compute the root mean square value of an array using the numpy mean, root and square  implementations.
+        Compute the root mean square value of an array using the numpy mean, root and square implementations.
         """
 
-        rms_distance = sqrt(mean(square(array)))
+        rms_distance = np.sqrt(np.mean(np.square(array)))
         return rms_distance
 
     def compute_rd_rms_distance(self):
@@ -70,8 +69,8 @@ class DistanceFeatures(CopFeatures):
 
     @staticmethod
     def compute_path_length(array1, array2):
-        distances_1 = diff(array1, axis=0)
-        distances_2 = diff(array2, axis=0)
+        distances_1 = np.diff(array1, axis=0)
+        distances_2 = np.diff(array2, axis=0)
         path_length = np.sqrt((distances_1 ** 2) + (distances_2**2)).sum()
 
         return path_length
@@ -84,7 +83,7 @@ class DistanceFeatures(CopFeatures):
     def compute_ml_path_length(self):
         """Compute the total length of the COP path in the ML direction."""
 
-        distances = np.absolute(diff(self.cop_x, axis=0))
+        distances = np.absolute(np.diff(self.cop_x, axis=0))
         path_length = distances.sum()
 
         return path_length
@@ -185,19 +184,19 @@ class AreaFeatures(DistanceFeatures):
     def compute_std_rd(self):
         """Compute the standard deviation of the resultant distance time series."""
 
-        std_rd = sqrt(square(self.distance_features["Rd rms distance"]) - square(self.distance_features["Rd mean distance"]))
+        std_rd = np.sqrt(np.square(self.distance_features["Rd rms distance"]) - np.square(self.distance_features["Rd mean distance"]))
         return std_rd
 
     def compute_std_ml(self):
         """Compute the standard deviation of the ML time series."""
 
-        std_ml = sqrt(square(self.distance_features["ml rms distance"]) - square(self.distance_features["ml mean distance"]))
+        std_ml = np.sqrt(np.square(self.distance_features["ml rms distance"]) - np.square(self.distance_features["ml mean distance"]))
         return std_ml
 
     def compute_std_ap(self):
         """Compute the standard deviation of the AP time series."""
 
-        std_ap = sqrt(square(self.distance_features["ap rms distance"]) - square(self.distance_features["ap mean distance"]))
+        std_ap = np.sqrt(np.square(self.distance_features["ap rms distance"]) - np.square(self.distance_features["ap mean distance"]))
         return std_ap
 
     def compute_confidence_circle_area(self):
@@ -208,7 +207,7 @@ class AreaFeatures(DistanceFeatures):
         """
 
         std_rd = self.compute_std_rd()
-        area_cc = np.pi * square(self.distance_features["Rd mean distance"] + self.z_05 * std_rd)
+        area_cc = np.pi * np.square(self.distance_features["Rd mean distance"] + self.z_05 * std_rd)
 
         return area_cc
 
@@ -227,8 +226,7 @@ class AreaFeatures(DistanceFeatures):
         #     4 * square(np.cov(self.cop_x, self.cop_y)[0][1]) - (square(std_ml) + square(std_ap)))
 
         try:
-            area_ce = np.pi * self.F_05 * sqrt(square(square(std_ml)) + square(square(std_ap)) + 6 * square(std_ml) *
-                                               square(std_ap) - 4 * square(np.cov(self.cop_x, self.cop_y)[0][1]) - (square(std_ml) + square(std_ap)))
+            area_ce = np.pi * self.F_05 * np.sqrt(np.square(np.square(std_ml)) + np.square(np.square(std_ap)) + 6 * np.square(std_ml) * np.square(std_ap) - 4 * np.square(np.cov(self.cop_x, self.cop_y)[0][1]) - (np.square(std_ml) + np.square(std_ap)))
 
             return area_ce
 
@@ -294,7 +292,7 @@ class HybridFeatures(AreaFeatures):
         The mean frequency-ML is the frequency, in Hz, of a sinusoidal oscillation with an average value of the mean distance-ML and a total path length of total excursions-ML.
         """
 
-        mean_frequency_ml = (self.distance_features["ml mean velocity"]) / (4 * sqrt(2) * self.distance_features["ml mean distance"])
+        mean_frequency_ml = (self.distance_features["ml mean velocity"]) / (4 * np.sqrt(2) * self.distance_features["ml mean distance"])
 
         return mean_frequency_ml
 
@@ -305,7 +303,7 @@ class HybridFeatures(AreaFeatures):
         The mean frequency-AP is the frequency, in Hz, of a sinusoidal oscillation with an average value of the mean distance-AP and a total path length of total excursions-AP.
         """
 
-        mean_frequency_ap = (self.distance_features["ap mean velocity"]) / (4 * sqrt(2) * self.distance_features["ap mean distance"])
+        mean_frequency_ap = (self.distance_features["ap mean velocity"]) / (4 * np.sqrt(2) * self.distance_features["ap mean distance"])
 
         return mean_frequency_ap
 
@@ -344,8 +342,7 @@ class HybridFeatures(AreaFeatures):
         std_ap = self.compute_std_ap()
 
         try:
-            d_fd_ce = sqrt(4 * self.F_05 * sqrt(square(square(std_ml)) + square(square(std_ap)) + 6 * square(std_ml) *
-                                                square(std_ap) - 4 * square(np.cov(self.cop_x, self.cop_y)[0][1]) - (square(std_ml) + square(std_ap))))
+            d_fd_ce = np.sqrt(4 * self.F_05 * np.sqrt(np.square(np.square(std_ml)) + np.square(np.square(std_ap)) + 6 * np.square(std_ml) * np.square(std_ap) - 4 * np.square(np.cov(self.cop_x, self.cop_y)[0][1]) - (np.square(std_ml) + np.square(std_ap))))
 
             return self.compute_fractal_dimension(d_fd_ce)
 
