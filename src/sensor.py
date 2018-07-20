@@ -1,9 +1,12 @@
+# Third-party modules imports
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../bin')))
+import logging
+
 # Built-in modules imports
 import btk
 from utils import load_config
-
-# Third-party modules imports
-import logging
 
 """
 logging.basicConfig(
