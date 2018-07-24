@@ -24,59 +24,91 @@ class FrequencyFeatures(CopFeatures):
         self.frequency_features = self.compute_frequency_features()
 
     def compute_power_spectral_density(self, array):
+        """Function to compute the power spectral density using the scipy implementation of the Welch method."
+
+        Scipy documentation: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.welch.html#scipy.signal.welch
+        """
+
         (f, psd) = welch(array, fs=self.fs, nperseg=self.nperseg)
 
         return (f, psd)
 
     def compute_rd_power_spectral_density(self):
+        """Function to compute the power spectral density of the resultant distance vector of the COP displacement."""
+
         (f, psd) = self.compute_power_spectral_density(self.cop_rd)
 
         return (f, psd)
 
     def compute_ml_power_spectral_density(self):
+        """Function to compute the power spectral density of  the COP displacement in the ML direction."""
+
         (f, psd) = self.compute_power_spectral_density(self.cop_x)
 
         return (f, psd)
 
     def compute_ap_power_spectral_density(self):
+        """Function to compute the power spectral density of  the COP displacement in the AP direction."""
+
         (f, psd) = self.compute_power_spectral_density(self.cop_y)
 
         return (f, psd)
 
     def compute_rd_power_spectrum_area(self):
+        """Function to compute the power spectrum cumulative area of the COP displacement.
+
+        The cumulative integrated area is computed using the composite trapezoidal rule.
+        Scipy documentation: https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.cumtrapz.html
+        """
+
         (f, psd) = self.rd_spectral_density
         area = cumtrapz(psd, f)
 
         return area
 
     def compute_ml_power_spectrum_area(self):
+        """Function to compute the power spectrum area of the COP displacement in the ML direction."""
+
         (f, psd) = self.ml_spectral_density
         area = cumtrapz(psd, f)
 
         return area
 
     def compute_ap_power_spectrum_area(self):
+        """Function to compute the power spectrum area of the COP displacement in the AP direction."""
+
         (f, psd) = self.ap_spectral_density
         area = cumtrapz(psd, f)
 
         return area
 
     def compute_rd_total_power(self):
+        """Function to compute the total power.
+
+        The total power (POWER) is the integrated area of the power spectrum.
+        """
+
         area = self.compute_rd_power_spectrum_area()
 
         return area[-1]
 
     def compute_ml_total_power(self):
+        """Function to compute the total power in the ML direction."""
+
         area = self.compute_ml_power_spectrum_area()
 
         return area[-1]
 
     def compute_ap_total_power(self):
+        """Function to compute the total power in the AP direction."""
+
         area = self.compute_ap_power_spectrum_area()
 
         return area[-1]
 
     def compute_rd_f_peak(self):
+        """Function to compute the peak frequency."""
+
         (f, psd) = self.rd_spectral_density
         p_max_index = psd.argmax()
         f_peak = f[p_max_index]
@@ -84,6 +116,8 @@ class FrequencyFeatures(CopFeatures):
         return f_peak
 
     def compute_ml_f_peak(self):
+        """Function to compute the peak frequency in the ML direction."""
+
         (f, psd) = self.ml_spectral_density
         p_max_index = psd.argmax()
         f_peak = f[p_max_index]
@@ -91,31 +125,45 @@ class FrequencyFeatures(CopFeatures):
         return f_peak
 
     def compute_ap_f_peak(self):
+        """Function to compute the peak frequency in the AP direction."""
+
         (f, psd) = self.ap_spectral_density
         p_max_index = psd.argmax()
         f_peak = f[p_max_index]
 
         return f_peak
 
-    def compute_rd_power_frequency(self, threshold):
+    def compute_rd_power_frequency(self, n):
+        """Function to compute the n% power frequency.
+
+        The n% power frequency is the frequency below which n% of the total power is found.
+        """
+
         power_spectrum_area = self.compute_rd_power_spectrum_area()
         (f, psd) = self.rd_spectral_density
+        threshold = (n / 100)
         f_power_index = np.where(power_spectrum_area >= (threshold * power_spectrum_area[-1]))
         f_power = f[f_power_index[0][0]]
 
         return f_power
 
-    def compute_ml_power_frequency(self, threshold):
+    def compute_ml_power_frequency(self, n):
+        """Function to compute the n% power frequency in the ML direction."""
+
         power_spectrum_area = self.compute_ml_power_spectrum_area()
         (f, psd) = self.ml_spectral_density
+        threshold = (n / 100)
         f_power_index = np.where(power_spectrum_area >= (threshold * power_spectrum_area[-1]))
         f_power = f[f_power_index[0][0]]
 
         return f_power
 
-    def compute_ap_power_frequency(self, threshold):
+    def compute_ap_power_frequency(self, n):
+        """Function to compute the n% power frequency in the AP direction."""
+
         power_spectrum_area = self.compute_ap_power_spectrum_area()
         (f, psd) = self.ap_spectral_density
+        threshold = (n / 100)
         f_power_index = np.where(power_spectrum_area >= (threshold * power_spectrum_area[-1]))
         f_power = f[f_power_index[0][0]]
 
