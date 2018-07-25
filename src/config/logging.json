@@ -39,15 +39,20 @@
     },
 
     "loggers": {
-        "module": {
+        "pipeline": {
             "level": "ERROR",
             "handlers": ["error_file_handler"],
             "propagate": "no"
+        },
+        "feature extraction": {
+            "level": "INFO",
+            "handlers": ["info_file_handler","console"],
+            "propagate": "no"
+        },
+        "tests": {
+            "level": "DEBUG",
+            "handlers": ["console"],
+            "propagate": "no"
         }
-    },
-
-    "root": {
-        "level": "INFO",
-        "handlers": ["console", "info_file_handler", "error_file_handler"]
     }
 }

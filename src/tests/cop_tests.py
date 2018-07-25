@@ -12,8 +12,8 @@ if __name__ == "__main__":
     config = load_config()
 
     # Setup logger
-    logger = logging.getLogger(__name__)
     setup_logging()
+    logger = logging.getLogger("tests")
 
     # WBB data test file
     filepath_wbb = config["test_files"]["wbb_raw_data"]
@@ -36,18 +36,21 @@ if __name__ == "__main__":
     # Create a data preprocessor reader object
     data_preprocessor = DataPreprocessor()
 
-    logger.info("This is a test")
+    logger.info("Testing Center Of Pressure (COP) computations module")
 
     if WBB:
+        logger.info("Processing Wii Balance Board data.")
+        logger.info("Test file: {}".format(filepath_wbb))
+
         raw_data = data_reader.get_raw_data(filepath=filepath_wbb, balance_board=True)
         analog_freq = data_reader.get_frequency(filepath=filepath_wbb)
 
-        #print(raw_data, analog_freq)
+        logger.debug("Raw data: {} \nAnalog Frequency: {}".format(raw_data, analog_freq))
 
         cop_wbb_x = compute_cop_wbb_x(raw_data)
         cop_wbb_y = compute_cop_wbb_y(raw_data)
 
-        print("WBB COP x: {} \nWBB COP y: {}".format(cop_wbb_x, cop_wbb_y))
+        logger.debug("WBB COP x: {} \n WBB COP y: {}".format(cop_wbb_x, cop_wbb_y))
 
         preprocessed_data = data_preprocessor.preprocess(cop_wbb_x, 1000, True)
 
@@ -58,15 +61,20 @@ if __name__ == "__main__":
             plt.show()
 
     else:
+        logger.info("Processing Force Plate data.")
+        logger.info("Test file: {}".format(filepath_fp))
+
         raw_data = data_reader.get_raw_data(filepath=filepath_fp)
         analog_freq = data_reader.get_frequency(filepath=filepath_fp)
 
-        #print(raw_data["Fz1"], analog_freq)
-        print(len(raw_data["Fz1"]))
+        logger.debug("Raw data: {} \nAnalog Frequency: {}".format(raw_data, analog_freq))
+
+        logger.debug("Fz1 size: {}".format(len(raw_data["Fz1"])))
+
         cop_fp_x = compute_cop_fp_x(raw_data)
         cop_fp_y = compute_cop_fp_y(raw_data)
 
-        print("FP COP x: {} \nFP COP y: {}".format(cop_fp_x, cop_fp_y))
+        logger.debug("FP COP x: {} \n FP COP y: {}".format(cop_fp_x, cop_fp_y))
 
         preprocessed_data = data_preprocessor.preprocess(cop_fp_x, analog_freq)
 

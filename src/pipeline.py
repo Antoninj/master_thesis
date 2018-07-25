@@ -4,13 +4,12 @@ from preprocess import DataPreprocessor
 from time_features import TimeFeatures
 from frequency_features import FrequencyFeatures
 from cop import *
-from utils import save_as_json, setup_logging
+from utils import save_as_json
 
 # Third-party module imports
 import logging
 
-logger = logging.getLogger(__name__)
-setup_logging()
+logger = logging.getLogger("pipeline")
 
 
 class DataPipeline(SensorDataReader, DataPreprocessor):

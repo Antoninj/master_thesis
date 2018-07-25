@@ -7,8 +7,8 @@ from argparse import ArgumentParser
 from tqdm import tqdm
 import logging
 
-logger = logging.getLogger(__name__)
 setup_logging()
+logger = logging.getLogger("feature extraction")
 
 
 def process_all_wbb_files(data_pipeline, files):
@@ -57,7 +57,12 @@ if __name__ == "__main__":
     # Get all the filepaths to the files that need to be processed
     filepaths = get_path_to_all_files(data_folder)
 
+    logger.info("Executing feature extraction script.")
+    logger.info("Processing data located in: {}".format(data_folder))
+
     if WBB:
         process_all_wbb_files(cop_data_pipeline, filepaths)
     else:
         process_all_fp_files(cop_data_pipeline, filepaths)
+
+    logger.info("Storing results in: {}".format(results_folder))
