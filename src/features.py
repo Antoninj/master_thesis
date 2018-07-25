@@ -8,7 +8,7 @@ import json
 config = load_config()
 
 
-class CopFeatures(object):
+class CopFeatures:
     """
     Base class for COP based features computations.
 

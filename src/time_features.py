@@ -375,6 +375,7 @@ class HybridFeatures(AreaFeatures):
         features["Mean frequency-ap"] = self.compute_mean_frequency_ap()
         features["Fractal dimension-CC"] = self.compute_fractal_dimension_cc()
         features["Fractal dimension-CE"] = self.compute_fractal_dimension_ce()
+
         return features
 
     def summary(self):

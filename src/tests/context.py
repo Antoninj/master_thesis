@@ -7,6 +7,6 @@ from preprocess import DataPreprocessor
 from cop import *
 from time_features import TimeFeatures
 from frequency_features import FrequencyFeatures
-from utils import load_config
+from utils import load_config, setup_logging
 from pipeline import DataPipeline
 

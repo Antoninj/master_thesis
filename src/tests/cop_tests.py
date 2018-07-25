@@ -5,10 +5,15 @@ from argparse import ArgumentParser
 
 from context import *
 
+
 if __name__ == "__main__":
 
     # Load configuration file
     config = load_config()
+
+    # Setup logger
+    logger = logging.getLogger(__name__)
+    setup_logging()
 
     # WBB data test file
     filepath_wbb = config["test_files"]["wbb_raw_data"]
@@ -31,11 +36,11 @@ if __name__ == "__main__":
     # Create a data preprocessor reader object
     data_preprocessor = DataPreprocessor()
 
+    logger.info("This is a test")
 
     if WBB:
-        data_reader.set_reader_filename(filepath_wbb)
-        raw_data = data_reader.get_raw_data(balance_board=True)
-        analog_freq = data_reader.get_frequency()
+        raw_data = data_reader.get_raw_data(filepath=filepath_wbb, balance_board=True)
+        analog_freq = data_reader.get_frequency(filepath=filepath_wbb)
 
         #print(raw_data, analog_freq)
 
@@ -53,9 +58,8 @@ if __name__ == "__main__":
             plt.show()
 
     else:
-        data_reader.set_reader_filename(filepath_fp)
-        raw_data = data_reader.get_raw_data()
-        analog_freq = data_reader.get_frequency()
+        raw_data = data_reader.get_raw_data(filepath=filepath_fp)
+        analog_freq = data_reader.get_frequency(filepath=filepath_fp)
 
         #print(raw_data["Fz1"], analog_freq)
         print(len(raw_data["Fz1"]))

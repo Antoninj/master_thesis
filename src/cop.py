@@ -5,14 +5,17 @@ from utils import load_config
 import numpy as np
 import pandas as pd
 import warnings
+import logging
 
-config = load_config()
 # Set numpy error level to warning
 np.seterr(all='warn')
 
 warnings.filterwarnings("ignore", message="numpy.dtype size changed")
 warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
 warnings.filterwarnings('error')
+
+logging.captureWarnings(True)
+config = load_config()
 
 
 def fill_zeros_with_last(arr):

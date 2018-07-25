@@ -4,28 +4,28 @@ from preprocess import DataPreprocessor
 from time_features import TimeFeatures
 from frequency_features import FrequencyFeatures
 from cop import *
-from utils import save_as_json
+from utils import save_as_json, setup_logging
 
 # Third-party module imports
 import logging
 
+logger = logging.getLogger(__name__)
+setup_logging()
 
-class DataPipeline(object):
+
+class DataPipeline(SensorDataReader, DataPreprocessor):
     """
     Class that pipelines all the different data processing steps from acquisition file reading to feature extraction.
     """
 
     def __init__(self):
-        self.data_reader = SensorDataReader()
-        self.data_preprocessor = DataPreprocessor()
+        super(DataPipeline, self).__init__()
 
-    def compute_cop_positions(self, balance_board=False):
-        """
-        Read the acquisition file raw data and compute the COP positions in the AP and ML directions.
-        """
+    def compute_cop_positions(self, file, balance_board=False):
+        """Read the acquisition file raw data and compute the COP positions in the AP and ML directions."""
 
         try:
-            raw_data = self.data_reader.get_raw_data(balance_board)
+            raw_data = self.get_raw_data(file, balance_board)
 
             if balance_board:
                 cop_x = compute_cop_wbb_x(raw_data)
@@ -42,25 +42,19 @@ class DataPipeline(object):
             raise
 
     def preprocess_cop_positions(self, cop_data, frequency, balance_board=False):
-        """
-        Preprocess the COP positions in the AP and ML directions and store them as a dictionary.
-        """
+        """Preprocess the COP positions in the AP and ML directions and store them as a dictionary."""
 
         labels = ["COP_x", "COP_y"]
-        preprocessed_data = [self.data_preprocessor.preprocess(data, frequency, balance_board) for data in cop_data]
+        preprocessed_data = [self.preprocess(data, frequency, balance_board) for data in cop_data]
 
         return dict(zip(labels, preprocessed_data))
 
     def save_cop_positions(self, filepath, balance_board=False):
-        """
-        Pipeline the COP computations and preprocessing steps and save the results to a json file.
-        """
-
-        self.data_reader.set_reader_filename(filepath)
+        """Pipeline the COP computations and preprocessing steps and save the results to a json file."""
 
         try:
             # Compute COP positions
-            cop_positions = self.compute_cop_positions(balance_board)
+            cop_positions = self.compute_cop_positions(filepath, balance_board)
 
             # Preprocess COP positions
             frequency = config["preprocessing_parameters"]["acquisition_frequency"]
@@ -70,33 +64,29 @@ class DataPipeline(object):
             save_as_json(preprocessed_cop_positions, filepath, "cop")
 
         except Exception as err:
-            print("Empty acquisition file: {}".format(filepath))
-            print(err.args)
+            logger.error(err, exc_info=True, stack_info=True)
 
     def compute_time_features(self, cop_x, cop_y):
         """Retrieve the time domain features."""
 
-        time_features = TimeFeatures(cop_x, cop_y)
+        time_domain_features = TimeFeatures(cop_x, cop_y)
 
-        return time_features.time_features
+        return time_domain_features.time_features
 
     def compute_frequency_features(self, cop_x, cop_y):
         """Retrieve the frequency domain features."""
 
-        frequency_features = FrequencyFeatures(cop_x, cop_y)
+        frequency_domain_features = FrequencyFeatures(cop_x, cop_y)
 
-        return frequency_features.frequency_features
+        return frequency_domain_features.frequency_features
 
     def save_features(self, filepath, balance_board=False):
         """
-        Pipeline the COP computations, preprocessing and feature extraction steps and save the results to a json file.
-        """
-
-        self.data_reader.set_reader_filename(filepath)
+        Pipeline the COP computations, preprocessing and feature extraction steps and save the results to a json file."""
 
         try:
             # Compute COP positions
-            cop_positions = self.compute_cop_positions(balance_board)
+            cop_positions = self.compute_cop_positions(filepath, balance_board)
 
             # Preprocess COP positions
             frequency = config["preprocessing_parameters"]["acquisition_frequency"]
@@ -112,5 +102,4 @@ class DataPipeline(object):
             save_as_json(merged_features, filepath, "features")
 
         except Exception as err:
-            print("Empty acquisition file: {}".format(filepath))
-            print(err.args)
+            logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)

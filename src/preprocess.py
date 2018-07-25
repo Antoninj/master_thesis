@@ -7,7 +7,7 @@ import logging
 import scipy.signal
 
 
-class DataPreprocessor(object):
+class DataPreprocessor:
     """
     Class that handles the preprocessing related tasks of the acquisition signal using the open source Scipy library.
 

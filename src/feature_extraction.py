@@ -1,27 +1,36 @@
 # Built-in modules imports
 from pipeline import DataPipeline
-from utils import load_config, get_path_to_all_files
+from utils import load_config, get_path_to_all_files, setup_logging
 
 # Third-party module imports
 from argparse import ArgumentParser
 from tqdm import tqdm
+import logging
+
+logger = logging.getLogger(__name__)
+setup_logging()
 
 
 def process_all_wbb_files(data_pipeline, files):
-    """Apply the frequency and time features extraction pipeline to all the wii balance data."""
+    """Apply the frequency and time features extraction pipeline to the wii balance board data."""
 
+    logger.info("Beginning of Wii Balance Board data processing")
     for file in tqdm(files):
         if "Vicon" not in file:
             cop_data_pipeline.save_features(file, balance_board=True)
 
+    logger.info("End of Wii Balance Board data processing")
+
 
 def process_all_fp_files(data_pipeline, files):
-    """Apply the frequency and time features extraction pipeline to all the force plate data."""
+    """Apply the frequency and time features extraction pipeline to the force plate data."""
 
+    logger.info("Beginning of Force Plate data processing")
     for file in tqdm(files):
         if "Vicon" in file:
-            #print(file)
             cop_data_pipeline.save_features(file)
+
+    logger.info("End of Force Plate data processing")
 
 
 if __name__ == "__main__":

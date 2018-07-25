@@ -2,6 +2,7 @@
 import json
 import numpy as np
 import os
+import logging.config
 
 
 class NumpyEncoder(json.JSONEncoder):
@@ -24,9 +25,13 @@ def load_config(filename="config"):
     """Load a configuration file."""
 
     path = os.path.abspath(os.path.dirname(__file__))
-    with open("{}/config/{}.json".format(path, filename)) as cfg:
-        config = json.load(cfg)
-    return config
+    config_path = "{}/config/{}.json".format(path, filename)
+    if os.path.exists(config_path):
+        with open(config_path) as file:
+            config = json.load(file)
+        return config
+    else:
+        return None
 
 
 def save_as_json(data, filepath, name_extension):
@@ -65,3 +70,12 @@ def get_path_to_all_files(folder_name):
 
     return filepaths
 
+
+def setup_logging(default_level=logging.INFO):
+    """Setup logging configuration."""
+
+    config = load_config(filename="logging")
+    if config is not None:
+        logging.config.dictConfig(config)
+    else:
+        logging.basicConfig(level=default_level)
