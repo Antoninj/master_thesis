@@ -240,7 +240,7 @@ class AreaFeatures(DistanceFeatures):
             return area_ce
 
         except Warning:
-            return "not defined"
+            return np.nan
 
     def compute_area_features(self):
         """Compute all the area features and store them in a dictionary."""
@@ -363,7 +363,7 @@ class HybridFeatures(AreaFeatures):
             return self.compute_fractal_dimension(d_fd_ce)
 
         except Warning:
-            return "not defined"
+            return np.nan
 
     def compute_hybrid_features(self):
         """Compute all the hybrid features and store them in a dictionary."""

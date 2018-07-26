@@ -53,6 +53,12 @@
             "level": "DEBUG",
             "handlers": ["console"],
             "propagate": "no"
+        },
+        "stats": {
+            "level": "INFO",
+            "handlers": ["info_file_handler","console"],
+            "propagate": "no"
         }
+
     }
 }

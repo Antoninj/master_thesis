@@ -46,7 +46,7 @@ def build_filename(filepath, name_extension):
     """Build a custom destination filepath."""
 
     base_name = os.path.splitext(filepath)[0]
-    filename = base_name.replace("BalanceBoard_Static", "results") + "_{}.json".format(name_extension)
+    filename = base_name.replace("BalanceBoard_Static", "results/feature_results") + "_{}.json".format(name_extension)
     dir_name = os.path.dirname(filename)
     check_folder(dir_name)
 
