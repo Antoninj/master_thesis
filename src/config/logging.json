@@ -58,6 +58,11 @@
             "level": "INFO",
             "handlers": ["info_file_handler","console"],
             "propagate": "no"
+        },
+        "utils": {
+            "level": "CRITICAL",
+            "handlers": ["console"],
+            "propagate": "no"
         }
 
     }

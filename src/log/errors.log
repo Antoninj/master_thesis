@@ -1,0 +1,456 @@
+2018-07-25 16:23:09,648 - pipeline - ERROR - : Acquisition::GetAnalog(string) 
+ Problem with file:/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet3/Session1/Vicon/10.c3d
+Traceback (most recent call last):
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 88, in save_features
+    cop_positions = self.compute_cop_positions(filepath, balance_board)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 27, in compute_cop_positions
+    raw_data = self.get_raw_data(file, balance_board)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/sensor.py", line 52, in get_raw_data
+    for label in labels]
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/sensor.py", line 52, in <listcomp>
+    for label in labels]
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/btk.py", line 5028, in GetAnalog
+    return _btk.btkAcquisition_GetAnalog(self, *args)
+RuntimeError: Acquisition::GetAnalog(string)
+Stack (most recent call last):
+  File "feature_extraction.py", line 66, in <module>
+    process_all_fp_files(cop_data_pipeline, filepaths)
+  File "feature_extraction.py", line 31, in process_all_fp_files
+    cop_data_pipeline.save_features(file)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 104, in save_features
+    logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
+2018-07-26 10:05:55,005 - pipeline - ERROR - : invalid value encountered in double_scalars 
+ Problem with file:/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet3/Session2/BalanceBoard/5.c3d
+Traceback (most recent call last):
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 95, in save_features
+    time_features = self.compute_time_features(preprocessed_cop_positions["COP_x"], preprocessed_cop_positions["COP_y"])
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 71, in compute_time_features
+    time_domain_features = TimeFeatures(cop_x, cop_y)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 394, in __init__
+    super(TimeFeatures, self).__init__(cop_x, cop_y)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 268, in __init__
+    self.hybrid_features = self.compute_hybrid_features()
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 373, in compute_hybrid_features
+    features["Mean frequency"] = self.compute_mean_frequency()
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 295, in compute_mean_frequency
+    2 * np.pi * self.distance_features["Rd mean distance"])
+RuntimeWarning: invalid value encountered in double_scalars
+Stack (most recent call last):
+  File "feature_extraction.py", line 64, in <module>
+    process_all_wbb_files(cop_data_pipeline, filepaths)
+  File "feature_extraction.py", line 20, in process_all_wbb_files
+    cop_data_pipeline.save_features(file, balance_board=True)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 104, in save_features
+    logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
+2018-07-26 10:06:26,793 - pipeline - ERROR - : underflow encountered in multiply 
+ Problem with file:/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet2/Session1/BalanceBoard/12.c3d
+Traceback (most recent call last):
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 92, in save_features
+    preprocessed_cop_positions = self.preprocess_cop_positions(cop_positions, frequency, balance_board)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 47, in preprocess_cop_positions
+    preprocessed_data = [self.preprocess(data, frequency, balance_board) for data in cop_data]
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 47, in <listcomp>
+    preprocessed_data = [self.preprocess(data, frequency, balance_board) for data in cop_data]
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/preprocess.py", line 82, in preprocess
+    resampled_signal, analog_frequency)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/preprocess.py", line 50, in apply_filtering
+    filtered_signal = scipy.signal.filtfilt(b, a, input_signal)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/scipy/signal/signaltools.py", line 3118, in filtfilt
+    (y, zf) = lfilter(b, a, axis_reverse(y, axis=axis), axis=axis, zi=zi * y0)
+RuntimeWarning: underflow encountered in multiply
+Stack (most recent call last):
+  File "feature_extraction.py", line 64, in <module>
+    process_all_wbb_files(cop_data_pipeline, filepaths)
+  File "feature_extraction.py", line 20, in process_all_wbb_files
+    cop_data_pipeline.save_features(file, balance_board=True)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 104, in save_features
+    logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
+2018-07-26 10:07:14,768 - pipeline - ERROR - : underflow encountered in multiply 
+ Problem with file:/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet15/Session1/BalanceBoard/7.c3d
+Traceback (most recent call last):
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 92, in save_features
+    preprocessed_cop_positions = self.preprocess_cop_positions(cop_positions, frequency, balance_board)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 47, in preprocess_cop_positions
+    preprocessed_data = [self.preprocess(data, frequency, balance_board) for data in cop_data]
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 47, in <listcomp>
+    preprocessed_data = [self.preprocess(data, frequency, balance_board) for data in cop_data]
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/preprocess.py", line 82, in preprocess
+    resampled_signal, analog_frequency)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/preprocess.py", line 50, in apply_filtering
+    filtered_signal = scipy.signal.filtfilt(b, a, input_signal)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/scipy/signal/signaltools.py", line 3118, in filtfilt
+    (y, zf) = lfilter(b, a, axis_reverse(y, axis=axis), axis=axis, zi=zi * y0)
+RuntimeWarning: underflow encountered in multiply
+Stack (most recent call last):
+  File "feature_extraction.py", line 64, in <module>
+    process_all_wbb_files(cop_data_pipeline, filepaths)
+  File "feature_extraction.py", line 20, in process_all_wbb_files
+    cop_data_pipeline.save_features(file, balance_board=True)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 104, in save_features
+    logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
+2018-07-26 10:07:54,173 - pipeline - ERROR - : underflow encountered in multiply 
+ Problem with file:/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet13/Session1/BalanceBoard/3.c3d
+Traceback (most recent call last):
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 92, in save_features
+    preprocessed_cop_positions = self.preprocess_cop_positions(cop_positions, frequency, balance_board)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 47, in preprocess_cop_positions
+    preprocessed_data = [self.preprocess(data, frequency, balance_board) for data in cop_data]
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 47, in <listcomp>
+    preprocessed_data = [self.preprocess(data, frequency, balance_board) for data in cop_data]
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/preprocess.py", line 82, in preprocess
+    resampled_signal, analog_frequency)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/preprocess.py", line 50, in apply_filtering
+    filtered_signal = scipy.signal.filtfilt(b, a, input_signal)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/scipy/signal/signaltools.py", line 3118, in filtfilt
+    (y, zf) = lfilter(b, a, axis_reverse(y, axis=axis), axis=axis, zi=zi * y0)
+RuntimeWarning: underflow encountered in multiply
+Stack (most recent call last):
+  File "feature_extraction.py", line 64, in <module>
+    process_all_wbb_files(cop_data_pipeline, filepaths)
+  File "feature_extraction.py", line 20, in process_all_wbb_files
+    cop_data_pipeline.save_features(file, balance_board=True)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 104, in save_features
+    logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
+2018-07-26 10:09:43,142 - pipeline - ERROR - : invalid value encountered in double_scalars 
+ Problem with file:/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet16/Session1/BalanceBoard/5.c3d
+Traceback (most recent call last):
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 95, in save_features
+    time_features = self.compute_time_features(preprocessed_cop_positions["COP_x"], preprocessed_cop_positions["COP_y"])
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 71, in compute_time_features
+    time_domain_features = TimeFeatures(cop_x, cop_y)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 394, in __init__
+    super(TimeFeatures, self).__init__(cop_x, cop_y)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 268, in __init__
+    self.hybrid_features = self.compute_hybrid_features()
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 373, in compute_hybrid_features
+    features["Mean frequency"] = self.compute_mean_frequency()
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 295, in compute_mean_frequency
+    2 * np.pi * self.distance_features["Rd mean distance"])
+RuntimeWarning: invalid value encountered in double_scalars
+Stack (most recent call last):
+  File "feature_extraction.py", line 64, in <module>
+    process_all_wbb_files(cop_data_pipeline, filepaths)
+  File "feature_extraction.py", line 20, in process_all_wbb_files
+    cop_data_pipeline.save_features(file, balance_board=True)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 104, in save_features
+    logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
+2018-07-26 10:10:19,294 - pipeline - ERROR - : invalid value encountered in double_scalars 
+ Problem with file:/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet18/Session2/BalanceBoard/9.c3d
+Traceback (most recent call last):
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 95, in save_features
+    time_features = self.compute_time_features(preprocessed_cop_positions["COP_x"], preprocessed_cop_positions["COP_y"])
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 71, in compute_time_features
+    time_domain_features = TimeFeatures(cop_x, cop_y)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 394, in __init__
+    super(TimeFeatures, self).__init__(cop_x, cop_y)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 268, in __init__
+    self.hybrid_features = self.compute_hybrid_features()
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 373, in compute_hybrid_features
+    features["Mean frequency"] = self.compute_mean_frequency()
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 295, in compute_mean_frequency
+    2 * np.pi * self.distance_features["Rd mean distance"])
+RuntimeWarning: invalid value encountered in double_scalars
+Stack (most recent call last):
+  File "feature_extraction.py", line 64, in <module>
+    process_all_wbb_files(cop_data_pipeline, filepaths)
+  File "feature_extraction.py", line 20, in process_all_wbb_files
+    cop_data_pipeline.save_features(file, balance_board=True)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 104, in save_features
+    logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
+2018-07-26 10:10:59,234 - pipeline - ERROR - : underflow encountered in multiply 
+ Problem with file:/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet19/Session1/BalanceBoard/6.c3d
+Traceback (most recent call last):
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 92, in save_features
+    preprocessed_cop_positions = self.preprocess_cop_positions(cop_positions, frequency, balance_board)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 47, in preprocess_cop_positions
+    preprocessed_data = [self.preprocess(data, frequency, balance_board) for data in cop_data]
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 47, in <listcomp>
+    preprocessed_data = [self.preprocess(data, frequency, balance_board) for data in cop_data]
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/preprocess.py", line 82, in preprocess
+    resampled_signal, analog_frequency)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/preprocess.py", line 50, in apply_filtering
+    filtered_signal = scipy.signal.filtfilt(b, a, input_signal)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/scipy/signal/signaltools.py", line 3118, in filtfilt
+    (y, zf) = lfilter(b, a, axis_reverse(y, axis=axis), axis=axis, zi=zi * y0)
+RuntimeWarning: underflow encountered in multiply
+Stack (most recent call last):
+  File "feature_extraction.py", line 64, in <module>
+    process_all_wbb_files(cop_data_pipeline, filepaths)
+  File "feature_extraction.py", line 20, in process_all_wbb_files
+    cop_data_pipeline.save_features(file, balance_board=True)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 104, in save_features
+    logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
+2018-07-26 10:11:13,176 - pipeline - ERROR - : invalid value encountered in double_scalars 
+ Problem with file:/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet10/Session2/BalanceBoard/10.c3d
+Traceback (most recent call last):
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 95, in save_features
+    time_features = self.compute_time_features(preprocessed_cop_positions["COP_x"], preprocessed_cop_positions["COP_y"])
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 71, in compute_time_features
+    time_domain_features = TimeFeatures(cop_x, cop_y)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 394, in __init__
+    super(TimeFeatures, self).__init__(cop_x, cop_y)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 268, in __init__
+    self.hybrid_features = self.compute_hybrid_features()
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 373, in compute_hybrid_features
+    features["Mean frequency"] = self.compute_mean_frequency()
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 295, in compute_mean_frequency
+    2 * np.pi * self.distance_features["Rd mean distance"])
+RuntimeWarning: invalid value encountered in double_scalars
+Stack (most recent call last):
+  File "feature_extraction.py", line 64, in <module>
+    process_all_wbb_files(cop_data_pipeline, filepaths)
+  File "feature_extraction.py", line 20, in process_all_wbb_files
+    cop_data_pipeline.save_features(file, balance_board=True)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 104, in save_features
+    logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
+2018-07-26 10:11:15,278 - pipeline - ERROR - : underflow encountered in multiply 
+ Problem with file:/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet10/Session2/BalanceBoard/9.c3d
+Traceback (most recent call last):
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 92, in save_features
+    preprocessed_cop_positions = self.preprocess_cop_positions(cop_positions, frequency, balance_board)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 47, in preprocess_cop_positions
+    preprocessed_data = [self.preprocess(data, frequency, balance_board) for data in cop_data]
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 47, in <listcomp>
+    preprocessed_data = [self.preprocess(data, frequency, balance_board) for data in cop_data]
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/preprocess.py", line 82, in preprocess
+    resampled_signal, analog_frequency)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/preprocess.py", line 50, in apply_filtering
+    filtered_signal = scipy.signal.filtfilt(b, a, input_signal)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/scipy/signal/signaltools.py", line 3118, in filtfilt
+    (y, zf) = lfilter(b, a, axis_reverse(y, axis=axis), axis=axis, zi=zi * y0)
+RuntimeWarning: underflow encountered in multiply
+Stack (most recent call last):
+  File "feature_extraction.py", line 64, in <module>
+    process_all_wbb_files(cop_data_pipeline, filepaths)
+  File "feature_extraction.py", line 20, in process_all_wbb_files
+    cop_data_pipeline.save_features(file, balance_board=True)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 104, in save_features
+    logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
+2018-07-26 12:05:30,035 - pipeline - ERROR - : Acquisition::GetAnalog(string) 
+ Problem with file:/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet3/Session1/Vicon/10.c3d
+Traceback (most recent call last):
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 88, in save_features
+    cop_positions = self.compute_cop_positions(filepath, balance_board)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 27, in compute_cop_positions
+    raw_data = self.get_raw_data(file, balance_board)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/sensor.py", line 52, in get_raw_data
+    for label in labels]
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/sensor.py", line 52, in <listcomp>
+    for label in labels]
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/btk.py", line 5028, in GetAnalog
+    return _btk.btkAcquisition_GetAnalog(self, *args)
+RuntimeError: Acquisition::GetAnalog(string)
+Stack (most recent call last):
+  File "feature_extraction.py", line 66, in <module>
+    process_all_fp_files(cop_data_pipeline, filepaths)
+  File "feature_extraction.py", line 31, in process_all_fp_files
+    cop_data_pipeline.save_features(file)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 104, in save_features
+    logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
+2018-07-26 12:11:19,972 - pipeline - ERROR - : invalid value encountered in double_scalars 
+ Problem with file:/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet3/Session2/BalanceBoard/5.c3d
+Traceback (most recent call last):
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 95, in save_features
+    time_features = self.compute_time_features(preprocessed_cop_positions["COP_x"], preprocessed_cop_positions["COP_y"])
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 71, in compute_time_features
+    time_domain_features = TimeFeatures(cop_x, cop_y)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 394, in __init__
+    super(TimeFeatures, self).__init__(cop_x, cop_y)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 268, in __init__
+    self.hybrid_features = self.compute_hybrid_features()
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 373, in compute_hybrid_features
+    features["Mean frequency"] = self.compute_mean_frequency()
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 295, in compute_mean_frequency
+    2 * np.pi * self.distance_features["Rd mean distance"])
+RuntimeWarning: invalid value encountered in double_scalars
+Stack (most recent call last):
+  File "feature_extraction.py", line 64, in <module>
+    process_all_wbb_files(cop_data_pipeline, filepaths)
+  File "feature_extraction.py", line 20, in process_all_wbb_files
+    cop_data_pipeline.save_features(file, balance_board=True)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 104, in save_features
+    logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
+2018-07-26 12:11:49,678 - pipeline - ERROR - : underflow encountered in multiply 
+ Problem with file:/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet2/Session1/BalanceBoard/12.c3d
+Traceback (most recent call last):
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 92, in save_features
+    preprocessed_cop_positions = self.preprocess_cop_positions(cop_positions, frequency, balance_board)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 47, in preprocess_cop_positions
+    preprocessed_data = [self.preprocess(data, frequency, balance_board) for data in cop_data]
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 47, in <listcomp>
+    preprocessed_data = [self.preprocess(data, frequency, balance_board) for data in cop_data]
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/preprocess.py", line 82, in preprocess
+    resampled_signal, analog_frequency)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/preprocess.py", line 50, in apply_filtering
+    filtered_signal = scipy.signal.filtfilt(b, a, input_signal)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/scipy/signal/signaltools.py", line 3118, in filtfilt
+    (y, zf) = lfilter(b, a, axis_reverse(y, axis=axis), axis=axis, zi=zi * y0)
+RuntimeWarning: underflow encountered in multiply
+Stack (most recent call last):
+  File "feature_extraction.py", line 64, in <module>
+    process_all_wbb_files(cop_data_pipeline, filepaths)
+  File "feature_extraction.py", line 20, in process_all_wbb_files
+    cop_data_pipeline.save_features(file, balance_board=True)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 104, in save_features
+    logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
+2018-07-26 12:12:34,981 - pipeline - ERROR - : underflow encountered in multiply 
+ Problem with file:/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet15/Session1/BalanceBoard/7.c3d
+Traceback (most recent call last):
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 92, in save_features
+    preprocessed_cop_positions = self.preprocess_cop_positions(cop_positions, frequency, balance_board)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 47, in preprocess_cop_positions
+    preprocessed_data = [self.preprocess(data, frequency, balance_board) for data in cop_data]
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 47, in <listcomp>
+    preprocessed_data = [self.preprocess(data, frequency, balance_board) for data in cop_data]
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/preprocess.py", line 82, in preprocess
+    resampled_signal, analog_frequency)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/preprocess.py", line 50, in apply_filtering
+    filtered_signal = scipy.signal.filtfilt(b, a, input_signal)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/scipy/signal/signaltools.py", line 3118, in filtfilt
+    (y, zf) = lfilter(b, a, axis_reverse(y, axis=axis), axis=axis, zi=zi * y0)
+RuntimeWarning: underflow encountered in multiply
+Stack (most recent call last):
+  File "feature_extraction.py", line 64, in <module>
+    process_all_wbb_files(cop_data_pipeline, filepaths)
+  File "feature_extraction.py", line 20, in process_all_wbb_files
+    cop_data_pipeline.save_features(file, balance_board=True)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 104, in save_features
+    logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
+2018-07-26 12:13:13,613 - pipeline - ERROR - : underflow encountered in multiply 
+ Problem with file:/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet13/Session1/BalanceBoard/3.c3d
+Traceback (most recent call last):
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 92, in save_features
+    preprocessed_cop_positions = self.preprocess_cop_positions(cop_positions, frequency, balance_board)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 47, in preprocess_cop_positions
+    preprocessed_data = [self.preprocess(data, frequency, balance_board) for data in cop_data]
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 47, in <listcomp>
+    preprocessed_data = [self.preprocess(data, frequency, balance_board) for data in cop_data]
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/preprocess.py", line 82, in preprocess
+    resampled_signal, analog_frequency)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/preprocess.py", line 50, in apply_filtering
+    filtered_signal = scipy.signal.filtfilt(b, a, input_signal)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/scipy/signal/signaltools.py", line 3118, in filtfilt
+    (y, zf) = lfilter(b, a, axis_reverse(y, axis=axis), axis=axis, zi=zi * y0)
+RuntimeWarning: underflow encountered in multiply
+Stack (most recent call last):
+  File "feature_extraction.py", line 64, in <module>
+    process_all_wbb_files(cop_data_pipeline, filepaths)
+  File "feature_extraction.py", line 20, in process_all_wbb_files
+    cop_data_pipeline.save_features(file, balance_board=True)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 104, in save_features
+    logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
+2018-07-26 12:14:55,741 - pipeline - ERROR - : invalid value encountered in double_scalars 
+ Problem with file:/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet16/Session1/BalanceBoard/5.c3d
+Traceback (most recent call last):
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 95, in save_features
+    time_features = self.compute_time_features(preprocessed_cop_positions["COP_x"], preprocessed_cop_positions["COP_y"])
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 71, in compute_time_features
+    time_domain_features = TimeFeatures(cop_x, cop_y)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 394, in __init__
+    super(TimeFeatures, self).__init__(cop_x, cop_y)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 268, in __init__
+    self.hybrid_features = self.compute_hybrid_features()
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 373, in compute_hybrid_features
+    features["Mean frequency"] = self.compute_mean_frequency()
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 295, in compute_mean_frequency
+    2 * np.pi * self.distance_features["Rd mean distance"])
+RuntimeWarning: invalid value encountered in double_scalars
+Stack (most recent call last):
+  File "feature_extraction.py", line 64, in <module>
+    process_all_wbb_files(cop_data_pipeline, filepaths)
+  File "feature_extraction.py", line 20, in process_all_wbb_files
+    cop_data_pipeline.save_features(file, balance_board=True)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 104, in save_features
+    logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
+2018-07-26 12:15:29,784 - pipeline - ERROR - : invalid value encountered in double_scalars 
+ Problem with file:/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet18/Session2/BalanceBoard/9.c3d
+Traceback (most recent call last):
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 95, in save_features
+    time_features = self.compute_time_features(preprocessed_cop_positions["COP_x"], preprocessed_cop_positions["COP_y"])
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 71, in compute_time_features
+    time_domain_features = TimeFeatures(cop_x, cop_y)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 394, in __init__
+    super(TimeFeatures, self).__init__(cop_x, cop_y)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 268, in __init__
+    self.hybrid_features = self.compute_hybrid_features()
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 373, in compute_hybrid_features
+    features["Mean frequency"] = self.compute_mean_frequency()
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 295, in compute_mean_frequency
+    2 * np.pi * self.distance_features["Rd mean distance"])
+RuntimeWarning: invalid value encountered in double_scalars
+Stack (most recent call last):
+  File "feature_extraction.py", line 64, in <module>
+    process_all_wbb_files(cop_data_pipeline, filepaths)
+  File "feature_extraction.py", line 20, in process_all_wbb_files
+    cop_data_pipeline.save_features(file, balance_board=True)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 104, in save_features
+    logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
+2018-07-26 12:16:08,801 - pipeline - ERROR - : underflow encountered in multiply 
+ Problem with file:/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet19/Session1/BalanceBoard/6.c3d
+Traceback (most recent call last):
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 92, in save_features
+    preprocessed_cop_positions = self.preprocess_cop_positions(cop_positions, frequency, balance_board)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 47, in preprocess_cop_positions
+    preprocessed_data = [self.preprocess(data, frequency, balance_board) for data in cop_data]
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 47, in <listcomp>
+    preprocessed_data = [self.preprocess(data, frequency, balance_board) for data in cop_data]
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/preprocess.py", line 82, in preprocess
+    resampled_signal, analog_frequency)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/preprocess.py", line 50, in apply_filtering
+    filtered_signal = scipy.signal.filtfilt(b, a, input_signal)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/scipy/signal/signaltools.py", line 3118, in filtfilt
+    (y, zf) = lfilter(b, a, axis_reverse(y, axis=axis), axis=axis, zi=zi * y0)
+RuntimeWarning: underflow encountered in multiply
+Stack (most recent call last):
+  File "feature_extraction.py", line 64, in <module>
+    process_all_wbb_files(cop_data_pipeline, filepaths)
+  File "feature_extraction.py", line 20, in process_all_wbb_files
+    cop_data_pipeline.save_features(file, balance_board=True)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 104, in save_features
+    logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
+2018-07-26 12:16:23,607 - pipeline - ERROR - : invalid value encountered in double_scalars 
+ Problem with file:/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet10/Session2/BalanceBoard/10.c3d
+Traceback (most recent call last):
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 95, in save_features
+    time_features = self.compute_time_features(preprocessed_cop_positions["COP_x"], preprocessed_cop_positions["COP_y"])
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 71, in compute_time_features
+    time_domain_features = TimeFeatures(cop_x, cop_y)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 394, in __init__
+    super(TimeFeatures, self).__init__(cop_x, cop_y)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 268, in __init__
+    self.hybrid_features = self.compute_hybrid_features()
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 373, in compute_hybrid_features
+    features["Mean frequency"] = self.compute_mean_frequency()
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 295, in compute_mean_frequency
+    2 * np.pi * self.distance_features["Rd mean distance"])
+RuntimeWarning: invalid value encountered in double_scalars
+Stack (most recent call last):
+  File "feature_extraction.py", line 64, in <module>
+    process_all_wbb_files(cop_data_pipeline, filepaths)
+  File "feature_extraction.py", line 20, in process_all_wbb_files
+    cop_data_pipeline.save_features(file, balance_board=True)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 104, in save_features
+    logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
+2018-07-26 12:16:25,770 - pipeline - ERROR - : underflow encountered in multiply 
+ Problem with file:/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet10/Session2/BalanceBoard/9.c3d
+Traceback (most recent call last):
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 92, in save_features
+    preprocessed_cop_positions = self.preprocess_cop_positions(cop_positions, frequency, balance_board)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 47, in preprocess_cop_positions
+    preprocessed_data = [self.preprocess(data, frequency, balance_board) for data in cop_data]
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 47, in <listcomp>
+    preprocessed_data = [self.preprocess(data, frequency, balance_board) for data in cop_data]
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/preprocess.py", line 82, in preprocess
+    resampled_signal, analog_frequency)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/preprocess.py", line 50, in apply_filtering
+    filtered_signal = scipy.signal.filtfilt(b, a, input_signal)
+  File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/scipy/signal/signaltools.py", line 3118, in filtfilt
+    (y, zf) = lfilter(b, a, axis_reverse(y, axis=axis), axis=axis, zi=zi * y0)
+RuntimeWarning: underflow encountered in multiply
+Stack (most recent call last):
+  File "feature_extraction.py", line 64, in <module>
+    process_all_wbb_files(cop_data_pipeline, filepaths)
+  File "feature_extraction.py", line 20, in process_all_wbb_files
+    cop_data_pipeline.save_features(file, balance_board=True)
+  File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 104, in save_features
+    logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)

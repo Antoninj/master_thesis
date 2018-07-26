@@ -63,7 +63,7 @@ class DataPipeline(SensorDataReader, DataPreprocessor):
             save_as_json(preprocessed_cop_positions, filepath, "cop")
 
         except Exception as err:
-            logger.error(err, exc_info=True, stack_info=True)
+            logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
 
     def compute_time_features(self, cop_x, cop_y):
         """Retrieve the time domain features."""

@@ -3,6 +3,9 @@ import json
 import numpy as np
 import os
 import logging.config
+import sys
+
+logger = logging.getLogger("utils")
 
 
 class NumpyEncoder(json.JSONEncoder):
@@ -26,12 +29,15 @@ def load_config(filename="config"):
 
     path = os.path.abspath(os.path.dirname(__file__))
     config_path = "{}/config/{}.json".format(path, filename)
-    if os.path.exists(config_path):
+
+    try:
         with open(config_path) as file:
             config = json.load(file)
         return config
-    else:
-        return None
+
+    except IOError as err:
+        logger.critical(err, exc_info=True)
+        sys.exit()
 
 
 def save_as_json(data, filepath, name_extension):
@@ -62,17 +68,21 @@ def check_folder(folder_name):
 def get_path_to_all_files(folder_name):
     """Recursively get all filepaths from a directory tree."""
 
-    filepaths = []
-    for dirname, dirnames, filenames in os.walk(folder_name):
-        for filename in filenames:
-            if '.DS_Store' not in filename:
-                filepaths.append(os.path.join(dirname, filename))
+    try:
+        filepaths = []
+        for dirname, dirnames, filenames in os.walk(folder_name):
+            for filename in filenames:
+                if '.DS_Store' not in filename:
+                    filepaths.append(os.path.join(dirname, filename))
+        return filepaths
 
-    return filepaths
+    except IOError as err:
+        logger.critical(err, exc_info=True)
+        sys.exit()
 
 
 def setup_logging(default_level=logging.INFO):
-    """Setup logging configuration."""
+    """Setup logging module configuration from configuration file."""
 
     config = load_config(filename="logging")
     if config is not None:

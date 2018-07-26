@@ -57,7 +57,7 @@ if __name__ == "__main__":
     # Load configuration files
     config = load_config()
 
-    # Feature computations results folder path
+    # Features computations results folder path
     feature_data_folder = config["feature_results_folder"]
 
     # Statistics results folder path
