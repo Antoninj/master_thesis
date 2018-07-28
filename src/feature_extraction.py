@@ -1,6 +1,6 @@
 # Built-in modules imports
 from pipeline import DataPipeline
-from utils import load_config, get_path_to_all_files, setup_logging,
+from utils import load_config, get_path_to_all_files, setup_logging, check_folder
 
 # Third-party module imports
 from argparse import ArgumentParser
@@ -16,7 +16,7 @@ def process_all_wbb_files(data_pipeline, files):
 
     logger.info("Beginning of Wii Balance Board data processing")
     for file in tqdm(files):
-            cop_data_pipeline.save_features(file, balance_board=True)
+        cop_data_pipeline.save_features(file, balance_board=True)
 
     logger.info("End of Wii Balance Board data processing")
 
@@ -26,7 +26,7 @@ def process_all_fp_files(data_pipeline, files):
 
     logger.info("Beginning of Force Plate data processing")
     for file in tqdm(files):
-            cop_data_pipeline.save_features(file)
+        cop_data_pipeline.save_features(file)
 
     logger.info("End of Force Plate data processing")
 
@@ -53,7 +53,7 @@ if __name__ == "__main__":
     # Create a data pipeline object
     cop_data_pipeline = DataPipeline()
 
-    # Get all the filepaths to the files that need to be processed
+    # Get all the paths to the files that need to be processed
     files = get_path_to_all_files(data_folder)
 
     # Separate WBB and force plate data

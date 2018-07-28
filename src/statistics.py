@@ -38,10 +38,7 @@ def generate_html_report(df, filename):
     df_profile.to_file(outputfile=filename)
 
 
-def generate_all_html_reports(wbb_files, fp_files):
-    wbb_dfs = construct_results_dfs(wbb_files)
-    fp_dfs = construct_results_dfs(fp_files)
-
+def generate_all_html_reports(wbb_dataframes, fp_dataframes):
     domain_names = ["time_domain", "freq_domain"]
     wbb_report_names = ["{}/wbb_{}_report.html".format(statistics_results_folder, name) for name in domain_names]
     fp_report_names = ["{}/fp_{}_report.html".format(statistics_results_folder, name) for name in domain_names]
@@ -71,18 +68,22 @@ if __name__ == "__main__":
     args = parser.parse_args()
     WBB = args.wbb
 
-    # Get all the filepaths to the files that need to be processed
+    # Get all the paths to the files that need to be processed
     files = get_path_to_all_files(feature_data_folder)
 
     # Separate WBB and force plate data
     wbb_files = [file for file in files if "Vicon" not in file and "cop" not in file]
     fp_files = [file for file in files if "Vicon" in file and "cop" not in file]
 
-    logger.info("Descriptive statistics generation script.")
+    # Create the pandas dataframes for further analysis
+    wbb_dfs = construct_results_dfs(wbb_files)
+    fp_dfs = construct_results_dfs(fp_files)
+
+    logger.info("Computing general descriptive statistics.")
     logger.info("Processing data located in: {}".format(feature_data_folder))
 
     logger.info("Generating HTML reports.")
 
-    generate_all_html_reports(wbb_files, fp_files)
+    generate_all_html_reports(wbb_dfs, fp_dfs)
 
     logger.info("Storing results in: {}".format(statistics_results_folder))

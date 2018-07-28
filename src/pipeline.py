@@ -20,12 +20,10 @@ class DataPipeline(SensorDataReader, DataPreprocessor):
     def __init__(self):
         super(DataPipeline, self).__init__()
 
-    def compute_cop_positions(self, file, balance_board=False):
+    def compute_cop_positions(self, raw_data, balance_board=False):
         """Read the acquisition file raw data and compute the COP positions in the AP and ML directions."""
 
         try:
-            raw_data = self.get_raw_data(file, balance_board)
-
             if balance_board:
                 cop_x = compute_cop_wbb_x(raw_data)
                 cop_y = compute_cop_wbb_y(raw_data)
@@ -48,23 +46,6 @@ class DataPipeline(SensorDataReader, DataPreprocessor):
 
         return dict(zip(labels, preprocessed_data))
 
-    def save_cop_positions(self, filepath, balance_board=False):
-        """Pipeline the COP computations and preprocessing steps and save the results to a json file."""
-
-        try:
-            # Compute COP positions
-            cop_positions = self.compute_cop_positions(filepath, balance_board)
-
-            # Preprocess COP positions
-            frequency = config["preprocessing_parameters"]["acquisition_frequency"]
-            preprocessed_cop_positions = self.preprocess_cop_positions(cop_positions, frequency, balance_board)
-
-            # Save cop data
-            save_as_json(preprocessed_cop_positions, filepath, "cop")
-
-        except Exception as err:
-            logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
-
     def compute_time_features(self, cop_x, cop_y):
         """Retrieve the time domain features."""
 
@@ -79,26 +60,34 @@ class DataPipeline(SensorDataReader, DataPreprocessor):
 
         return frequency_domain_features.frequency_features
 
-    def save_features(self, filepath, balance_board=False):
+    def save_features(self, filepath, balance_board=False, save_cop=False):
         """
         Pipeline the COP computations, preprocessing and feature extraction steps and save the results to a json file."""
 
         try:
+            # Get the data
+            raw_data = self.get_raw_data(filepath, balance_board)
+
             # Compute COP positions
-            cop_positions = self.compute_cop_positions(filepath, balance_board)
+            cop_positions = self.compute_cop_positions(raw_data, balance_board)
 
             # Preprocess COP positions
             frequency = config["preprocessing_parameters"]["acquisition_frequency"]
             preprocessed_cop_positions = self.preprocess_cop_positions(cop_positions, frequency, balance_board)
 
-            # Compute features
+            if save_cop:
+                # Save intermediate results of COP computations
+                save_as_json(preprocessed_cop_positions, filepath, "cop_results", "cop")
+                return
+
+            # Compute features based on COP positions
             time_features = self.compute_time_features(preprocessed_cop_positions["COP_x"], preprocessed_cop_positions["COP_y"])
             frequency_features = self.compute_frequency_features(preprocessed_cop_positions["COP_x"], preprocessed_cop_positions["COP_y"])
 
-            merged_features = {"time_features": time_features, "frequency_features": frequency_features}
+            merged_features = {"filepath": filepath, "time_features": time_features, "frequency_features": frequency_features}
 
-            # Save features
-            save_as_json(merged_features, filepath, "features")
+            # Save features in json format
+            save_as_json(merged_features, filepath, "feature_results", "features")
 
         except Exception as err:
             logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
