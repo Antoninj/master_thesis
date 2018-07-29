@@ -1,0 +1,44 @@
+.. _api:
+
+.. currentmodule:: src
+
+API
+===
+
+Raw acquisition data extraction
+-------------------------------
+.. automodule:: src.sensor
+  :members:
+
+
+Data preprocessing
+------------------
+
+.. automodule:: src.preprocess
+  :members:
+
+Center of Pressure computations
+-------------------------------
+
+.. automodule:: src.cop
+  :members:
+
+
+Feature computations
+--------------------
+
+.. automodule:: src.features
+  :members:
+
+.. automodule:: src.time_features
+  :members:
+
+.. automodule:: src.frequency_features
+   :members:
+
+
+Data pipelining
+---------------
+
+.. automodule:: src.pipeline
+  :members:

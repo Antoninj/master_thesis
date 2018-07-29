@@ -68,4 +68,4 @@ if __name__ == "__main__":
     else:
         process_all_fp_files(cop_data_pipeline, fp_files)
 
-    logger.info("Storing results in: {}".format(results_folder))
+    logger.info("Saving results to: {}".format(results_folder))

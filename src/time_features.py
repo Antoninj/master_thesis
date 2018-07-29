@@ -146,21 +146,21 @@ class DistanceFeatures(CopFeatures):
         """Compute all the distance features and store them in a dictionary."""
 
         features = {}
-        features["Rd mean distance"] = self.compute_rd_mean_distance()
-        features["ml mean distance"] = self.compute_ml_mean_distance()
-        features["ap mean distance"] = self.compute_ap_mean_distance()
-        features["Rd rms distance"] = self.compute_rd_rms_distance()
-        features["ml rms distance"] = self.compute_ml_rms_distance()
-        features["ap rms distance"] = self.compute_ap_rms_distance()
-        features["Rd path length"] = self.compute_rd_path_length()
-        features["ml path length"] = self.compute_ml_path_length()
-        features["ap path length"] = self.compute_ap_path_length()
-        features["Rd mean velocity"] = self.compute_rd_mean_velocity()
-        features["ml mean velocity"] = self.compute_ml_mean_velocity()
-        features["ap mean velocity"] = self.compute_ap_mean_velocity()
-        features["Rd range"] = self.compute_rd_range()
-        features["ml range"] = self.compute_ml_range()
-        features["ap range"] = self.compute_ap_range()
+        features["Mean distance"] = self.compute_rd_mean_distance()
+        features["Mean distance-ML"] = self.compute_ml_mean_distance()
+        features["Mean distance-AP"] = self.compute_ap_mean_distance()
+        features["Rms distance"] = self.compute_rd_rms_distance()
+        features["Rms distance-ML"] = self.compute_ml_rms_distance()
+        features["Rms distance-AP"] = self.compute_ap_rms_distance()
+        features["Path length"] = self.compute_rd_path_length()
+        features["Path length-ML"] = self.compute_ml_path_length()
+        features["Path length-AP"] = self.compute_ap_path_length()
+        features["Mean velocity"] = self.compute_rd_mean_velocity()
+        features["Mean velocity-ML"] = self.compute_ml_mean_velocity()
+        features["Mean velocity-AP"] = self.compute_ap_mean_velocity()
+        features["Range"] = self.compute_rd_range()
+        features["Range-ML"] = self.compute_ml_range()
+        features["Range-AP"] = self.compute_ap_range()
 
         return features
 
@@ -187,22 +187,22 @@ class AreaFeatures(DistanceFeatures):
     def compute_std_rd(self):
         """Compute the standard deviation of the resultant distance time series."""
 
-        std_rd = np.sqrt(np.square(self.distance_features["Rd rms distance"]) - np.square(
-            self.distance_features["Rd mean distance"]))
+        std_rd = np.sqrt(np.square(self.distance_features["Rms distance"]) - np.square(
+            self.distance_features["Rms distance"]))
         return std_rd
 
     def compute_std_ml(self):
         """Compute the standard deviation of the ML time series."""
 
-        std_ml = np.sqrt(np.square(self.distance_features["ml rms distance"]) - np.square(
-            self.distance_features["ml mean distance"]))
+        std_ml = np.sqrt(np.square(self.distance_features["Rms distance-ML"]) - np.square(
+            self.distance_features["Rms distance-ML"]))
         return std_ml
 
     def compute_std_ap(self):
         """Compute the standard deviation of the AP time series."""
 
-        std_ap = np.sqrt(np.square(self.distance_features["ap rms distance"]) - np.square(
-            self.distance_features["ap mean distance"]))
+        std_ap = np.sqrt(np.square(self.distance_features["Rms distance-AP"]) - np.square(
+            self.distance_features["Rms distance-AP"]))
         return std_ap
 
     def compute_confidence_circle_area(self):
@@ -215,7 +215,7 @@ class AreaFeatures(DistanceFeatures):
         std_rd = self.compute_std_rd()
         area_cc = np.pi * \
             np.square(
-                self.distance_features["Rd mean distance"] + self.z_05 * std_rd)
+                self.distance_features["Mean distance"] + self.z_05 * std_rd)
 
         return area_cc
 
@@ -291,8 +291,8 @@ class HybridFeatures(AreaFeatures):
         The mean frequency (MFREQ) is the rotational frequency,in revolutions per second or Hz, of the COP if it had traveled the total excursions around a circle with a radius of the mean distance.
         """
 
-        mean_frequency = (self.distance_features["Rd mean velocity"]) / (
-            2 * np.pi * self.distance_features["Rd mean distance"])
+        mean_frequency = (self.distance_features["Mean velocity"]) / (
+            2 * np.pi * self.distance_features["Mean distance"])
 
         return mean_frequency
 
@@ -303,8 +303,8 @@ class HybridFeatures(AreaFeatures):
         The mean frequency-ML is the frequency, in Hz, of a sinusoidal oscillation with an average value of the mean distance-ML and a total path length of total excursions-ML.
         """
 
-        mean_frequency_ml = (self.distance_features["ml mean velocity"]) / (
-            4 * np.sqrt(2) * self.distance_features["ml mean distance"])
+        mean_frequency_ml = (self.distance_features["Mean velocity-ML"]) / (
+            4 * np.sqrt(2) * self.distance_features["Mean distance-ML"])
 
         return mean_frequency_ml
 
@@ -315,8 +315,8 @@ class HybridFeatures(AreaFeatures):
         The mean frequency-AP is the frequency, in Hz, of a sinusoidal oscillation with an average value of the mean distance-AP and a total path length of total excursions-AP.
         """
 
-        mean_frequency_ap = (self.distance_features["ap mean velocity"]) / (
-            4 * np.sqrt(2) * self.distance_features["ap mean distance"])
+        mean_frequency_ap = (self.distance_features["Mean velocity-AP"]) / (
+            4 * np.sqrt(2) * self.distance_features["Mean distance-AP"])
 
         return mean_frequency_ap
 
@@ -329,7 +329,7 @@ class HybridFeatures(AreaFeatures):
 
         N = self.cop_rd.size
         FD = (np.log(N)) / \
-            (np.log((N * d) / (self.distance_features["Rd path length"])))
+            (np.log((N * d) / (self.distance_features["Path length"])))
 
         return FD
 
@@ -342,7 +342,7 @@ class HybridFeatures(AreaFeatures):
 
         std_rd = self.compute_std_rd()
         d_fd_cc = 2 * \
-            (self.distance_features["Rd mean distance"] + self.z_05 * std_rd)
+            (self.distance_features["Mean distance"] + self.z_05 * std_rd)
 
         return self.compute_fractal_dimension(d_fd_cc)
 
@@ -371,8 +371,8 @@ class HybridFeatures(AreaFeatures):
         features = {}
         features["Sway area"] = self.compute_sway_area()
         features["Mean frequency"] = self.compute_mean_frequency()
-        features["Mean frequency-ml"] = self.compute_mean_frequency_ml()
-        features["Mean frequency-ap"] = self.compute_mean_frequency_ap()
+        features["Mean frequency-ML"] = self.compute_mean_frequency_ml()
+        features["Mean frequency-AP"] = self.compute_mean_frequency_ap()
         features["Fractal dimension-CC"] = self.compute_fractal_dimension_cc()
         features["Fractal dimension-CE"] = self.compute_fractal_dimension_ce()
 

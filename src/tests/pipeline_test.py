@@ -34,9 +34,9 @@ if __name__ == "__main__":
         logger.info("Processing Wii Balance Board data.")
         logger.info("Test file: {}".format(filepath_wbb))
 
-        cop_data_pipeline.save_features(filepath_wbb, balance_board=True, save_cop=True)
+        cop_data_pipeline.save_features(filepath_wbb, balance_board=True)
     else:
         logger.info("Processing Force Plate data.")
         logger.info("Test file: {}".format(filepath_fp))
 
-        cop_data_pipeline.save_features(filepath_fp, save_cop=True)
+        cop_data_pipeline.save_features(filepath_fp)

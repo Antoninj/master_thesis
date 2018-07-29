@@ -1,4 +1,4 @@
-2018-07-28 23:18:06,953 - pipeline - ERROR - : Acquisition::GetAnalog(string) 
+2018-07-29 12:54:28,470 - pipeline - ERROR - : Acquisition::GetAnalog(string) 
  Problem with file:/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet3/Session1/Vicon/10.c3d
 Traceback (most recent call last):
   File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 69, in save_features
@@ -17,7 +17,7 @@ Stack (most recent call last):
     cop_data_pipeline.save_features(file)
   File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 93, in save_features
     logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
-2018-07-28 23:23:05,756 - pipeline - ERROR - : invalid value encountered in double_scalars 
+2018-07-29 12:58:45,152 - pipeline - ERROR - : invalid value encountered in double_scalars 
  Problem with file:/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet3/Session2/BalanceBoard/5.c3d
 Traceback (most recent call last):
   File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 84, in save_features
@@ -31,7 +31,7 @@ Traceback (most recent call last):
   File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 373, in compute_hybrid_features
     features["Mean frequency"] = self.compute_mean_frequency()
   File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 295, in compute_mean_frequency
-    2 * np.pi * self.distance_features["Rd mean distance"])
+    2 * np.pi * self.distance_features["Mean distance"])
 RuntimeWarning: invalid value encountered in double_scalars
 Stack (most recent call last):
   File "feature_extraction.py", line 67, in <module>
@@ -40,7 +40,7 @@ Stack (most recent call last):
     cop_data_pipeline.save_features(file, balance_board=True)
   File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 93, in save_features
     logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
-2018-07-28 23:23:38,409 - pipeline - ERROR - : underflow encountered in multiply 
+2018-07-29 12:59:19,405 - pipeline - ERROR - : underflow encountered in multiply 
  Problem with file:/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet2/Session1/BalanceBoard/12.c3d
 Traceback (most recent call last):
   File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 76, in save_features
@@ -63,7 +63,7 @@ Stack (most recent call last):
     cop_data_pipeline.save_features(file, balance_board=True)
   File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 93, in save_features
     logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
-2018-07-28 23:24:35,573 - pipeline - ERROR - : underflow encountered in multiply 
+2018-07-29 13:00:16,701 - pipeline - ERROR - : underflow encountered in multiply 
  Problem with file:/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet15/Session1/BalanceBoard/7.c3d
 Traceback (most recent call last):
   File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 76, in save_features
@@ -86,7 +86,7 @@ Stack (most recent call last):
     cop_data_pipeline.save_features(file, balance_board=True)
   File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 93, in save_features
     logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
-2018-07-28 23:25:26,691 - pipeline - ERROR - : underflow encountered in multiply 
+2018-07-29 13:01:01,892 - pipeline - ERROR - : underflow encountered in multiply 
  Problem with file:/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet13/Session1/BalanceBoard/3.c3d
 Traceback (most recent call last):
   File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 76, in save_features
@@ -109,7 +109,7 @@ Stack (most recent call last):
     cop_data_pipeline.save_features(file, balance_board=True)
   File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 93, in save_features
     logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
-2018-07-28 23:27:23,614 - pipeline - ERROR - : invalid value encountered in double_scalars 
+2018-07-29 13:02:54,253 - pipeline - ERROR - : invalid value encountered in double_scalars 
  Problem with file:/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet16/Session1/BalanceBoard/5.c3d
 Traceback (most recent call last):
   File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 84, in save_features
@@ -123,7 +123,7 @@ Traceback (most recent call last):
   File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 373, in compute_hybrid_features
     features["Mean frequency"] = self.compute_mean_frequency()
   File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 295, in compute_mean_frequency
-    2 * np.pi * self.distance_features["Rd mean distance"])
+    2 * np.pi * self.distance_features["Mean distance"])
 RuntimeWarning: invalid value encountered in double_scalars
 Stack (most recent call last):
   File "feature_extraction.py", line 67, in <module>
@@ -132,7 +132,7 @@ Stack (most recent call last):
     cop_data_pipeline.save_features(file, balance_board=True)
   File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 93, in save_features
     logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
-2018-07-28 23:28:02,173 - pipeline - ERROR - : invalid value encountered in double_scalars 
+2018-07-29 13:03:31,996 - pipeline - ERROR - : invalid value encountered in double_scalars 
  Problem with file:/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet18/Session2/BalanceBoard/9.c3d
 Traceback (most recent call last):
   File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 84, in save_features
@@ -146,7 +146,7 @@ Traceback (most recent call last):
   File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 373, in compute_hybrid_features
     features["Mean frequency"] = self.compute_mean_frequency()
   File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 295, in compute_mean_frequency
-    2 * np.pi * self.distance_features["Rd mean distance"])
+    2 * np.pi * self.distance_features["Mean distance"])
 RuntimeWarning: invalid value encountered in double_scalars
 Stack (most recent call last):
   File "feature_extraction.py", line 67, in <module>
@@ -155,7 +155,7 @@ Stack (most recent call last):
     cop_data_pipeline.save_features(file, balance_board=True)
   File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 93, in save_features
     logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
-2018-07-28 23:28:41,996 - pipeline - ERROR - : underflow encountered in multiply 
+2018-07-29 13:04:12,513 - pipeline - ERROR - : underflow encountered in multiply 
  Problem with file:/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet19/Session1/BalanceBoard/6.c3d
 Traceback (most recent call last):
   File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 76, in save_features
@@ -178,7 +178,7 @@ Stack (most recent call last):
     cop_data_pipeline.save_features(file, balance_board=True)
   File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 93, in save_features
     logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
-2018-07-28 23:28:57,271 - pipeline - ERROR - : invalid value encountered in double_scalars 
+2018-07-29 13:04:27,585 - pipeline - ERROR - : invalid value encountered in double_scalars 
  Problem with file:/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet10/Session2/BalanceBoard/10.c3d
 Traceback (most recent call last):
   File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 84, in save_features
@@ -192,7 +192,7 @@ Traceback (most recent call last):
   File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 373, in compute_hybrid_features
     features["Mean frequency"] = self.compute_mean_frequency()
   File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/time_features.py", line 295, in compute_mean_frequency
-    2 * np.pi * self.distance_features["Rd mean distance"])
+    2 * np.pi * self.distance_features["Mean distance"])
 RuntimeWarning: invalid value encountered in double_scalars
 Stack (most recent call last):
   File "feature_extraction.py", line 67, in <module>
@@ -201,7 +201,7 @@ Stack (most recent call last):
     cop_data_pipeline.save_features(file, balance_board=True)
   File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 93, in save_features
     logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
-2018-07-28 23:28:59,673 - pipeline - ERROR - : underflow encountered in multiply 
+2018-07-29 13:04:29,683 - pipeline - ERROR - : underflow encountered in multiply 
  Problem with file:/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet10/Session2/BalanceBoard/9.c3d
 Traceback (most recent call last):
   File "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/src/pipeline.py", line 76, in save_features

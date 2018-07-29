@@ -173,18 +173,18 @@ class FrequencyFeatures(CopFeatures):
         """Compute all the frequency features and store them in a dictionary."""
 
         features = {}
-        features["Rd Total power"] = self.compute_rd_total_power()
-        features["ML Total power"] = self.compute_ml_total_power()
-        features["AP Total power"] = self.compute_ap_total_power()
-        features["Rd peak frequency"] = self.compute_rd_f_peak()
-        features["ML peak frequency"] = self.compute_ml_f_peak()
-        features["AP peak frequency"] = self.compute_ap_f_peak()
-        features["50% Rd peak frequency"] = self.compute_rd_power_frequency(0.5)
-        features["50% ML peak frequency"] = self.compute_ml_power_frequency(0.5)
-        features["50% AP peak frequency"] = self.compute_ap_power_frequency(0.5)
-        features["80% Rd peak frequency"] = self.compute_rd_power_frequency(0.8)
-        features["80% ML peak frequency"] = self.compute_ml_power_frequency(0.8)
-        features["80% AP peak frequency"] = self.compute_ap_power_frequency(0.8)
+        features["Total power-RD"] = self.compute_rd_total_power()
+        features["Total power-ML"] = self.compute_ml_total_power()
+        features["Total power-AP"] = self.compute_ap_total_power()
+        features["Peak frequency-RD"] = self.compute_rd_f_peak()
+        features["Peak frequency-ML"] = self.compute_ml_f_peak()
+        features["Peak frequency-AP"] = self.compute_ap_f_peak()
+        features["50% power frequency-RD"] = self.compute_rd_power_frequency(0.5)
+        features["50% power frequency-ML"] = self.compute_ml_power_frequency(0.5)
+        features["50% power frequency-AP"] = self.compute_ap_power_frequency(0.5)
+        features["80% power frequency-RD"] = self.compute_rd_power_frequency(0.8)
+        features["80% power frequency-ML"] = self.compute_ml_power_frequency(0.8)
+        features["80% power frequency-AP"] = self.compute_ap_power_frequency(0.8)
 
         return features
 

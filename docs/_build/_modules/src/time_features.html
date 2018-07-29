@@ -1,0 +1,506 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>src.time_features &#8212; wbb_validation 0.1.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for src.time_features</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Built-in modules imports</span>
+<span class="kn">from</span> <span class="nn">.features</span> <span class="k">import</span> <span class="n">CopFeatures</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">load_config</span>
+
+<span class="c1"># Third-party modules imports</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">()</span>
+
+<span class="c1"># Set numpy error level to warning</span>
+<span class="c1"># np.seterr(all=&#39;warn&#39;)</span>
+<span class="c1"># warnings.filterwarnings(&#39;error&#39;)</span>
+
+
+<div class="viewcode-block" id="DistanceFeatures"><a class="viewcode-back" href="../../api.html#src.time_features.DistanceFeatures">[docs]</a><span class="k">class</span> <span class="nc">DistanceFeatures</span><span class="p">(</span><span class="n">CopFeatures</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class that implements the time domain distance features computations derived from the COP positions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cop_x</span><span class="p">,</span> <span class="n">cop_y</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DistanceFeatures</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cop_x</span><span class="p">,</span> <span class="n">cop_y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distance_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_distance_features</span><span class="p">()</span>
+
+<div class="viewcode-block" id="DistanceFeatures.compute_mean_distance"><a class="viewcode-back" href="../../api.html#src.time_features.DistanceFeatures.compute_mean_distance">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">compute_mean_distance</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the mean value of an array using the numpy mean implementation.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">array</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DistanceFeatures.compute_rd_mean_distance"><a class="viewcode-back" href="../../api.html#src.time_features.DistanceFeatures.compute_rd_mean_distance">[docs]</a>    <span class="k">def</span> <span class="nf">compute_rd_mean_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the average distance from the mean COP.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_mean_distance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cop_rd</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DistanceFeatures.compute_ml_mean_distance"><a class="viewcode-back" href="../../api.html#src.time_features.DistanceFeatures.compute_ml_mean_distance">[docs]</a>    <span class="k">def</span> <span class="nf">compute_ml_mean_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the average ML distance from the mean COP.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_mean_distance</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cop_x</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="DistanceFeatures.compute_ap_mean_distance"><a class="viewcode-back" href="../../api.html#src.time_features.DistanceFeatures.compute_ap_mean_distance">[docs]</a>    <span class="k">def</span> <span class="nf">compute_ap_mean_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the average AP distance from the mean COP.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_mean_distance</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cop_y</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="DistanceFeatures.compute_rms_distance"><a class="viewcode-back" href="../../api.html#src.time_features.DistanceFeatures.compute_rms_distance">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">compute_rms_distance</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the root mean square value of an array using the numpy mean, root and square implementations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">rms_distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">array</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">rms_distance</span></div>
+
+<div class="viewcode-block" id="DistanceFeatures.compute_rd_rms_distance"><a class="viewcode-back" href="../../api.html#src.time_features.DistanceFeatures.compute_rd_rms_distance">[docs]</a>    <span class="k">def</span> <span class="nf">compute_rd_rms_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the root mean square distance from the mean COP.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_rms_distance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cop_rd</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DistanceFeatures.compute_ml_rms_distance"><a class="viewcode-back" href="../../api.html#src.time_features.DistanceFeatures.compute_ml_rms_distance">[docs]</a>    <span class="k">def</span> <span class="nf">compute_ml_rms_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the root mean square ML distance from the mean COP.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_rms_distance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cop_x</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DistanceFeatures.compute_ap_rms_distance"><a class="viewcode-back" href="../../api.html#src.time_features.DistanceFeatures.compute_ap_rms_distance">[docs]</a>    <span class="k">def</span> <span class="nf">compute_ap_rms_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the root mean square AP distance from the mean COP.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_rms_distance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cop_y</span><span class="p">)</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">compute_path_length</span><span class="p">(</span><span class="n">array1</span><span class="p">,</span> <span class="n">array2</span><span class="p">):</span>
+        <span class="n">distances_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">array1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">distances_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">array2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">path_length</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">distances_1</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">distances_2</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">path_length</span>
+
+<div class="viewcode-block" id="DistanceFeatures.compute_rd_path_length"><a class="viewcode-back" href="../../api.html#src.time_features.DistanceFeatures.compute_rd_path_length">[docs]</a>    <span class="k">def</span> <span class="nf">compute_rd_path_length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the total length of the COP path.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_path_length</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cop_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cop_y</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DistanceFeatures.compute_ml_path_length"><a class="viewcode-back" href="../../api.html#src.time_features.DistanceFeatures.compute_ml_path_length">[docs]</a>    <span class="k">def</span> <span class="nf">compute_ml_path_length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the total length of the COP path in the ML direction.&quot;&quot;&quot;</span>
+
+        <span class="n">distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cop_x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+        <span class="n">path_length</span> <span class="o">=</span> <span class="n">distances</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">path_length</span></div>
+
+<div class="viewcode-block" id="DistanceFeatures.compute_ap_path_length"><a class="viewcode-back" href="../../api.html#src.time_features.DistanceFeatures.compute_ap_path_length">[docs]</a>    <span class="k">def</span> <span class="nf">compute_ap_path_length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the total length of the COP path in the AP direction.&quot;&quot;&quot;</span>
+
+        <span class="n">distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cop_y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+        <span class="n">path_length</span> <span class="o">=</span> <span class="n">distances</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">path_length</span></div>
+
+<div class="viewcode-block" id="DistanceFeatures.compute_rd_mean_velocity"><a class="viewcode-back" href="../../api.html#src.time_features.DistanceFeatures.compute_rd_mean_velocity">[docs]</a>    <span class="k">def</span> <span class="nf">compute_rd_mean_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the average velocity of the COP.&quot;&quot;&quot;</span>
+
+        <span class="n">mean_velocity</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compute_rd_path_length</span><span class="p">())</span> <span class="o">/</span> \
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cop_rd</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_frequency</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mean_velocity</span></div>
+
+<div class="viewcode-block" id="DistanceFeatures.compute_ml_mean_velocity"><a class="viewcode-back" href="../../api.html#src.time_features.DistanceFeatures.compute_ml_mean_velocity">[docs]</a>    <span class="k">def</span> <span class="nf">compute_ml_mean_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the average velocity of the COP in the ML direction.&quot;&quot;&quot;</span>
+
+        <span class="n">mean_velocity</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compute_ml_path_length</span><span class="p">())</span> <span class="o">/</span> \
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cop_x</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_frequency</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mean_velocity</span></div>
+
+<div class="viewcode-block" id="DistanceFeatures.compute_ap_mean_velocity"><a class="viewcode-back" href="../../api.html#src.time_features.DistanceFeatures.compute_ap_mean_velocity">[docs]</a>    <span class="k">def</span> <span class="nf">compute_ap_mean_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the average velocity of the COP in the AP direction.&quot;&quot;&quot;</span>
+
+        <span class="n">mean_velocity</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compute_ap_path_length</span><span class="p">())</span> <span class="o">/</span> \
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cop_y</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_frequency</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mean_velocity</span></div>
+
+<div class="viewcode-block" id="DistanceFeatures.compute_range"><a class="viewcode-back" href="../../api.html#src.time_features.DistanceFeatures.compute_range">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">compute_range</span><span class="p">(</span><span class="n">min_value</span><span class="p">,</span> <span class="n">max_value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the range.</span>
+
+<span class="sd">        The range is the maximum distance between any two points on the COP path.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="n">min_value</span> <span class="o">-</span> <span class="n">max_value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DistanceFeatures.compute_rd_range"><a class="viewcode-back" href="../../api.html#src.time_features.DistanceFeatures.compute_rd_range">[docs]</a>    <span class="k">def</span> <span class="nf">compute_rd_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the range of the resultant distance time series.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cop_rd</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">cop_rd</span><span class="o">.</span><span class="n">max</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="DistanceFeatures.compute_ml_range"><a class="viewcode-back" href="../../api.html#src.time_features.DistanceFeatures.compute_ml_range">[docs]</a>    <span class="k">def</span> <span class="nf">compute_ml_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the range in the ML direction.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cop_x</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">cop_x</span><span class="o">.</span><span class="n">max</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="DistanceFeatures.compute_ap_range"><a class="viewcode-back" href="../../api.html#src.time_features.DistanceFeatures.compute_ap_range">[docs]</a>    <span class="k">def</span> <span class="nf">compute_ap_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the range in the AP direction.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cop_y</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">cop_y</span><span class="o">.</span><span class="n">max</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="DistanceFeatures.compute_distance_features"><a class="viewcode-back" href="../../api.html#src.time_features.DistanceFeatures.compute_distance_features">[docs]</a>    <span class="k">def</span> <span class="nf">compute_distance_features</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute all the distance features and store them in a dictionary.&quot;&quot;&quot;</span>
+
+        <span class="n">features</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">features</span><span class="p">[</span><span class="s2">&quot;Mean distance&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_rd_mean_distance</span><span class="p">()</span>
+        <span class="n">features</span><span class="p">[</span><span class="s2">&quot;Mean distance-ML&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_ml_mean_distance</span><span class="p">()</span>
+        <span class="n">features</span><span class="p">[</span><span class="s2">&quot;Mean distance-AP&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_ap_mean_distance</span><span class="p">()</span>
+        <span class="n">features</span><span class="p">[</span><span class="s2">&quot;Rms distance&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_rd_rms_distance</span><span class="p">()</span>
+        <span class="n">features</span><span class="p">[</span><span class="s2">&quot;Rms distance-ML&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_ml_rms_distance</span><span class="p">()</span>
+        <span class="n">features</span><span class="p">[</span><span class="s2">&quot;Rms distance-AP&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_ap_rms_distance</span><span class="p">()</span>
+        <span class="n">features</span><span class="p">[</span><span class="s2">&quot;Path length&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_rd_path_length</span><span class="p">()</span>
+        <span class="n">features</span><span class="p">[</span><span class="s2">&quot;Path length-ML&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_ml_path_length</span><span class="p">()</span>
+        <span class="n">features</span><span class="p">[</span><span class="s2">&quot;Path length-AP&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_ap_path_length</span><span class="p">()</span>
+        <span class="n">features</span><span class="p">[</span><span class="s2">&quot;Mean velocity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_rd_mean_velocity</span><span class="p">()</span>
+        <span class="n">features</span><span class="p">[</span><span class="s2">&quot;Mean velocity-ML&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_ml_mean_velocity</span><span class="p">()</span>
+        <span class="n">features</span><span class="p">[</span><span class="s2">&quot;Mean velocity-AP&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_ap_mean_velocity</span><span class="p">()</span>
+        <span class="n">features</span><span class="p">[</span><span class="s2">&quot;Range&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_rd_range</span><span class="p">()</span>
+        <span class="n">features</span><span class="p">[</span><span class="s2">&quot;Range-ML&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_ml_range</span><span class="p">()</span>
+        <span class="n">features</span><span class="p">[</span><span class="s2">&quot;Range-AP&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_ap_range</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">features</span></div>
+
+<div class="viewcode-block" id="DistanceFeatures.summary"><a class="viewcode-back" href="../../api.html#src.time_features.DistanceFeatures.summary">[docs]</a>    <span class="k">def</span> <span class="nf">summary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Print out a summary of the distance features to standard output.&quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance_features</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="AreaFeatures"><a class="viewcode-back" href="../../api.html#src.time_features.AreaFeatures">[docs]</a><span class="k">class</span> <span class="nc">AreaFeatures</span><span class="p">(</span><span class="n">DistanceFeatures</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class that implements the time domain area features computations derived from the COP positions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Constants</span>
+    <span class="n">z_05</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;time_features_parameters&quot;</span><span class="p">][</span><span class="s2">&quot;z_05&quot;</span><span class="p">]</span>
+    <span class="n">F_05</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;time_features_parameters&quot;</span><span class="p">][</span><span class="s2">&quot;F_05&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cop_x</span><span class="p">,</span> <span class="n">cop_y</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">AreaFeatures</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cop_x</span><span class="p">,</span> <span class="n">cop_y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">area_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_area_features</span><span class="p">()</span>
+
+<div class="viewcode-block" id="AreaFeatures.compute_std_rd"><a class="viewcode-back" href="../../api.html#src.time_features.AreaFeatures.compute_std_rd">[docs]</a>    <span class="k">def</span> <span class="nf">compute_std_rd</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the standard deviation of the resultant distance time series.&quot;&quot;&quot;</span>
+
+        <span class="n">std_rd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distance_features</span><span class="p">[</span><span class="s2">&quot;Rms distance&quot;</span><span class="p">])</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">distance_features</span><span class="p">[</span><span class="s2">&quot;Rms distance&quot;</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">std_rd</span></div>
+
+<div class="viewcode-block" id="AreaFeatures.compute_std_ml"><a class="viewcode-back" href="../../api.html#src.time_features.AreaFeatures.compute_std_ml">[docs]</a>    <span class="k">def</span> <span class="nf">compute_std_ml</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the standard deviation of the ML time series.&quot;&quot;&quot;</span>
+
+        <span class="n">std_ml</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distance_features</span><span class="p">[</span><span class="s2">&quot;Rms distance-ML&quot;</span><span class="p">])</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">distance_features</span><span class="p">[</span><span class="s2">&quot;Rms distance-ML&quot;</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">std_ml</span></div>
+
+<div class="viewcode-block" id="AreaFeatures.compute_std_ap"><a class="viewcode-back" href="../../api.html#src.time_features.AreaFeatures.compute_std_ap">[docs]</a>    <span class="k">def</span> <span class="nf">compute_std_ap</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the standard deviation of the AP time series.&quot;&quot;&quot;</span>
+
+        <span class="n">std_ap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distance_features</span><span class="p">[</span><span class="s2">&quot;Rms distance-AP&quot;</span><span class="p">])</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">distance_features</span><span class="p">[</span><span class="s2">&quot;Rms distance-AP&quot;</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">std_ap</span></div>
+
+<div class="viewcode-block" id="AreaFeatures.compute_confidence_circle_area"><a class="viewcode-back" href="../../api.html#src.time_features.AreaFeatures.compute_confidence_circle_area">[docs]</a>    <span class="k">def</span> <span class="nf">compute_confidence_circle_area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the 95% confidence circle area (AREA-CC).</span>
+
+<span class="sd">        It is the area of a circle with a radius equal to the one-sided 95% confidence limit of the RD time series.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">std_rd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_std_rd</span><span class="p">()</span>
+        <span class="n">area_cc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> \
+            <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">distance_features</span><span class="p">[</span><span class="s2">&quot;Mean distance&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">z_05</span> <span class="o">*</span> <span class="n">std_rd</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">area_cc</span></div>
+
+<div class="viewcode-block" id="AreaFeatures.compute_confidence_elipse_area"><a class="viewcode-back" href="../../api.html#src.time_features.AreaFeatures.compute_confidence_elipse_area">[docs]</a>    <span class="k">def</span> <span class="nf">compute_confidence_elipse_area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the 95% confidence elipse area (AREA-CE).</span>
+
+<span class="sd">        It is the area of the 95% bivariate confidence ellipse, which is expected to enclose approximately 95% of the points on the COP path.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">std_ml</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_std_ml</span><span class="p">()</span>
+        <span class="n">std_ap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_std_ap</span><span class="p">()</span>
+
+        <span class="c1"># For debuging purposes</span>
+        <span class="c1"># print(square(square(std_ml)) + square(square(std_ap)) + 6 * square(std_ml) * square(std_ap) -</span>
+        <span class="c1">#     4 * square(np.cov(self.cop_x, self.cop_y)[0][1]) - (square(std_ml) + square(std_ap)))</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">area_ce</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">F_05</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">std_ml</span><span class="p">))</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">std_ap</span><span class="p">))</span> <span class="o">+</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span>
+                <span class="n">std_ml</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">std_ap</span><span class="p">)</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cop_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cop_y</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">std_ml</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">std_ap</span><span class="p">)))</span>
+
+            <span class="k">return</span> <span class="n">area_ce</span>
+
+        <span class="k">except</span> <span class="ne">Warning</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span></div>
+
+<div class="viewcode-block" id="AreaFeatures.compute_area_features"><a class="viewcode-back" href="../../api.html#src.time_features.AreaFeatures.compute_area_features">[docs]</a>    <span class="k">def</span> <span class="nf">compute_area_features</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute all the area features and store them in a dictionary.&quot;&quot;&quot;</span>
+
+        <span class="n">features</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">features</span><span class="p">[</span><span class="s2">&quot;95</span><span class="si">% c</span><span class="s2">onfidence circle area&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_confidence_circle_area</span><span class="p">()</span>
+        <span class="n">features</span><span class="p">[</span><span class="s2">&quot;95</span><span class="si">% c</span><span class="s2">onfidence elipse area&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_confidence_elipse_area</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">features</span></div>
+
+<div class="viewcode-block" id="AreaFeatures.summary"><a class="viewcode-back" href="../../api.html#src.time_features.AreaFeatures.summary">[docs]</a>    <span class="k">def</span> <span class="nf">summary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Print out a summary of the area features to standard output.&quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_features</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="HybridFeatures"><a class="viewcode-back" href="../../api.html#src.time_features.HybridFeatures">[docs]</a><span class="k">class</span> <span class="nc">HybridFeatures</span><span class="p">(</span><span class="n">AreaFeatures</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class that implements the time domain hybrid features computations derived from the COP positions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cop_x</span><span class="p">,</span> <span class="n">cop_y</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">HybridFeatures</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cop_x</span><span class="p">,</span> <span class="n">cop_y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hybrid_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_hybrid_features</span><span class="p">()</span>
+
+<div class="viewcode-block" id="HybridFeatures.compute_sway_area"><a class="viewcode-back" href="../../api.html#src.time_features.HybridFeatures.compute_sway_area">[docs]</a>    <span class="k">def</span> <span class="nf">compute_sway_area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the sway area.</span>
+
+<span class="sd">        Sway area estimates the area enclosed by the COP path per unit of time.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">sway_values</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cop_rd</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_frequency</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cop_rd</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">sway_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cop_x</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">cop_y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">cop_x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">cop_y</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">T</span><span class="p">))</span>
+
+        <span class="n">sway_area</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sway_values</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">sway_area</span></div>
+
+<div class="viewcode-block" id="HybridFeatures.compute_mean_frequency"><a class="viewcode-back" href="../../api.html#src.time_features.HybridFeatures.compute_mean_frequency">[docs]</a>    <span class="k">def</span> <span class="nf">compute_mean_frequency</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the mean frequency.</span>
+
+<span class="sd">        The mean frequency (MFREQ) is the rotational frequency,in revolutions per second or Hz, of the COP if it had traveled the total excursions around a circle with a radius of the mean distance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">mean_frequency</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distance_features</span><span class="p">[</span><span class="s2">&quot;Mean velocity&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span>
+            <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance_features</span><span class="p">[</span><span class="s2">&quot;Mean distance&quot;</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">mean_frequency</span></div>
+
+<div class="viewcode-block" id="HybridFeatures.compute_mean_frequency_ml"><a class="viewcode-back" href="../../api.html#src.time_features.HybridFeatures.compute_mean_frequency_ml">[docs]</a>    <span class="k">def</span> <span class="nf">compute_mean_frequency_ml</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the mean frequency in the ML direction.</span>
+
+<span class="sd">        The mean frequency-ML is the frequency, in Hz, of a sinusoidal oscillation with an average value of the mean distance-ML and a total path length of total excursions-ML.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">mean_frequency_ml</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distance_features</span><span class="p">[</span><span class="s2">&quot;Mean velocity-ML&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span>
+            <span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance_features</span><span class="p">[</span><span class="s2">&quot;Mean distance-ML&quot;</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">mean_frequency_ml</span></div>
+
+<div class="viewcode-block" id="HybridFeatures.compute_mean_frequency_ap"><a class="viewcode-back" href="../../api.html#src.time_features.HybridFeatures.compute_mean_frequency_ap">[docs]</a>    <span class="k">def</span> <span class="nf">compute_mean_frequency_ap</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the mean frequency in the AP direction.</span>
+
+<span class="sd">        The mean frequency-AP is the frequency, in Hz, of a sinusoidal oscillation with an average value of the mean distance-AP and a total path length of total excursions-AP.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">mean_frequency_ap</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distance_features</span><span class="p">[</span><span class="s2">&quot;Mean velocity-AP&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span>
+            <span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance_features</span><span class="p">[</span><span class="s2">&quot;Mean distance-AP&quot;</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">mean_frequency_ap</span></div>
+
+<div class="viewcode-block" id="HybridFeatures.compute_fractal_dimension"><a class="viewcode-back" href="../../api.html#src.time_features.HybridFeatures.compute_fractal_dimension">[docs]</a>    <span class="k">def</span> <span class="nf">compute_fractal_dimension</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the fractal dimension (FD).</span>
+
+<span class="sd">        The fractal dimension (FD) is a unitless measure of the degree to which a curve fills the metric space which it encompasses.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">N</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cop_rd</span><span class="o">.</span><span class="n">size</span>
+        <span class="n">FD</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">N</span><span class="p">))</span> <span class="o">/</span> \
+            <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="n">N</span> <span class="o">*</span> <span class="n">d</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distance_features</span><span class="p">[</span><span class="s2">&quot;Path length&quot;</span><span class="p">])))</span>
+
+        <span class="k">return</span> <span class="n">FD</span></div>
+
+<div class="viewcode-block" id="HybridFeatures.compute_fractal_dimension_cc"><a class="viewcode-back" href="../../api.html#src.time_features.HybridFeatures.compute_fractal_dimension_cc">[docs]</a>    <span class="k">def</span> <span class="nf">compute_fractal_dimension_cc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the fractal dimension-CC.</span>
+
+<span class="sd">        The fractal dimension-CC is based on the 95% confidence circle.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">std_rd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_std_rd</span><span class="p">()</span>
+        <span class="n">d_fd_cc</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> \
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distance_features</span><span class="p">[</span><span class="s2">&quot;Mean distance&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">z_05</span> <span class="o">*</span> <span class="n">std_rd</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_fractal_dimension</span><span class="p">(</span><span class="n">d_fd_cc</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HybridFeatures.compute_fractal_dimension_ce"><a class="viewcode-back" href="../../api.html#src.time_features.HybridFeatures.compute_fractal_dimension_ce">[docs]</a>    <span class="k">def</span> <span class="nf">compute_fractal_dimension_ce</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the fractal dimension-CE.</span>
+
+<span class="sd">        The fractal dimension-CE is based on the 95% confidence elipse.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">std_ml</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_std_ml</span><span class="p">()</span>
+        <span class="n">std_ap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_std_ap</span><span class="p">()</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">d_fd_ce</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">F_05</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">std_ml</span><span class="p">))</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">std_ap</span><span class="p">))</span> <span class="o">+</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span>
+                <span class="n">std_ml</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">std_ap</span><span class="p">)</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cop_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cop_y</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">std_ml</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">std_ap</span><span class="p">))))</span>
+
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_fractal_dimension</span><span class="p">(</span><span class="n">d_fd_ce</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Warning</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span></div>
+
+<div class="viewcode-block" id="HybridFeatures.compute_hybrid_features"><a class="viewcode-back" href="../../api.html#src.time_features.HybridFeatures.compute_hybrid_features">[docs]</a>    <span class="k">def</span> <span class="nf">compute_hybrid_features</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute all the hybrid features and store them in a dictionary.&quot;&quot;&quot;</span>
+
+        <span class="n">features</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">features</span><span class="p">[</span><span class="s2">&quot;Sway area&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_sway_area</span><span class="p">()</span>
+        <span class="n">features</span><span class="p">[</span><span class="s2">&quot;Mean frequency&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_mean_frequency</span><span class="p">()</span>
+        <span class="n">features</span><span class="p">[</span><span class="s2">&quot;Mean frequency-ML&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_mean_frequency_ml</span><span class="p">()</span>
+        <span class="n">features</span><span class="p">[</span><span class="s2">&quot;Mean frequency-AP&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_mean_frequency_ap</span><span class="p">()</span>
+        <span class="n">features</span><span class="p">[</span><span class="s2">&quot;Fractal dimension-CC&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_fractal_dimension_cc</span><span class="p">()</span>
+        <span class="n">features</span><span class="p">[</span><span class="s2">&quot;Fractal dimension-CE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_fractal_dimension_ce</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">features</span></div>
+
+<div class="viewcode-block" id="HybridFeatures.summary"><a class="viewcode-back" href="../../api.html#src.time_features.HybridFeatures.summary">[docs]</a>    <span class="k">def</span> <span class="nf">summary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Print out a summary of the hybrid features to standard output.&quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hybrid_features</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="TimeFeatures"><a class="viewcode-back" href="../../api.html#src.time_features.TimeFeatures">[docs]</a><span class="k">class</span> <span class="nc">TimeFeatures</span><span class="p">(</span><span class="n">HybridFeatures</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class that merges all the time domain features.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cop_x</span><span class="p">,</span> <span class="n">cop_y</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TimeFeatures</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cop_x</span><span class="p">,</span> <span class="n">cop_y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge_time_features</span><span class="p">()</span>
+
+<div class="viewcode-block" id="TimeFeatures.merge_time_features"><a class="viewcode-back" href="../../api.html#src.time_features.TimeFeatures.merge_time_features">[docs]</a>    <span class="k">def</span> <span class="nf">merge_time_features</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Merge all the time domain features together.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">distance_features</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">area_features</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">hybrid_features</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="TimeFeatures.summary"><a class="viewcode-back" href="../../api.html#src.time_features.TimeFeatures.summary">[docs]</a>    <span class="k">def</span> <span class="nf">summary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Print out a summary of the time features to standard output. &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_features</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">wbb_validation</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../background.html">Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Antonin Jousson.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+    </div>
+
+    
+    <a href="https://github.com/Antoninj/" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>

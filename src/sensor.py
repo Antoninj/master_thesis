@@ -4,13 +4,13 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../bin')))
 
 # Built-in modules imports
-import btk
+from btk import btkAcquisitionFileReader
 from utils import load_config
 
 config = load_config()
 
 
-class SensorDataReader(btk.btkAcquisitionFileReader):
+class SensorDataReader(btkAcquisitionFileReader):
     """
     Class to collect and format the raw sensor data values from the WBB and force plate acquisition files which are stored in the c3d file format (cf https://www.c3d.org/HTML/default.htm).
 
@@ -24,7 +24,7 @@ class SensorDataReader(btk.btkAcquisitionFileReader):
     def __init__(self):
         super(SensorDataReader, self).__init__()
 
-    def _set_reader_filename(self, filepath):
+    def set_reader_filename(self, filepath):
         """Change the current acquisition file used by the file reader."""
 
         self.SetFilename(filepath)

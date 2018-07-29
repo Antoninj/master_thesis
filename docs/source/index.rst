@@ -6,15 +6,13 @@
 Welcome to wbb_validation's documentation!
 ==========================================
 
+Contents
+--------
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
-
-
-Indices and tables
-==================
+   background
+   api
 
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`

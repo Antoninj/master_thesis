@@ -1,10 +1,20 @@
-2018-07-28 23:17:51,187 - feature extraction - INFO - Executing feature extraction script.
-2018-07-28 23:17:51,187 - feature extraction - INFO - Processing data located in: /Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static
-2018-07-28 23:17:51,188 - feature extraction - INFO - Beginning of Force Plate data processing
-2018-07-28 23:20:36,471 - feature extraction - INFO - End of Force Plate data processing
-2018-07-28 23:20:36,471 - feature extraction - INFO - Storing results in: /Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/feature_results
-2018-07-28 23:22:44,357 - feature extraction - INFO - Executing feature extraction script.
-2018-07-28 23:22:44,359 - feature extraction - INFO - Processing data located in: /Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static
-2018-07-28 23:22:44,359 - feature extraction - INFO - Beginning of Wii Balance Board data processing
-2018-07-28 23:29:29,861 - feature extraction - INFO - End of Wii Balance Board data processing
-2018-07-28 23:29:29,862 - feature extraction - INFO - Storing results in: /Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/feature_results
+2018-07-29 12:54:13,333 - feature extraction - INFO - Executing feature extraction script.
+2018-07-29 12:54:13,334 - feature extraction - INFO - Processing data located in: /Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static
+2018-07-29 12:54:13,335 - feature extraction - INFO - Beginning of Force Plate data processing
+2018-07-29 12:57:05,933 - feature extraction - INFO - End of Force Plate data processing
+2018-07-29 12:57:05,934 - feature extraction - INFO - Saving results to: /Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/feature_results
+2018-07-29 12:58:21,641 - feature extraction - INFO - Executing feature extraction script.
+2018-07-29 12:58:21,643 - feature extraction - INFO - Processing data located in: /Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static
+2018-07-29 12:58:21,643 - feature extraction - INFO - Beginning of Wii Balance Board data processing
+2018-07-29 13:04:57,508 - feature extraction - INFO - End of Wii Balance Board data processing
+2018-07-29 13:04:57,508 - feature extraction - INFO - Saving results to: /Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/feature_results
+2018-07-29 15:04:17,714 - stats - INFO - Computing general descriptive statistics.
+2018-07-29 15:04:17,716 - stats - INFO - Processing data located in: /Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/feature_results
+2018-07-29 15:04:17,716 - stats - INFO - Generating HTML reports.
+2018-07-29 15:04:30,818 - stats - INFO - Generating correlation plots.
+2018-07-29 15:05:15,301 - stats - INFO - Processing data located in: /Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/feature_results
+2018-07-29 15:05:18,933 - stats - INFO - Computing general descriptive statistics.
+2018-07-29 15:05:18,933 - stats - INFO - Generating HTML reports.
+2018-07-29 15:05:31,933 - stats - INFO - Generating correlation plots.
+2018-07-29 15:05:42,159 - stats - INFO - Generating Bland and Altman agreement plots.
+2018-07-29 15:05:42,160 - stats - INFO - Saving results to: /Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/statistics
