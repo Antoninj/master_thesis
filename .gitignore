@@ -1,0 +1,22 @@
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Project scope
+results
+build
+btk-core-0.3.0_src
+__pycache__
+.git
+.pylintrc
+*.ipynb_checkpoints
+BalanceBoard_Static
+*.png
+misc.md
+*.pyc
+*.pdf
+*.log
