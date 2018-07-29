@@ -15,6 +15,8 @@ logger = logging.getLogger("stats")
 
 
 def construct_results_dfs(files):
+    """Aggregate all time and frequency feature computations results in dataframes."""
+
     time_frames = []
     frequency_frames = []
     for filepath in files:
@@ -34,13 +36,18 @@ def construct_results_dfs(files):
     return [df1, df2]
 
 
-def generate_html_report(df, filename):
+def generate_profile_report(df, filename):
+    """Create a HTML profile report of a dataframe using general descriptive statistics.
+
+    The profile report is generated using the pandas profiling (https://github.com/pandas-profiling) library."""
 
     df_profile = pandas_profiling.ProfileReport(df, bins=50)
     df_profile.to_file(outputfile=filename)
 
 
-def generate_all_html_reports(wbb_dataframes, fp_dataframes):
+def generate_all_profile_reports(wbb_dataframes, fp_dataframes):
+    """Create all the profile reports."""
+
     domain_names = ["time_domain_features", "frequency_domain_features"]
     wbb_report_names = ["{}/wbb_{}_report.html".format(statistics_results_folder, name) for name in domain_names]
     fp_report_names = ["{}/fp_{}_report.html".format(statistics_results_folder, name) for name in domain_names]
@@ -48,10 +55,25 @@ def generate_all_html_reports(wbb_dataframes, fp_dataframes):
     dfs = wbb_dfs + fp_dfs
     report_names = wbb_report_names + fp_report_names
     for (data, name) in zip(dfs, report_names):
-        generate_html_report(data, name)
+        generate_profile_report(data, name)
 
 
-def plot_correlation(df1, df2, name="time_domain_features"):
+def compute_mean_and_stds(df1, df2):
+    """Compute the mean and standard deviation values for each feature."""
+
+    wbb_mean_df = pd.DataFrame(df1.mean(), columns=["WBB mean"])
+    wbb_std_df = pd.DataFrame(df1.std(), columns=["WBB std"])
+    fp_mean_df = pd.DataFrame(df2.mean(), columns=["FP mean"])
+    fp_std_df = pd.DataFrame(df2.std(), columns=["FP std"])
+
+    aggregated_results = pd.concat([wbb_mean_df, wbb_std_df, fp_mean_df, fp_std_df], axis=1)
+
+    return aggregated_results
+
+
+def plot_feature_correlation(df1, df2, name="time_domain_features"):
+    """Perform a linear least-squares regression and plot the correlation line for each feature."""
+
     columns = df1.columns
     fig, axs = plt.subplots(8, 3, figsize=(20, 30), facecolor='w', edgecolor='k')
     fig.subplots_adjust(hspace=.5)
@@ -106,17 +128,22 @@ if __name__ == "__main__":
     fp_dfs = construct_results_dfs(fp_files)
 
     logger.info("Computing general descriptive statistics.")
-    logger.info("Generating HTML reports.")
+    logger.info("Generating profile reports.")
 
-    generate_all_html_reports(wbb_dfs, fp_dfs)
+    generate_all_profile_reports(wbb_dfs, fp_dfs)
+
+    logger.info("Computing mean feature values and standard deviations.")
+
+    time_domain_results = compute_mean_and_stds(wbb_dfs[0], fp_dfs[0])
+    freq_domain_results = compute_mean_and_stds(wbb_dfs[1], fp_dfs[1])
 
     logger.info("Generating correlation plots.")
 
     # Time features correlation plots
-    plot_correlation(wbb_dfs[0], fp_dfs[0])
+    plot_feature_correlation(wbb_dfs[0], fp_dfs[0])
 
     # Frequency feature correlation plots
-    plot_correlation(wbb_dfs[1], fp_dfs[1], name="frequency_domain_features")
+    plot_feature_correlation(wbb_dfs[1], fp_dfs[1], name="frequency_domain_features")
 
     logger.info("Generating Bland and Altman agreement plots.")
 

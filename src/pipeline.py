@@ -5,6 +5,7 @@ from time_features import TimeFeatures
 from frequency_features import FrequencyFeatures
 from cop import *
 from utils import save_as_json
+from tqdm import tqdm
 
 # Third-party module imports
 import logging
@@ -17,11 +18,12 @@ class DataPipeline(SensorDataReader, DataPreprocessor):
     Class that pipelines all the different data processing steps from acquisition file reading to feature extraction.
     """
 
-    def __init__(self):
+    def __init__(self, files=None):
         super(DataPipeline, self).__init__()
+        self.data = files
 
     def compute_cop_positions(self, raw_data, balance_board=False):
-        """Read the acquisition file raw data and compute the COP positions in the AP and ML directions."""
+        """Compute the COP positions in the AP and ML directions."""
 
         try:
             if balance_board:
@@ -47,14 +49,14 @@ class DataPipeline(SensorDataReader, DataPreprocessor):
         return dict(zip(labels, preprocessed_data))
 
     def compute_time_features(self, cop_x, cop_y):
-        """Retrieve the time domain features."""
+        """Compute the time domain features."""
 
         time_domain_features = TimeFeatures(cop_x, cop_y)
 
         return time_domain_features.time_features
 
     def compute_frequency_features(self, cop_x, cop_y):
-        """Retrieve the frequency domain features."""
+        """Compute the frequency domain features."""
 
         frequency_domain_features = FrequencyFeatures(cop_x, cop_y)
 
@@ -91,3 +93,11 @@ class DataPipeline(SensorDataReader, DataPreprocessor):
 
         except Exception as err:
             logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
+
+    def process_all_files(self, balance_board=False):
+        """Write docstring"""
+
+        for file in tqdm(self.data):
+            self.save_features(file, balance_board)
+
+

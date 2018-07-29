@@ -33,7 +33,7 @@ class SensorDataReader(btkAcquisitionFileReader):
     def get_raw_data(self, filepath, balance_board=False):
         """Extract and aggregate raw sensor data of interest."""
 
-        self._set_reader_filename(filepath)
+        self.set_reader_filename(filepath)
         acq = self.GetOutput()
 
         if balance_board:
