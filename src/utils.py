@@ -62,6 +62,7 @@ def build_filename(filepath, destination_folder, name_extension):
 
 def check_folder(folder_name):
     """Check if a folder exists, and if not, create it."""
+
     if not os.path.exists(folder_name):
         os.makedirs(folder_name)
 
