@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 import warnings
 import logging
-2
+
 # Set numpy error level to warning
 np.seterr(all='warn')
 
@@ -26,17 +26,17 @@ def fill_zeros_with_last(arr):
     return arr[prev]
 
 
-def compute_cop_wbb_x(raw_data):
+def compute_cop_wbb_x(data):
     """Compute the x coordinate of the WBB center of pressure."""
 
     # Wbb width (in mm)
     lx = config["wbb_parameters"]["width"] * 10
 
     # Wbb force sensor values
-    TR = raw_data["TopRight Kg"][:, 0]
-    BR = raw_data["BottomRight Kg"][:, 0]
-    TL = raw_data["TopLeft Kg"][:, 0]
-    BL = raw_data["BottomLeft Kg"][:, 0]
+    TR = data["TopRight Kg"]
+    BR = data["BottomRight Kg"]
+    TL = data["TopLeft Kg"]
+    BL = data["BottomLeft Kg"]
 
     TR = pd.DataFrame(TR)[0].replace(to_replace=0, value=1).values
     BR = pd.DataFrame(BR)[0].replace(to_replace=0, value=1).values
@@ -52,17 +52,17 @@ def compute_cop_wbb_x(raw_data):
         return np.ones_like(TR)
 
 
-def compute_cop_wbb_y(raw_data):
+def compute_cop_wbb_y(data):
     """Compute the y coordinate of the WBB center of pressure."""
 
     # Wbb length (in mm)
     ly = config["wbb_parameters"]["length"] * 10
 
     # Wbb force sensor values
-    TR = raw_data["TopRight Kg"][:, 0]
-    BR = raw_data["BottomRight Kg"][:, 0]
-    TL = raw_data["TopLeft Kg"][:, 0]
-    BL = raw_data["BottomLeft Kg"][:, 0]
+    TR = data["TopRight Kg"]
+    BR = data["BottomRight Kg"]
+    TL = data["TopLeft Kg"]
+    BL = data["BottomLeft Kg"]
 
     TR = pd.DataFrame(TR)[0].replace(to_replace=0, value=1).values
     BR = pd.DataFrame(BR)[0].replace(to_replace=0, value=1).values
@@ -78,16 +78,16 @@ def compute_cop_wbb_y(raw_data):
         return np.ones_like(TR)
 
 
-def compute_cop_fp_x(raw_data, debug=False):
+def compute_cop_fp_x(data, debug=False):
     """Compute the x coordinate of the force plate center of pressure."""
 
     # Force plate heigth (in mm)
     dz = config["wbb_parameters"]["height"]
 
     # Force plate sensor values
-    Fx = raw_data["Fx1"].flatten()
-    My = raw_data["My1"].flatten()
-    Fz = raw_data["Fz1"].flatten()
+    Fx = data["Fx1"]
+    My = data["My1"]
+    Fz = data["Fz1"]
 
     Fx = pd.DataFrame(Fx)[0].replace(to_replace=0, value=1).values
     My = pd.DataFrame(My)[0].replace(to_replace=0, value=1).values
@@ -103,16 +103,16 @@ def compute_cop_fp_x(raw_data, debug=False):
     return cop_fp_x
 
 
-def compute_cop_fp_y(raw_data):
+def compute_cop_fp_y(data):
     """Compute the y coordinate of the force plate center of pressure."""
 
     # Force plate heigth (in mm)
     dz = config["wbb_parameters"]["height"]
 
     # Force plate sensor values
-    Fy = raw_data["Fy1"].flatten()
-    Mx = raw_data["Mx1"].flatten()
-    Fz = raw_data["Fz1"].flatten()
+    Fy = data["Fy1"]
+    Mx = data["Mx1"]
+    Fz = data["Fz1"]
 
     Fy = pd.DataFrame(Fy)[0].replace(to_replace=0, value=1).values
     Mx = pd.DataFrame(Mx)[0].replace(to_replace=0, value=1).values

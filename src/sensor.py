@@ -59,7 +59,7 @@ class SensorDataReader(btkAcquisitionFileReader):
     def get_frequency(self, filepath, point=False):
         """Extract analog/point frequencies."""
 
-        self._set_reader_filename(filepath)
+        self.set_reader_filename(filepath)
         acq = self.GetOutput()
 
         if point:

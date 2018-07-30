@@ -68,7 +68,7 @@ class DataPreprocessor:
         else:
             return input_signal[self.threshold:]
 
-    def preprocess(self, input_signal, analog_frequency, balance_board=False):
+    def preprocess_sensor_data(self, input_signal, analog_frequency, balance_board=False):
         """
         Pipeline all the preprocessing steps.
 
@@ -76,14 +76,32 @@ class DataPreprocessor:
         """
 
         if balance_board:
-            input_signal = self.cut_data(input_signal, 500)
-            resampled_signal = self.apply_resampling(input_signal)
+            signal = input_signal[:, 0]
+            cut_signal = self.cut_data(signal, 500)
+            resampled_signal = self.apply_resampling(cut_signal)
             filtered_signal = self.apply_filtering(
                 resampled_signal, analog_frequency)
         else:
-            input_signal = self.cut_data(input_signal, 5000)
+            signal = input_signal.flatten()
+            cut_signal = self.cut_data(signal, 5000)
             filtered_signal = self.apply_filtering(
-                input_signal, analog_frequency)
-        preprocessed_signal = self.apply_detrending(filtered_signal)
+                cut_signal, analog_frequency)
 
-        return preprocessed_signal
+        return filtered_signal
+
+    def preprocess_raw_data(self, data, frequency, balance_board=False):
+        """Preprocess the raw force sensor data"""
+
+        for key, value in data.items():
+            data[key] = self.preprocess_sensor_data(value, frequency, balance_board)
+
+        return data
+
+    def preprocess_cop_data(self, data):
+        """Preprocess the cop data"""
+
+        for key, value in data.items():
+            data[key] = self.apply_detrending(value)
+
+        return data
+

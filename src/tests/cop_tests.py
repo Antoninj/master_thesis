@@ -47,17 +47,20 @@ if __name__ == "__main__":
 
         logger.debug("Raw data: {} \nAnalog Frequency: {}".format(raw_data, analog_freq))
 
-        cop_wbb_x = compute_cop_wbb_x(raw_data)
-        cop_wbb_y = compute_cop_wbb_y(raw_data)
+        preprocessed_data = data_preprocessor.preprocess_raw_data(raw_data, 1000, True)
 
-        logger.debug("WBB COP x: {} \n WBB COP y: {}".format(cop_wbb_x, cop_wbb_y))
+        cop_wbb_x = compute_cop_wbb_x(preprocessed_data)
+        cop_wbb_y = compute_cop_wbb_y(preprocessed_data)
 
-        preprocessed_data = data_preprocessor.preprocess(cop_wbb_x, 1000, True)
+        cop_wbb_x_detrended = data_preprocessor.apply_detrending(cop_wbb_x)
+        cop_wbb_y_detrended = data_preprocessor.apply_detrending(cop_wbb_y)
+
+        logger.debug("WBB COP x: {} \n WBB COP y: {}".format(cop_wbb_x_detrended, cop_wbb_y_detrended))
 
         if plot:
             plt.figure()
-            plt.plot(cop_wbb_x)
-            plt.plot(preprocessed_data)
+            plt.plot(cop_wbb_x_detrended)
+            plt.plot(cop_wbb_y_detrended)
             plt.show()
 
     else:
@@ -71,15 +74,18 @@ if __name__ == "__main__":
 
         logger.debug("Fz1 size: {}".format(len(raw_data["Fz1"])))
 
-        cop_fp_x = compute_cop_fp_x(raw_data)
-        cop_fp_y = compute_cop_fp_y(raw_data)
+        preprocessed_data = data_preprocessor.preprocess_raw_data(raw_data, analog_freq)
 
-        logger.debug("FP COP x: {} \n FP COP y: {}".format(cop_fp_x, cop_fp_y))
+        cop_fp_x = compute_cop_fp_x(preprocessed_data)
+        cop_fp_y = compute_cop_fp_y(preprocessed_data)
 
-        preprocessed_data = data_preprocessor.preprocess(cop_fp_x, analog_freq)
+        cop_fp_x_detrended = data_preprocessor.apply_detrending(cop_fp_x)
+        cop_fp_y_detrended = data_preprocessor.apply_detrending(cop_fp_y)
+
+        logger.debug("FP COP x: {} \n FP COP y: {}".format(cop_fp_x_detrended, cop_fp_y_detrended))
 
         if plot:
             plt.figure()
-            plt.plot(cop_fp_x)
-            plt.plot(preprocessed_data)
+            plt.plot(cop_fp_x_detrended)
+            plt.plot(cop_fp_y_detrended)
             plt.show()
