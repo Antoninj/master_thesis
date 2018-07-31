@@ -1,18 +1,14 @@
-# Built-in modules imports
-from utils import load_config, get_path_to_all_files, setup_logging, check_folder
-
 # Third-party module imports
 import pandas as pd
 import pandas_profiling
 import numpy as np
 from scipy import stats
 from matplotlib import pyplot as plt
-from argparse import ArgumentParser
-import logging
 import json
 
-setup_logging()
-logger = logging.getLogger("stats")
+# Built-in modules imports
+from utils import load_config
+config = load_config()
 
 
 def construct_results_dfs(files):
@@ -52,14 +48,14 @@ def generate_profile_report(df, filename, bins=50):
     df_profile.to_file(outputfile=filename)
 
 
-def generate_all_profile_reports(wbb_dataframes, fp_dataframes):
+def generate_all_profile_reports(wbb_dataframes, fp_dataframes, statistics_results_folder):
     """Create all the profile reports."""
 
     domain_names = ["time_domain_features", "frequency_domain_features"]
     wbb_report_names = ["{}/wbb_{}_report.html".format(statistics_results_folder, name) for name in domain_names]
     fp_report_names = ["{}/fp_{}_report.html".format(statistics_results_folder, name) for name in domain_names]
 
-    dfs = wbb_dfs + fp_dfs
+    dfs = wbb_dataframes + fp_dataframes
     report_names = wbb_report_names + fp_report_names
     for (data, name) in zip(dfs, report_names):
         generate_profile_report(data, name)
@@ -78,7 +74,47 @@ def compute_mean_and_stds(df1, df2):
     return aggregated_results
 
 
-def plot_correlation(df1, df2, name="time_domain_features"):
+def compute_spearman_correlation(df1, df2):
+    """                     ."""
+
+    result_dict = {}
+    # Loop over each feature
+    for column in df1.columns:
+        x = df1[column]
+        y = df2[column][:df1.shape[0]]
+
+        # Perform the T-test
+        rho, p_value = stats.spearmanr(x, y, nan_policy="propagate")
+
+        # Store the results
+        result_dict[column] = {}
+        result_dict[column]["rho"] = rho
+        result_dict[column]["p-value"] = p_value
+
+    return result_dict
+
+
+def compute_t_test(df1, df2):
+    """                     ."""
+
+    result_dict = {}
+    # Loop over each feature
+    for column in df1.columns:
+        x = df1[column]
+        y = df2[column][:df1.shape[0]]
+
+        # Perform the T-test
+        t_statistic, p_value = stats.ttest_ind(x, y, nan_policy="propagate")
+
+        # Store the results
+        result_dict[column] = {}
+        result_dict[column]["t_statistic"] = t_statistic
+        result_dict[column]["p-value"] = p_value
+
+    return result_dict
+
+
+def pearson_correlation_plots(df1, df2, statistics_results_folder, name="time_domain_features"):
     """Perform a linear least-squares regression and plot the correlation line for each feature."""
 
     fig, axs = plt.subplots(8, 3, figsize=(20, 30), facecolor='w', edgecolor='k')
@@ -94,8 +130,10 @@ def plot_correlation(df1, df2, name="time_domain_features"):
         # Perform the linear regression
         slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
 
-        # Store the R and p-value results
+        # Store the linear regression results
         result_dict[column] = {}
+        result_dict[column]["slope"] = slope
+        result_dict[column]["intercept"] = intercept
         result_dict[column]["R"] = r_value
         result_dict[column]["p-value"] = p_value
 
@@ -105,8 +143,13 @@ def plot_correlation(df1, df2, name="time_domain_features"):
         ax.set_xlabel('Balance Board')
         ax.set_ylabel('Force plate')
         ax.set_title(column, weight=600)
-        r_squared = round(r_value**2, 4)
-        ax.text(0.9, 0.5, "R\u00b2={}".format(r_squared), fontsize=9, horizontalalignment='center',
+        ax.text(0.8, 0.9, "p-value = {}".format(round(p_value, 4)), fontsize=9, horizontalalignment='center',
+                verticalalignment='center', transform=ax.transAxes)
+        ax.text(0.8, 0.8, "R\u00b2={}".format(round(r_value**2, 4)), fontsize=9, horizontalalignment='center',
+                verticalalignment='center', transform=ax.transAxes)
+        ax.text(0.8, 0.7, "Slope = {}".format(round(slope, 4)), fontsize=9, horizontalalignment='center',
+                verticalalignment='center', transform=ax.transAxes)
+        ax.text(0.8, 0.6, "Intercept = {}".format(round(intercept, 4)), fontsize=9, horizontalalignment='center',
                 verticalalignment='center', transform=ax.transAxes)
         # ax.legend()
 
@@ -116,7 +159,7 @@ def plot_correlation(df1, df2, name="time_domain_features"):
     return result_dict
 
 
-def bland_altman_plot(df1, df2, name="time_domain"):
+def bland_altman_plots(df1, df2, statistics_results_folder, name="time_domain"):
 
     fig, axs = plt.subplots(8, 3, figsize=(20, 30), facecolor='w', edgecolor='k')
     fig.subplots_adjust(hspace=.5)
@@ -152,102 +195,3 @@ def bland_altman_plot(df1, df2, name="time_domain"):
     plt.savefig("{}/{}_bland_altman_plots.png".format(statistics_results_folder, name), bbox_inches='tight')
 
     return result_dict
-
-
-if __name__ == "__main__":
-
-    ##################
-    # Boilerplate code
-    ##################
-
-    # Load configuration files
-    config = load_config()
-
-    # Features computations results folder path
-    feature_data_folder = config["feature_results_folder"]
-
-    # Statistics results folder path
-    statistics_results_folder = config["statistics_results_folder"]
-    check_folder(statistics_results_folder)
-
-    # Command line argument parser to choose between wbb or force plate data
-    parser = ArgumentParser(
-        description="")
-    parser.add_argument("-d", "--debug", action='store_true', help="Show debug messages")
-    args = parser.parse_args()
-    debug = args.debug
-
-    if debug:
-        logger.setLevel("DEBUG")
-
-    ###############
-    # Data handling
-    ###############
-
-    # Get all the paths to the files that need to be processed
-    files = get_path_to_all_files(feature_data_folder)
-
-    # Separate WBB and force plate data
-    wbb_files = [file for file in files if "Vicon" not in file and "cop" not in file]
-    fp_files = [file for file in files if "Vicon" in file and "cop" not in file]
-
-    logger.info("Processing data located in: {}".format(feature_data_folder))
-
-    # Create the pandas dataframes for further analysis
-    wbb_dfs = construct_results_dfs(wbb_files)
-    fp_dfs = construct_results_dfs(fp_files)
-
-    logger.info("Computing general descriptive statistics.")
-
-    #################################
-    # Dataframes HTML profile reports
-    #################################
-
-    logger.info("Generating profile reports.")
-    generate_all_profile_reports(wbb_dfs, fp_dfs)
-
-    ###########################################################
-    # Features mean and standard deviations values computations
-    ###########################################################
-
-    logger.info("Computing mean and standard deviations values for each feature.")
-    time_domain_results = compute_mean_and_stds(wbb_dfs[0], fp_dfs[0])
-    freq_domain_results = compute_mean_and_stds(wbb_dfs[1], fp_dfs[1])
-
-    ###################
-    # Correlation plots
-    ###################
-
-    logger.info("Generating correlation plots.")
-
-    # Time features correlation plots
-    time_correlation_results = plot_correlation(wbb_dfs[0], fp_dfs[0])
-    logger.debug(time_correlation_results)
-
-    # Frequency feature correlation plots
-    freq_correlation_results = plot_correlation(wbb_dfs[1], fp_dfs[1], name="frequency_domain_features")
-    logger.debug(freq_correlation_results)
-
-    ##################################################################
-    # Bland and Altman plots and Limits of Agreement(LOA) computations
-    ##################################################################
-
-    logger.info("Generating Bland and Altman agreement plots.")
-
-    # Time features Bland and Altman plots
-    time_loa = bland_altman_plot(wbb_dfs[0], fp_dfs[0])
-    logger.debug(time_loa)
-
-    # Frequency feature Bland and Altman plots
-    freq_loa = bland_altman_plot(wbb_dfs[1], fp_dfs[1], name="frequency_domain_features")
-    logger.debug(time_loa)
-
-    ########################################################
-    # Intraclass Correlation Coefficients (ICC) computations
-    ########################################################
-
-    #########################
-    # PUTTING IT ALL TOGETHER
-    #########################
-
-    logger.info("Saving results to: {}".format(statistics_results_folder))
