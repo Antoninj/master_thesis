@@ -8,6 +8,10 @@ from context import *
 
 if __name__ == "__main__":
 
+    ##################
+    # Boilerplate code
+    ##################
+
     # Load configuration file
     config = load_config()
 
@@ -35,6 +39,10 @@ if __name__ == "__main__":
 
     # Create a data preprocessor reader object
     data_preprocessor = DataPreprocessor()
+
+    ##################
+    # Tests
+    ##################
 
     logger.info("Testing Center Of Pressure (COP) computations module")
 

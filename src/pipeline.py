@@ -91,7 +91,7 @@ class DataPipeline(SensorDataReader, DataPreprocessor):
             logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
 
     def process_all_files(self, balance_board=False):
-        """Write docstring"""
+        """Save features from all files."""
 
         for file in tqdm(self.data):
             self.save_features(file, balance_board)

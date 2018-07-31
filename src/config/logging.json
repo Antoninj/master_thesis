@@ -56,7 +56,7 @@
         },
         "stats": {
             "level": "INFO",
-            "handlers": ["info_file_handler","console"],
+            "handlers": ["error_file_handler","info_file_handler","console"],
             "propagate": "no"
         },
         "utils": {

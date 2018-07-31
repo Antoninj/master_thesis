@@ -7,6 +7,10 @@ from context import *
 
 if __name__ == "__main__":
 
+    ##################
+    # Boilerplate code
+    ##################
+
     # Load configuration file
     config = load_config()
 
@@ -26,6 +30,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
     freq = args.freq
     plot = args.plot
+
+    ##################
+    # Tests
+    ##################
 
     logger.info("Testing feature computation modules.")
     logger.info("Test file: {}".format(wbb_cop_data))

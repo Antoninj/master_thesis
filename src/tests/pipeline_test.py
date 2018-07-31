@@ -5,6 +5,10 @@ from context import *
 
 if __name__ == "__main__":
 
+    ##################
+    # Boilerplate code
+    ##################
+
     # Load configuration files
     config = load_config()
 
@@ -27,6 +31,10 @@ if __name__ == "__main__":
 
     # Create a data pipeline object
     cop_data_pipeline = DataPipeline()
+
+    ##################
+    # Tests
+    ##################
 
     logger.info("Testing data pipeline module.")
 

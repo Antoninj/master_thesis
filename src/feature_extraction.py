@@ -12,6 +12,10 @@ logger = logging.getLogger("feature extraction")
 
 if __name__ == "__main__":
 
+    ##################
+    # Boilerplate code
+    ##################
+
     # Load configuration files
     config = load_config()
 
@@ -29,12 +33,20 @@ if __name__ == "__main__":
     args = parser.parse_args()
     WBB = args.wbb
 
+    ###############
+    # Data handling
+    ###############
+
     # Get all the paths to the files that need to be processed
     files = get_path_to_all_files(data_folder)
 
     # Separate WBB and force plate data
     wbb_files = [file for file in files if "Vicon" not in file]
     fp_files = [file for file in files if "Vicon" in file]
+
+    ####################
+    # Feature extraction
+    ####################
 
     logger.info("Executing feature extraction script.")
     logger.info("Processing data located in: {}".format(data_folder))
@@ -44,6 +56,8 @@ if __name__ == "__main__":
 
         # Create a data pipeline object
         wbb_data_pipeline = DataPipeline(wbb_files)
+
+        # Process all the WBB data
         wbb_data_pipeline.process_all_files(balance_board=True)
 
         logger.info("End of Wii Balance Board data processing")
@@ -53,6 +67,8 @@ if __name__ == "__main__":
 
         # Create a data pipeline object
         fp_data_pipeline = DataPipeline(fp_files)
+
+        # Process all the force plate data
         fp_data_pipeline.process_all_files()
 
         logger.info("End of Force Plate data processing")
