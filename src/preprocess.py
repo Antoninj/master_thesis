@@ -104,4 +104,3 @@ class DataPreprocessor:
             data[key] = self.apply_detrending(value)
 
         return data
-

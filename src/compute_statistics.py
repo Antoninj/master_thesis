@@ -7,7 +7,7 @@ from argparse import ArgumentParser
 import logging
 
 setup_logging()
-logger = logging.getLogger("stats")
+logger = logging.getLogger("statistics")
 
 if __name__ == "__main__":
 
@@ -80,6 +80,7 @@ if __name__ == "__main__":
 
     # Frequency features
     freq_t_test_results = compute_t_test(wbb_dfs[1], fp_dfs[1])
+    logger.debug(freq_t_test_results)
 
     ######################
     # Spearman correlation
@@ -92,6 +93,7 @@ if __name__ == "__main__":
 
     # Frequency features
     freq_spearman_results = compute_spearman_correlation(wbb_dfs[1], fp_dfs[1])
+    logger.debug(freq_spearman_results)
 
     ###########################################
     # Pearson correlation and linear regression
@@ -99,11 +101,11 @@ if __name__ == "__main__":
 
     logger.info("Generating correlation plots.")
     # Time features correlation plots
-    time_correlation_results = pearson_correlation_plots(wbb_dfs[0], fp_dfs[0], statistics_results_folder)
+    time_correlation_results = make_pearson_correlation_plots(wbb_dfs[0], fp_dfs[0], statistics_results_folder)
     logger.debug(time_correlation_results)
 
     # Frequency feature correlation plots
-    freq_correlation_results = pearson_correlation_plots(wbb_dfs[1], fp_dfs[1], statistics_results_folder, name="frequency_domain_features")
+    freq_correlation_results = make_pearson_correlation_plots(wbb_dfs[1], fp_dfs[1], statistics_results_folder, name="frequency_domain_features")
     logger.debug(freq_correlation_results)
 
     ##################################################################
@@ -112,12 +114,12 @@ if __name__ == "__main__":
 
     logger.info("Generating Bland and Altman agreement plots.")
     # Time features Bland and Altman plots
-    time_loa = bland_altman_plots(wbb_dfs[0], fp_dfs[0], statistics_results_folder)
+    time_loa = make_bland_altman_plots(wbb_dfs[0], fp_dfs[0], statistics_results_folder)
     logger.debug(time_loa)
 
     # Frequency feature Bland and Altman plots
-    freq_loa = bland_altman_plots(wbb_dfs[1], fp_dfs[1], statistics_results_folder, name="frequency_domain_features")
-    logger.debug(time_loa)
+    freq_loa = make_bland_altman_plots(wbb_dfs[1], fp_dfs[1], statistics_results_folder, name="frequency_domain_features")
+    logger.debug(freq_loa)
 
     ########################################################
     # Intraclass Correlation Coefficients (ICC) computations
