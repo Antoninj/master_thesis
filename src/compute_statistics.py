@@ -75,11 +75,11 @@ if __name__ == "__main__":
 
     logger.info("Computing t-statistics and p-values for each feature.")
     # Time features
-    time_t_test_results = compute_t_test(wbb_dfs[0], fp_dfs[0])
+    time_t_test_results = perform_t_test(wbb_dfs[0], fp_dfs[0])
     logger.debug(time_t_test_results)
 
     # Frequency features
-    freq_t_test_results = compute_t_test(wbb_dfs[1], fp_dfs[1])
+    freq_t_test_results = perform_t_test(wbb_dfs[1], fp_dfs[1])
     logger.debug(freq_t_test_results)
 
     ######################
@@ -124,6 +124,16 @@ if __name__ == "__main__":
     ########################################################
     # Intraclass Correlation Coefficients (ICC) computations
     ########################################################
+
+    logger.info("Computing ICCs.")
+
+    # Time features
+    time_icc = compute_ICC(wbb_dfs[0], fp_dfs[0])
+    logger.debug(time_icc)
+
+    # Frequency feature Bland and Altman plots
+    freq_icc = compute_ICC(wbb_dfs[1], fp_dfs[1])
+    logger.debug(freq_icc)
 
     #########################
     # PUTTING IT ALL TOGETHER

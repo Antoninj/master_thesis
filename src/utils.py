@@ -84,10 +84,16 @@ def get_path_to_all_files(folder_name):
 
 
 def setup_logging(default_level=logging.INFO):
-    """Setup logging module configuration from configuration file."""
+    """Setup the logging module configuration from configuration file."""
 
     config = load_config(filename="logging")
     if config is not None:
         logging.config.dictConfig(config)
     else:
         logging.basicConfig(level=default_level)
+
+
+def clean_files(wbb_files, fp_files):
+
+    pass
+

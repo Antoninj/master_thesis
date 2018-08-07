@@ -6,6 +6,8 @@ from scipy import stats
 from matplotlib import pyplot as plt
 import json
 import logging
+from rpy2.robjects import DataFrame, FloatVector, pandas2ri
+from rpy2.robjects.packages import importr
 
 # Built-in modules imports
 from utils import load_config, setup_logging
@@ -16,10 +18,12 @@ logger = logging.getLogger("stats")
 
 
 def construct_results_dfs(files):
-    """Aggregate all time and frequency feature computations results in dataframes."""
+    """Aggregate all time and frequency feature computations results in two dataframes."""
 
     time_frames = []
     frequency_frames = []
+
+    # Create lists of dataframes with all the time and frequency feature computations results
     for filepath in files:
         with open(filepath) as json_data:
             features = json.load(json_data)
@@ -29,9 +33,11 @@ def construct_results_dfs(files):
         time_frames.append(pd.DataFrame(time_features, index=[0]))
         frequency_frames.append(pd.DataFrame(frequency_features, index=[0]))
 
+    # Concatenate the dataframes together
     time_features_df = pd.concat(time_frames, axis=0)
     frequency_features_df = pd.concat(frequency_frames, axis=0)
 
+    # Reshape the dataframes
     df1 = time_features_df.reset_index().drop('index', 1)
     df2 = frequency_features_df.reset_index().drop('index', 1)
 
@@ -45,7 +51,7 @@ def generate_profile_report(df, filename, bins=50):
     The profile report is generated using the pandas profiling (https://github.com/pandas-profiling) library.
     """
 
-    # Create the report
+    # Create the profile report
     df_profile = pandas_profiling.ProfileReport(df, bins=bins)
 
     # Save the report
@@ -79,7 +85,7 @@ def compute_mean_and_stds(df1, df2):
 
 
 def compute_spearman_correlation(df1, df2):
-    """                     ."""
+    """Compute the spearman correlation coefficient between the WBB and Force plate data for each feature."""
 
     result_dict = {}
     # Loop over each feature
@@ -88,7 +94,7 @@ def compute_spearman_correlation(df1, df2):
         y = df2[column][:df1.shape[0]]
 
         try:
-            # Perform the T-test
+            # Compute the spearman coefficient(rho) and the corresponding p-value
             rho, p_value = stats.spearmanr(x, y, nan_policy="propagate")
 
             # Store the results
@@ -103,8 +109,8 @@ def compute_spearman_correlation(df1, df2):
     return result_dict
 
 
-def compute_t_test(df1, df2):
-    """                     ."""
+def perform_t_test(df1, df2):
+    """"Perfom a T-test using the WBB and Force plate data for each feature."""
 
     result_dict = {}
     # Loop over each feature
@@ -113,7 +119,7 @@ def compute_t_test(df1, df2):
         y = df2[column][:df1.shape[0]]
 
         try:
-            # Perform the T-test
+            # Comoute the T-statistic and the corresponding p-value
             t_statistic, p_value = stats.ttest_ind(x, y, nan_policy="propagate")
 
             # Store the results
@@ -147,10 +153,10 @@ def make_pearson_correlation_plots(df1, df2, statistics_results_folder, name="ti
 
             # Store the linear regression results
             result_dict[column] = {}
-            result_dict[column]["slope"] = slope
-            result_dict[column]["intercept"] = intercept
-            result_dict[column]["R"] = r_value
-            result_dict[column]["p-value"] = p_value
+            result_dict[column]["slope"] = round(slope, 4)
+            result_dict[column]["intercept"] = round(intercept, 4)
+            result_dict[column]["R"] = round(r_value, 4)
+            result_dict[column]["p-value"] = round(p_value, 4)
 
             # Make the plot
             ax.plot(x, y, '.', label='original data')
@@ -192,12 +198,13 @@ def make_bland_altman_plots(df1, df2, statistics_results_folder, name="time_doma
         y = df2[column][:df1.shape[0]]
 
         try:
-            # Prepare the data for the plots
+            # Compute the LOA and arrange the data for the plots
             mean = np.mean([x, y], axis=0)
             diff = x - y
             md = np.mean(diff)
             sd = np.std(diff, axis=0)
 
+            # Store the results
             result_dict[column] = {}
             result_dict[column]["LOA"] = "{},{}".format(md - 2 * sd, md + 2 * sd)
 
@@ -218,5 +225,44 @@ def make_bland_altman_plots(df1, df2, statistics_results_folder, name="time_doma
 
     # Save the plots
     plt.savefig("{}/{}_bland_altman_plots.png".format(statistics_results_folder, name), bbox_inches='tight')
+
+    return result_dict
+
+
+def compute_ICC(df1, df2):
+    """
+    Compute the two-way mixed ICC.
+
+    R library used for the ICC implementation: http://www.personality-project.org/r/html/ICC.html
+    More info on what is the two-way mixed ICC: https://www.uvm.edu/~dhowell/methods8/Supplements/icc/More%20on%20ICCs.pdf
+    """
+
+    psych = importr("psych")
+    result_dict = {}
+    # Loop over each feature
+    for column in df1.columns:
+        x = df1[column]
+        y = df2[column][:df1.shape[0]]
+
+        try:
+            r_df = DataFrame({"WBB feature": FloatVector(x),
+                              "FP feature": FloatVector(y)})
+            # Compute the two way mixed ICC
+            icc_res = psych.ICC(r_df)
+            iccs_r_df = icc_res[0]
+            iccs_df = pandas2ri.ri2py(iccs_r_df)
+
+            icc = iccs_df.iloc[5]["ICC"]
+            icc_lower_bound = iccs_df.iloc[5]["lower bound"]
+            icc_upper_bound = iccs_df.iloc[5]["upper bound"]
+            icc_result = "{}({}, {})".format(round(icc, 4), round(icc_lower_bound, 4), round(icc_upper_bound, 4))
+
+            # Store the results
+            result_dict[column] = {}
+            result_dict[column]["ICC"] = icc_result
+
+        except (RuntimeWarning, Exception) as err:
+            logger.error("Problem with feature: {}.\n{}".format(column, err), exc_info=True, stack_info=True)
+            pass
 
     return result_dict

@@ -400,7 +400,7 @@ class TimeFeatures(HybridFeatures):
         return {**self.distance_features, **self.area_features, **self.hybrid_features}
 
     def summary(self):
-        """Print out a summary of the time features to standard output. """
+        """Print out a summary of the time features to standard output."""
 
         for key, value in self.time_features.items():
             print("{}: {}".format(key, value))
