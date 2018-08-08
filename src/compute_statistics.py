@@ -1,5 +1,5 @@
 # Built-in modules imports
-from utils import load_config, get_path_to_all_files, setup_logging, check_folder
+from utils import load_config, get_path_to_all_files, setup_logging, check_folder, clean_files
 
 # Third-party module imports
 from stats import *
@@ -41,16 +41,13 @@ if __name__ == "__main__":
 
     # Get all the paths to the files that need to be processed
     files = get_path_to_all_files(feature_data_folder)
-
-    # Separate WBB and force plate data
-    wbb_files = [file for file in files if "Vicon" not in file and "cop" not in file]
-    fp_files = [file for file in files if "Vicon" in file and "cop" not in file]
+    wbb_files_curated, fp_files_curated = clean_files(files)
 
     logger.info("Processing data located in: {}".format(feature_data_folder))
 
     # Create the pandas dataframes for further analysis
-    wbb_dfs = construct_results_dfs(wbb_files)
-    fp_dfs = construct_results_dfs(fp_files)
+    wbb_dfs = construct_results_dfs(wbb_files_curated)
+    fp_dfs = construct_results_dfs(fp_files_curated)
 
     logger.info("Computing general descriptive statistics.")
 
@@ -59,6 +56,7 @@ if __name__ == "__main__":
     #################################
 
     logger.info("Generating profile reports.")
+
     generate_all_profile_reports(wbb_dfs, fp_dfs, statistics_results_folder)
 
     ###########################################################
@@ -66,6 +64,7 @@ if __name__ == "__main__":
     ###########################################################
 
     logger.info("Computing mean and standard deviations values for each feature.")
+
     time_domain_results = compute_mean_and_stds(wbb_dfs[0], fp_dfs[0])
     freq_domain_results = compute_mean_and_stds(wbb_dfs[1], fp_dfs[1])
 
@@ -74,6 +73,7 @@ if __name__ == "__main__":
     ################
 
     logger.info("Computing t-statistics and p-values for each feature.")
+
     # Time features
     time_t_test_results = perform_t_test(wbb_dfs[0], fp_dfs[0])
     logger.debug(time_t_test_results)
@@ -87,6 +87,7 @@ if __name__ == "__main__":
     ######################
 
     logger.info("Computing spearman correlation coefficients and p-values for each feature.")
+
     # Time features
     time_spearman_results = compute_spearman_correlation(wbb_dfs[0], fp_dfs[0])
     logger.debug(time_spearman_results)
@@ -99,7 +100,8 @@ if __name__ == "__main__":
     # Pearson correlation and linear regression
     ###########################################
 
-    logger.info("Generating correlation plots.")
+    logger.info("Generating pearson correlation plots.")
+
     # Time features correlation plots
     time_correlation_results = make_pearson_correlation_plots(wbb_dfs[0], fp_dfs[0], statistics_results_folder)
     logger.debug(time_correlation_results)
@@ -113,6 +115,7 @@ if __name__ == "__main__":
     ##################################################################
 
     logger.info("Generating Bland and Altman agreement plots.")
+
     # Time features Bland and Altman plots
     time_loa = make_bland_altman_plots(wbb_dfs[0], fp_dfs[0], statistics_results_folder)
     logger.debug(time_loa)
@@ -125,7 +128,7 @@ if __name__ == "__main__":
     # Intraclass Correlation Coefficients (ICC) computations
     ########################################################
 
-    logger.info("Computing ICCs.")
+    logger.info("Computing two-way mixed ICCs.")
 
     # Time features
     time_icc = compute_ICC(wbb_dfs[0], fp_dfs[0])

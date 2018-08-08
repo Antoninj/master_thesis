@@ -20,7 +20,8 @@ class DataPipeline(SensorDataReader, DataPreprocessor):
 
     def __init__(self, files=None):
         super(DataPipeline, self).__init__()
-        self.data = files
+        if files is not None:
+            self.data = files
 
     def compute_cop_positions(self, preprocessed_data, balance_board=False):
         """Compute the COP positions in the AP and ML directions."""
@@ -93,5 +94,7 @@ class DataPipeline(SensorDataReader, DataPreprocessor):
     def process_all_files(self, balance_board=False):
         """Save features from all files."""
 
-        for file in tqdm(self.data):
-            self.save_features(file, balance_board)
+        if self.data is not None:
+            for file in tqdm(self.data):
+                self.save_features(file, balance_board)
+

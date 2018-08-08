@@ -91,7 +91,7 @@ def compute_spearman_correlation(df1, df2):
     # Loop over each feature
     for column in df1.columns:
         x = df1[column]
-        y = df2[column][:df1.shape[0]]
+        y = df2[column]
 
         try:
             # Compute the spearman coefficient(rho) and the corresponding p-value
@@ -116,7 +116,7 @@ def perform_t_test(df1, df2):
     # Loop over each feature
     for column in df1.columns:
         x = df1[column]
-        y = df2[column][:df1.shape[0]]
+        y = df2[column]
 
         try:
             # Comoute the T-statistic and the corresponding p-value
@@ -145,7 +145,7 @@ def make_pearson_correlation_plots(df1, df2, statistics_results_folder, name="ti
     # Loop over each feature
     for ax, column in zip(axs.ravel(), df1.columns):
         x = df1[column]
-        y = df2[column][:df1.shape[0]]
+        y = df2[column]
 
         try:
             # Perform the linear regression
@@ -195,7 +195,7 @@ def make_bland_altman_plots(df1, df2, statistics_results_folder, name="time_doma
     # Loop over each feature
     for ax, column in zip(axs.ravel(), df1.columns):
         x = df1[column]
-        y = df2[column][:df1.shape[0]]
+        y = df2[column]
 
         try:
             # Compute the LOA and arrange the data for the plots
@@ -242,7 +242,7 @@ def compute_ICC(df1, df2):
     # Loop over each feature
     for column in df1.columns:
         x = df1[column]
-        y = df2[column][:df1.shape[0]]
+        y = df2[column]
 
         try:
             r_df = DataFrame({"WBB feature": FloatVector(x),

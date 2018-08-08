@@ -83,6 +83,21 @@ def get_path_to_all_files(folder_name):
         sys.exit()
 
 
+def clean_files(files):
+    """Separate WBB and force plate data."""
+
+    wbb_files = [file for file in files if "Vicon" not in file and "cop" not in file]
+    fp_files = [file for file in files if "Vicon" in file and "cop" not in file]
+
+    wbb_files_modified = [filename.replace("BalanceBoard", "Vicon") for filename in wbb_files]
+    fp_files_modified = [filename.replace("Vicon", "BalanceBoard") for filename in fp_files]
+
+    fp_files_curated = [file for file in fp_files if file in wbb_files_modified]
+    wbb_files_curated = [file for file in wbb_files if file in fp_files_modified]
+
+    return wbb_files_curated, fp_files_curated
+
+
 def setup_logging(default_level=logging.INFO):
     """Setup the logging module configuration from configuration file."""
 
@@ -91,9 +106,3 @@ def setup_logging(default_level=logging.INFO):
         logging.config.dictConfig(config)
     else:
         logging.basicConfig(level=default_level)
-
-
-def clean_files(wbb_files, fp_files):
-
-    pass
-
