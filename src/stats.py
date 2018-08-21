@@ -48,6 +48,8 @@ def generate_profile_report(df, filename, bins=50):
     """
     Create a HTML profile report of a dataframe using general descriptive statistics.
 
+    Notes
+    -----
     The profile report is generated using the pandas profiling (https://github.com/pandas-profiling) library.
     """
 
@@ -85,7 +87,13 @@ def compute_mean_and_stds(df1, df2):
 
 
 def compute_spearman_correlation(df1, df2):
-    """Compute the spearman correlation coefficient between the WBB and Force plate data for each feature."""
+    """
+    Compute the spearman correlation coefficient between the WBB and Force plate data for each feature.
+
+    References
+    ----------
+    .. [1] Scipy documentation: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.spearmanr.html
+    """
 
     result_dict = {}
     # Loop over each feature
@@ -110,7 +118,13 @@ def compute_spearman_correlation(df1, df2):
 
 
 def perform_t_test(df1, df2):
-    """"Perfom a T-test using the WBB and Force plate data for each feature."""
+    """"
+    Perfom a T-test using the WBB and Force plate data for each feature.
+
+    References
+    ----------
+    .. [1] Scipy documentation: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html#scipy.stats.ttest_ind
+    """
 
     result_dict = {}
     # Loop over each feature
@@ -135,7 +149,13 @@ def perform_t_test(df1, df2):
 
 
 def make_pearson_correlation_plots(df1, df2, statistics_results_folder, name="time_domain_features"):
-    """Perform a linear least-squares regression and plot the correlation line for each feature."""
+    """
+    Perform a linear least-squares regression and plot the correlation line for each feature.
+
+    References
+    ----------
+    .. [1] Scipy documentation: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.linregress.html
+    """
 
     fig, axs = plt.subplots(8, 3, figsize=(20, 30), facecolor='w', edgecolor='k')
     fig.subplots_adjust(hspace=.5)
@@ -184,7 +204,7 @@ def make_pearson_correlation_plots(df1, df2, statistics_results_folder, name="ti
     return result_dict
 
 
-def make_bland_altman_plots(df1, df2, statistics_results_folder, name="time_domain"):
+def make_bland_altman_plots(df1, df2, statistics_results_folder, name="time_domain_features"):
     """Compute limit of agreement values and make bland and altman plot for each feature."""
 
     fig, axs = plt.subplots(8, 3, figsize=(20, 30), facecolor='w', edgecolor='k')
@@ -233,7 +253,12 @@ def compute_ICC(df1, df2):
     """
     Compute the two-way mixed ICC.
 
-    R library used for the ICC implementation: http://www.personality-project.org/r/html/ICC.html
+    References
+    ----------
+    .. [1] R library used for the ICC implementation: http://www.personality-project.org/r/html/ICC.html
+
+    Notes
+    -----
     More info on what is the two-way mixed ICC: https://www.uvm.edu/~dhowell/methods8/Supplements/icc/More%20on%20ICCs.pdf
     """
 

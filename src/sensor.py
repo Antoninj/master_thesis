@@ -12,10 +12,16 @@ config = load_config()
 
 class SensorDataReader(btkAcquisitionFileReader):
     """
-    Class to collect and format the raw sensor data values from the WBB and force plate acquisition files which are stored in the c3d file format (cf https://www.c3d.org/HTML/default.htm).
+    Class to collect and format the raw sensor data values from the WBB and force plate acquisition files which are stored in the c3d file format.
 
-    The locally compiled and installed binaries of the biomechanical toolkit python wrapper (http://biomechanical-toolkit.github.io/docs/Wrapping/Python/index.html) are used to read
+    The locally compiled and installed binaries of the biomechanical toolkit python wrapper are used to read
     and extract the data.
+
+    Notes
+    -----
+    Biomechanical toolkit python wrapper starting guide: http://biomechanical-toolkit.github.io/docs/Wrapping/Python/index.html
+    C3D format documentation: https://www.c3d.org/HTML/default.htm
+
     """
 
     data_labels = config["sensor_labels"]["data_points_labels"]
@@ -25,13 +31,17 @@ class SensorDataReader(btkAcquisitionFileReader):
         super(SensorDataReader, self).__init__()
 
     def set_reader_filename(self, filepath):
-        """Change the current acquisition file used by the file reader."""
+        """Change the acquisition file currently used by the file reader."""
 
         self.SetFilename(filepath)
         self.Update()
 
     def get_raw_data(self, filepath, balance_board=False):
-        """Extract and aggregate raw sensor data of interest."""
+        """
+        Extract and aggregate raw sensor data of interest.
+
+        The data being extracted can be modified through the configuration file.
+        """
 
         self.set_reader_filename(filepath)
         acq = self.GetOutput()

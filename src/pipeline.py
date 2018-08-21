@@ -6,6 +6,7 @@ from frequency_features import FrequencyFeatures
 from cop import *
 from utils import save_as_json
 from tqdm import tqdm
+import sys
 
 # Third-party module imports
 import logging
@@ -20,8 +21,7 @@ class DataPipeline(SensorDataReader, DataPreprocessor):
 
     def __init__(self, files=None):
         super(DataPipeline, self).__init__()
-        if files is not None:
-            self.data = files
+        self.data = files
 
     def compute_cop_positions(self, preprocessed_data, balance_board=False):
         """Compute the COP positions in the AP and ML directions."""
@@ -74,7 +74,7 @@ class DataPipeline(SensorDataReader, DataPreprocessor):
 
             if save_cop:
                 # Save intermediate results of COP computations
-                save_as_json(preprocessed_cop_data, filepath, "cop_results", "cop")
+                save_as_json(preprocessed_cop_data, filepath, destination_folder="cop_results", name_extension="cop")
                 return
 
             # Compute time features from COP displacement
@@ -86,22 +86,22 @@ class DataPipeline(SensorDataReader, DataPreprocessor):
             merged_features = {"filepath": filepath, "time_features": time_features, "frequency_features": frequency_features}
 
             # Save features in json format
-            save_as_json(merged_features, filepath, "feature_results", "features")
+            save_as_json(merged_features, filepath, destination_folder="feature_results", name_extension="features")
 
         except Exception as err:
             logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
 
-    def process_all_files(self, balance_board=False):
+    def process_all_files(self, logger, balance_board=False):
         """Save features from all files."""
 
         if self.data is not None:
             for file in tqdm(self.data):
                 self.save_features(file, balance_board)
         else:
-            logger.info("No files to process.")
+            logger.critical("No files to process.")
+            sys.exit()
 
-    def set_pipeline_data(files):
+    def set_pipeline_data(self, files):
         """Set the input data of the pipeline."""
 
         self.data = files
-

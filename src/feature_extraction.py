@@ -51,25 +51,28 @@ if __name__ == "__main__":
     logger.info("Executing feature extraction script.")
     logger.info("Processing data located in: {}".format(data_folder))
 
+    # Create the pipeline object
+    data_pipeline = DataPipeline()
+
     if WBB:
         logger.info("Beginning of Wii Balance Board data processing")
 
-        # Create a data pipeline object
-        wbb_data_pipeline = DataPipeline(wbb_files)
+        # Assign WBB data to the pipeline object
+        data_pipeline.set_pipeline_data(wbb_files)
 
         # Process all the WBB data
-        wbb_data_pipeline.process_all_files(balance_board=True)
+        data_pipeline.process_all_files(logger, balance_board=True)
 
         logger.info("End of Wii Balance Board data processing")
 
     else:
         logger.info("Beginning of Force Plate data processing")
 
-        # Create a data pipeline object
-        fp_data_pipeline = DataPipeline(fp_files)
+        # Assign force plate data to the pipeline object
+        data_pipeline.set_pipeline_data(fp_files)
 
         # Process all the force plate data
-        fp_data_pipeline.process_all_files()
+        data_pipeline.process_all_files()
 
         logger.info("End of Force Plate data processing")
 

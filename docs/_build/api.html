@@ -34,483 +34,95 @@
             
   <div class="section" id="api">
 <span id="id1"></span><h1>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="module-src.sensor">
-<span id="raw-acquisition-data-extraction"></span><h2>Raw acquisition data extraction<a class="headerlink" href="#module-src.sensor" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="src.sensor.SensorDataReader">
-<em class="property">class </em><code class="descclassname">src.sensor.</code><code class="descname">SensorDataReader</code><a class="reference internal" href="_modules/src/sensor.html#SensorDataReader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.sensor.SensorDataReader" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class to collect and format the raw sensor data values from the WBB and force plate acquisition files which are stored in the c3d file format (cf <a class="reference external" href="https://www.c3d.org/HTML/default.htm">https://www.c3d.org/HTML/default.htm</a>).</p>
-<p>The locally compiled and installed binaries of the biomechanical toolkit python wrapper (<a class="reference external" href="http://biomechanical-toolkit.github.io/docs/Wrapping/Python/index.html">http://biomechanical-toolkit.github.io/docs/Wrapping/Python/index.html</a>) are used to read
-and extract the data.</p>
-<dl class="method">
-<dt id="src.sensor.SensorDataReader.get_frequency">
-<code class="descname">get_frequency</code><span class="sig-paren">(</span><em>filepath</em>, <em>point=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/sensor.html#SensorDataReader.get_frequency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.sensor.SensorDataReader.get_frequency" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract analog/point frequencies.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.sensor.SensorDataReader.get_raw_data">
-<code class="descname">get_raw_data</code><span class="sig-paren">(</span><em>filepath</em>, <em>balance_board=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/sensor.html#SensorDataReader.get_raw_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.sensor.SensorDataReader.get_raw_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract and aggregate raw sensor data of interest.</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="raw-acquisition-data-extraction">
+<h2>Raw acquisition data extraction<a class="headerlink" href="#raw-acquisition-data-extraction" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-src.preprocess">
-<span id="data-preprocessing"></span><h2>Data preprocessing<a class="headerlink" href="#module-src.preprocess" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="src.preprocess.DataPreprocessor">
-<em class="property">class </em><code class="descclassname">src.preprocess.</code><code class="descname">DataPreprocessor</code><a class="reference internal" href="_modules/src/preprocess.html#DataPreprocessor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.preprocess.DataPreprocessor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class that handles the preprocessing related tasks of the acquisition signal using the open source Scipy library.</p>
-<p>More specifically, it relies on the implementations found in the latest release of the scipy signal processing package scipy.signal.</p>
-<dl class="method">
-<dt id="src.preprocess.DataPreprocessor.apply_detrending">
-<code class="descname">apply_detrending</code><span class="sig-paren">(</span><em>input_signal</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/preprocess.html#DataPreprocessor.apply_detrending"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.preprocess.DataPreprocessor.apply_detrending" title="Permalink to this definition">¶</a></dt>
-<dd><p>Detrend the input signal by removing a linear trend or just the mean of the signal.</p>
-<p>Scipy documentation: <a class="reference external" href="https://docs.scipy.org/doc/scipy-1.1.0/reference/generated/scipy.signal.detrend.html#scipy.signal.detrend">https://docs.scipy.org/doc/scipy-1.1.0/reference/generated/scipy.signal.detrend.html#scipy.signal.detrend</a>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.preprocess.DataPreprocessor.apply_filtering">
-<code class="descname">apply_filtering</code><span class="sig-paren">(</span><em>input_signal</em>, <em>analog_frequency</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/preprocess.html#DataPreprocessor.apply_filtering"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.preprocess.DataPreprocessor.apply_filtering" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create and apply a low pass butterworth filter. The order and the cutoff frequencies of the filter can be specified through the configuration file.</p>
-<p>Scipy documentation: <a class="reference external" href="https://docs.scipy.org/doc/scipy-1.1.0/reference/generated/scipy.signal.butter.html#scipy.signal.butter">https://docs.scipy.org/doc/scipy-1.1.0/reference/generated/scipy.signal.butter.html#scipy.signal.butter</a></p>
-<p>Then it applies the butter digital filter forward and backward to the input signal.
-Scipy documentation: <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.filtfilt.html">https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.filtfilt.html</a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.preprocess.DataPreprocessor.apply_resampling">
-<code class="descname">apply_resampling</code><span class="sig-paren">(</span><em>input_signal</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/preprocess.html#DataPreprocessor.apply_resampling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.preprocess.DataPreprocessor.apply_resampling" title="Permalink to this definition">¶</a></dt>
-<dd><p>Resample the input signal using polyphase resampling.</p>
-<p>Scipy documentation: <a class="reference external" href="https://docs.scipy.org/doc/scipy-1.1.0/reference/generated/scipy.signal.resample_poly.html#scipy.signal.resample_poly">https://docs.scipy.org/doc/scipy-1.1.0/reference/generated/scipy.signal.resample_poly.html#scipy.signal.resample_poly</a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.preprocess.DataPreprocessor.cut_data">
-<code class="descname">cut_data</code><span class="sig-paren">(</span><em>input_signal</em>, <em>threshold=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/preprocess.html#DataPreprocessor.cut_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.preprocess.DataPreprocessor.cut_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Cut beginning of the input signal based on a given threshold.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.preprocess.DataPreprocessor.preprocess">
-<code class="descname">preprocess</code><span class="sig-paren">(</span><em>input_signal</em>, <em>analog_frequency</em>, <em>balance_board=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/preprocess.html#DataPreprocessor.preprocess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.preprocess.DataPreprocessor.preprocess" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pipeline all the preprocessing steps.</p>
-<p>The resampling is only applied to the wii balance board data in order to match the force plate acquisition frequency.</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="data-preprocessing">
+<h2>Data preprocessing<a class="headerlink" href="#data-preprocessing" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="center-of-pressure-computations">
 <h2>Center of Pressure computations<a class="headerlink" href="#center-of-pressure-computations" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-src.features">
-<span id="feature-computations"></span><h2>Feature computations<a class="headerlink" href="#module-src.features" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="src.features.CopFeatures">
-<em class="property">class </em><code class="descclassname">src.features.</code><code class="descname">CopFeatures</code><span class="sig-paren">(</span><em>cop_x</em>, <em>cop_y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/features.html#CopFeatures"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.features.CopFeatures" title="Permalink to this definition">¶</a></dt>
-<dd><p>Base class for COP based features computations.</p>
-<p>This class doesn’t implement any feature computations and is simply responsible for parsing the COP data that will be used in COP based features computations in both the time and frequency domains.</p>
-<dl class="staticmethod">
-<dt id="src.features.CopFeatures.compute_rd">
-<em class="property">static </em><code class="descname">compute_rd</code><span class="sig-paren">(</span><em>cop_x</em>, <em>cop_y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/features.html#CopFeatures.compute_rd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.features.CopFeatures.compute_rd" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to compute the resultant distance vector from the x and y COP coordinates</p>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="src.features.CopFeatures.parse_cop_data">
-<em class="property">static </em><code class="descname">parse_cop_data</code><span class="sig-paren">(</span><em>filepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/features.html#CopFeatures.parse_cop_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.features.CopFeatures.parse_cop_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse cop data from an input file.</p>
-</dd></dl>
-
-</dd></dl>
-
-<span class="target" id="module-src.time_features"></span><dl class="class">
-<dt id="src.time_features.AreaFeatures">
-<em class="property">class </em><code class="descclassname">src.time_features.</code><code class="descname">AreaFeatures</code><span class="sig-paren">(</span><em>cop_x</em>, <em>cop_y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#AreaFeatures"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.AreaFeatures" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class that implements the time domain area features computations derived from the COP positions.</p>
-<dl class="method">
-<dt id="src.time_features.AreaFeatures.compute_area_features">
-<code class="descname">compute_area_features</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#AreaFeatures.compute_area_features"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.AreaFeatures.compute_area_features" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute all the area features and store them in a dictionary.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.AreaFeatures.compute_confidence_circle_area">
-<code class="descname">compute_confidence_circle_area</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#AreaFeatures.compute_confidence_circle_area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.AreaFeatures.compute_confidence_circle_area" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the 95% confidence circle area (AREA-CC).</p>
-<p>It is the area of a circle with a radius equal to the one-sided 95% confidence limit of the RD time series.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.AreaFeatures.compute_confidence_elipse_area">
-<code class="descname">compute_confidence_elipse_area</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#AreaFeatures.compute_confidence_elipse_area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.AreaFeatures.compute_confidence_elipse_area" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the 95% confidence elipse area (AREA-CE).</p>
-<p>It is the area of the 95% bivariate confidence ellipse, which is expected to enclose approximately 95% of the points on the COP path.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.AreaFeatures.compute_std_ap">
-<code class="descname">compute_std_ap</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#AreaFeatures.compute_std_ap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.AreaFeatures.compute_std_ap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the standard deviation of the AP time series.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.AreaFeatures.compute_std_ml">
-<code class="descname">compute_std_ml</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#AreaFeatures.compute_std_ml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.AreaFeatures.compute_std_ml" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the standard deviation of the ML time series.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.AreaFeatures.compute_std_rd">
-<code class="descname">compute_std_rd</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#AreaFeatures.compute_std_rd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.AreaFeatures.compute_std_rd" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the standard deviation of the resultant distance time series.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.AreaFeatures.summary">
-<code class="descname">summary</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#AreaFeatures.summary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.AreaFeatures.summary" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print out a summary of the area features to standard output.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="src.time_features.DistanceFeatures">
-<em class="property">class </em><code class="descclassname">src.time_features.</code><code class="descname">DistanceFeatures</code><span class="sig-paren">(</span><em>cop_x</em>, <em>cop_y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#DistanceFeatures"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.DistanceFeatures" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class that implements the time domain distance features computations derived from the COP positions.</p>
-<dl class="method">
-<dt id="src.time_features.DistanceFeatures.compute_ap_mean_distance">
-<code class="descname">compute_ap_mean_distance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#DistanceFeatures.compute_ap_mean_distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.DistanceFeatures.compute_ap_mean_distance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the average AP distance from the mean COP.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.DistanceFeatures.compute_ap_mean_velocity">
-<code class="descname">compute_ap_mean_velocity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#DistanceFeatures.compute_ap_mean_velocity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.DistanceFeatures.compute_ap_mean_velocity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the average velocity of the COP in the AP direction.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.DistanceFeatures.compute_ap_path_length">
-<code class="descname">compute_ap_path_length</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#DistanceFeatures.compute_ap_path_length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.DistanceFeatures.compute_ap_path_length" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the total length of the COP path in the AP direction.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.DistanceFeatures.compute_ap_range">
-<code class="descname">compute_ap_range</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#DistanceFeatures.compute_ap_range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.DistanceFeatures.compute_ap_range" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the range in the AP direction.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.DistanceFeatures.compute_ap_rms_distance">
-<code class="descname">compute_ap_rms_distance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#DistanceFeatures.compute_ap_rms_distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.DistanceFeatures.compute_ap_rms_distance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the root mean square AP distance from the mean COP.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.DistanceFeatures.compute_distance_features">
-<code class="descname">compute_distance_features</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#DistanceFeatures.compute_distance_features"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.DistanceFeatures.compute_distance_features" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute all the distance features and store them in a dictionary.</p>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="src.time_features.DistanceFeatures.compute_mean_distance">
-<em class="property">static </em><code class="descname">compute_mean_distance</code><span class="sig-paren">(</span><em>array</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#DistanceFeatures.compute_mean_distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.DistanceFeatures.compute_mean_distance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the mean value of an array using the numpy mean implementation.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.DistanceFeatures.compute_ml_mean_distance">
-<code class="descname">compute_ml_mean_distance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#DistanceFeatures.compute_ml_mean_distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.DistanceFeatures.compute_ml_mean_distance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the average ML distance from the mean COP.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.DistanceFeatures.compute_ml_mean_velocity">
-<code class="descname">compute_ml_mean_velocity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#DistanceFeatures.compute_ml_mean_velocity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.DistanceFeatures.compute_ml_mean_velocity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the average velocity of the COP in the ML direction.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.DistanceFeatures.compute_ml_path_length">
-<code class="descname">compute_ml_path_length</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#DistanceFeatures.compute_ml_path_length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.DistanceFeatures.compute_ml_path_length" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the total length of the COP path in the ML direction.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.DistanceFeatures.compute_ml_range">
-<code class="descname">compute_ml_range</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#DistanceFeatures.compute_ml_range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.DistanceFeatures.compute_ml_range" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the range in the ML direction.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.DistanceFeatures.compute_ml_rms_distance">
-<code class="descname">compute_ml_rms_distance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#DistanceFeatures.compute_ml_rms_distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.DistanceFeatures.compute_ml_rms_distance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the root mean square ML distance from the mean COP.</p>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="src.time_features.DistanceFeatures.compute_range">
-<em class="property">static </em><code class="descname">compute_range</code><span class="sig-paren">(</span><em>min_value</em>, <em>max_value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#DistanceFeatures.compute_range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.DistanceFeatures.compute_range" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the range.</p>
-<p>The range is the maximum distance between any two points on the COP path.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.DistanceFeatures.compute_rd_mean_distance">
-<code class="descname">compute_rd_mean_distance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#DistanceFeatures.compute_rd_mean_distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.DistanceFeatures.compute_rd_mean_distance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the average distance from the mean COP.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.DistanceFeatures.compute_rd_mean_velocity">
-<code class="descname">compute_rd_mean_velocity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#DistanceFeatures.compute_rd_mean_velocity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.DistanceFeatures.compute_rd_mean_velocity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the average velocity of the COP.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.DistanceFeatures.compute_rd_path_length">
-<code class="descname">compute_rd_path_length</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#DistanceFeatures.compute_rd_path_length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.DistanceFeatures.compute_rd_path_length" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the total length of the COP path.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.DistanceFeatures.compute_rd_range">
-<code class="descname">compute_rd_range</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#DistanceFeatures.compute_rd_range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.DistanceFeatures.compute_rd_range" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the range of the resultant distance time series.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.DistanceFeatures.compute_rd_rms_distance">
-<code class="descname">compute_rd_rms_distance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#DistanceFeatures.compute_rd_rms_distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.DistanceFeatures.compute_rd_rms_distance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the root mean square distance from the mean COP.</p>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="src.time_features.DistanceFeatures.compute_rms_distance">
-<em class="property">static </em><code class="descname">compute_rms_distance</code><span class="sig-paren">(</span><em>array</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#DistanceFeatures.compute_rms_distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.DistanceFeatures.compute_rms_distance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the root mean square value of an array using the numpy mean, root and square implementations.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.DistanceFeatures.summary">
-<code class="descname">summary</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#DistanceFeatures.summary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.DistanceFeatures.summary" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print out a summary of the distance features to standard output.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="src.time_features.HybridFeatures">
-<em class="property">class </em><code class="descclassname">src.time_features.</code><code class="descname">HybridFeatures</code><span class="sig-paren">(</span><em>cop_x</em>, <em>cop_y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#HybridFeatures"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.HybridFeatures" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class that implements the time domain hybrid features computations derived from the COP positions.</p>
-<dl class="method">
-<dt id="src.time_features.HybridFeatures.compute_fractal_dimension">
-<code class="descname">compute_fractal_dimension</code><span class="sig-paren">(</span><em>d</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#HybridFeatures.compute_fractal_dimension"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.HybridFeatures.compute_fractal_dimension" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the fractal dimension (FD).</p>
-<p>The fractal dimension (FD) is a unitless measure of the degree to which a curve fills the metric space which it encompasses.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.HybridFeatures.compute_fractal_dimension_cc">
-<code class="descname">compute_fractal_dimension_cc</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#HybridFeatures.compute_fractal_dimension_cc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.HybridFeatures.compute_fractal_dimension_cc" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the fractal dimension-CC.</p>
-<p>The fractal dimension-CC is based on the 95% confidence circle.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.HybridFeatures.compute_fractal_dimension_ce">
-<code class="descname">compute_fractal_dimension_ce</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#HybridFeatures.compute_fractal_dimension_ce"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.HybridFeatures.compute_fractal_dimension_ce" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the fractal dimension-CE.</p>
-<p>The fractal dimension-CE is based on the 95% confidence elipse.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.HybridFeatures.compute_hybrid_features">
-<code class="descname">compute_hybrid_features</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#HybridFeatures.compute_hybrid_features"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.HybridFeatures.compute_hybrid_features" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute all the hybrid features and store them in a dictionary.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.HybridFeatures.compute_mean_frequency">
-<code class="descname">compute_mean_frequency</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#HybridFeatures.compute_mean_frequency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.HybridFeatures.compute_mean_frequency" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the mean frequency.</p>
-<p>The mean frequency (MFREQ) is the rotational frequency,in revolutions per second or Hz, of the COP if it had traveled the total excursions around a circle with a radius of the mean distance.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.HybridFeatures.compute_mean_frequency_ap">
-<code class="descname">compute_mean_frequency_ap</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#HybridFeatures.compute_mean_frequency_ap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.HybridFeatures.compute_mean_frequency_ap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the mean frequency in the AP direction.</p>
-<p>The mean frequency-AP is the frequency, in Hz, of a sinusoidal oscillation with an average value of the mean distance-AP and a total path length of total excursions-AP.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.HybridFeatures.compute_mean_frequency_ml">
-<code class="descname">compute_mean_frequency_ml</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#HybridFeatures.compute_mean_frequency_ml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.HybridFeatures.compute_mean_frequency_ml" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the mean frequency in the ML direction.</p>
-<p>The mean frequency-ML is the frequency, in Hz, of a sinusoidal oscillation with an average value of the mean distance-ML and a total path length of total excursions-ML.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.HybridFeatures.compute_sway_area">
-<code class="descname">compute_sway_area</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#HybridFeatures.compute_sway_area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.HybridFeatures.compute_sway_area" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the sway area.</p>
-<p>Sway area estimates the area enclosed by the COP path per unit of time.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.HybridFeatures.summary">
-<code class="descname">summary</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#HybridFeatures.summary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.HybridFeatures.summary" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print out a summary of the hybrid features to standard output.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="src.time_features.TimeFeatures">
-<em class="property">class </em><code class="descclassname">src.time_features.</code><code class="descname">TimeFeatures</code><span class="sig-paren">(</span><em>cop_x</em>, <em>cop_y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#TimeFeatures"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.TimeFeatures" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class that merges all the time domain features.</p>
-<dl class="method">
-<dt id="src.time_features.TimeFeatures.merge_time_features">
-<code class="descname">merge_time_features</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#TimeFeatures.merge_time_features"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.TimeFeatures.merge_time_features" title="Permalink to this definition">¶</a></dt>
-<dd><p>Merge all the time domain features together.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.time_features.TimeFeatures.summary">
-<code class="descname">summary</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/time_features.html#TimeFeatures.summary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.time_features.TimeFeatures.summary" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print out a summary of the time features to standard output.</p>
-</dd></dl>
-
-</dd></dl>
-
-<span class="target" id="module-src.frequency_features"></span><dl class="class">
-<dt id="src.frequency_features.FrequencyFeatures">
-<em class="property">class </em><code class="descclassname">src.frequency_features.</code><code class="descname">FrequencyFeatures</code><span class="sig-paren">(</span><em>cop_x</em>, <em>cop_y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/frequency_features.html#FrequencyFeatures"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.frequency_features.FrequencyFeatures" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class that implements the frequency domain features derived from the COP positions.</p>
-<dl class="method">
-<dt id="src.frequency_features.FrequencyFeatures.compute_ap_f_peak">
-<code class="descname">compute_ap_f_peak</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/frequency_features.html#FrequencyFeatures.compute_ap_f_peak"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.frequency_features.FrequencyFeatures.compute_ap_f_peak" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to compute the peak frequency in the AP direction.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.frequency_features.FrequencyFeatures.compute_ap_power_frequency">
-<code class="descname">compute_ap_power_frequency</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/frequency_features.html#FrequencyFeatures.compute_ap_power_frequency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.frequency_features.FrequencyFeatures.compute_ap_power_frequency" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to compute the n% power frequency in the AP direction.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.frequency_features.FrequencyFeatures.compute_ap_power_spectral_density">
-<code class="descname">compute_ap_power_spectral_density</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/frequency_features.html#FrequencyFeatures.compute_ap_power_spectral_density"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.frequency_features.FrequencyFeatures.compute_ap_power_spectral_density" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to compute the power spectral density of  the COP displacement in the AP direction.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.frequency_features.FrequencyFeatures.compute_ap_power_spectrum_area">
-<code class="descname">compute_ap_power_spectrum_area</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/frequency_features.html#FrequencyFeatures.compute_ap_power_spectrum_area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.frequency_features.FrequencyFeatures.compute_ap_power_spectrum_area" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to compute the power spectrum area of the COP displacement in the AP direction.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.frequency_features.FrequencyFeatures.compute_ap_total_power">
-<code class="descname">compute_ap_total_power</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/frequency_features.html#FrequencyFeatures.compute_ap_total_power"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.frequency_features.FrequencyFeatures.compute_ap_total_power" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to compute the total power in the AP direction.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.frequency_features.FrequencyFeatures.compute_frequency_features">
-<code class="descname">compute_frequency_features</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/frequency_features.html#FrequencyFeatures.compute_frequency_features"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.frequency_features.FrequencyFeatures.compute_frequency_features" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute all the frequency features and store them in a dictionary.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.frequency_features.FrequencyFeatures.compute_ml_f_peak">
-<code class="descname">compute_ml_f_peak</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/frequency_features.html#FrequencyFeatures.compute_ml_f_peak"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.frequency_features.FrequencyFeatures.compute_ml_f_peak" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to compute the peak frequency in the ML direction.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.frequency_features.FrequencyFeatures.compute_ml_power_frequency">
-<code class="descname">compute_ml_power_frequency</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/frequency_features.html#FrequencyFeatures.compute_ml_power_frequency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.frequency_features.FrequencyFeatures.compute_ml_power_frequency" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to compute the n% power frequency in the ML direction.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.frequency_features.FrequencyFeatures.compute_ml_power_spectral_density">
-<code class="descname">compute_ml_power_spectral_density</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/frequency_features.html#FrequencyFeatures.compute_ml_power_spectral_density"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.frequency_features.FrequencyFeatures.compute_ml_power_spectral_density" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to compute the power spectral density of  the COP displacement in the ML direction.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.frequency_features.FrequencyFeatures.compute_ml_power_spectrum_area">
-<code class="descname">compute_ml_power_spectrum_area</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/frequency_features.html#FrequencyFeatures.compute_ml_power_spectrum_area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.frequency_features.FrequencyFeatures.compute_ml_power_spectrum_area" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to compute the power spectrum area of the COP displacement in the ML direction.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.frequency_features.FrequencyFeatures.compute_ml_total_power">
-<code class="descname">compute_ml_total_power</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/frequency_features.html#FrequencyFeatures.compute_ml_total_power"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.frequency_features.FrequencyFeatures.compute_ml_total_power" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to compute the total power in the ML direction.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.frequency_features.FrequencyFeatures.compute_power_spectral_density">
-<code class="descname">compute_power_spectral_density</code><span class="sig-paren">(</span><em>array</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/frequency_features.html#FrequencyFeatures.compute_power_spectral_density"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.frequency_features.FrequencyFeatures.compute_power_spectral_density" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to compute the power spectral density using the scipy implementation of the Welch method.”</p>
-<p>Scipy documentation: <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.welch.html#scipy.signal.welch">https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.welch.html#scipy.signal.welch</a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.frequency_features.FrequencyFeatures.compute_rd_f_peak">
-<code class="descname">compute_rd_f_peak</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/frequency_features.html#FrequencyFeatures.compute_rd_f_peak"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.frequency_features.FrequencyFeatures.compute_rd_f_peak" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to compute the peak frequency.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.frequency_features.FrequencyFeatures.compute_rd_power_frequency">
-<code class="descname">compute_rd_power_frequency</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/frequency_features.html#FrequencyFeatures.compute_rd_power_frequency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.frequency_features.FrequencyFeatures.compute_rd_power_frequency" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to compute the n% power frequency.</p>
-<p>The n% power frequency is the frequency below which n% of the total power is found.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.frequency_features.FrequencyFeatures.compute_rd_power_spectral_density">
-<code class="descname">compute_rd_power_spectral_density</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/frequency_features.html#FrequencyFeatures.compute_rd_power_spectral_density"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.frequency_features.FrequencyFeatures.compute_rd_power_spectral_density" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to compute the power spectral density of the resultant distance vector of the COP displacement.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.frequency_features.FrequencyFeatures.compute_rd_power_spectrum_area">
-<code class="descname">compute_rd_power_spectrum_area</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/frequency_features.html#FrequencyFeatures.compute_rd_power_spectrum_area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.frequency_features.FrequencyFeatures.compute_rd_power_spectrum_area" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to compute the power spectrum cumulative area of the COP displacement.</p>
-<p>The cumulative integrated area is computed using the composite trapezoidal rule.
-Scipy documentation: <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.cumtrapz.html">https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.cumtrapz.html</a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.frequency_features.FrequencyFeatures.compute_rd_total_power">
-<code class="descname">compute_rd_total_power</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/frequency_features.html#FrequencyFeatures.compute_rd_total_power"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.frequency_features.FrequencyFeatures.compute_rd_total_power" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to compute the total power.</p>
-<p>The total power (POWER) is the integrated area of the power spectrum.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="src.frequency_features.FrequencyFeatures.summary">
-<code class="descname">summary</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/frequency_features.html#FrequencyFeatures.summary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.frequency_features.FrequencyFeatures.summary" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print out a summary of the frequency features to standard output.</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="feature-computations">
+<h2>Feature computations<a class="headerlink" href="#feature-computations" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="data-pipelining">
 <h2>Data pipelining<a class="headerlink" href="#data-pipelining" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="statistics">
+<h2>Statistics<a class="headerlink" href="#statistics" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-src.utils">
+<span id="utilities"></span><h2>Utilities<a class="headerlink" href="#module-src.utils" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="src.utils.NumpyEncoder">
+<em class="property">class </em><code class="descclassname">src.utils.</code><code class="descname">NumpyEncoder</code><span class="sig-paren">(</span><em>*</em>, <em>skipkeys=False</em>, <em>ensure_ascii=True</em>, <em>check_circular=True</em>, <em>allow_nan=True</em>, <em>sort_keys=False</em>, <em>indent=None</em>, <em>separators=None</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils.html#NumpyEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.utils.NumpyEncoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Special json encoder for numpy types.</p>
+<dl class="method">
+<dt id="src.utils.NumpyEncoder.default">
+<code class="descname">default</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils.html#NumpyEncoder.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.utils.NumpyEncoder.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement this method in a subclass such that it returns
+a serializable object for <code class="docutils literal notranslate"><span class="pre">o</span></code>, or calls the base implementation
+(to raise a <code class="docutils literal notranslate"><span class="pre">TypeError</span></code>).</p>
+<p>For example, to support arbitrary iterators, you could
+implement default like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">iterable</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">iterable</span><span class="p">)</span>
+    <span class="c1"># Let the base class default method raise the TypeError</span>
+    <span class="k">return</span> <span class="n">JSONEncoder</span><span class="o">.</span><span class="n">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="src.utils.build_filename">
+<code class="descclassname">src.utils.</code><code class="descname">build_filename</code><span class="sig-paren">(</span><em>filepath</em>, <em>destination_folder</em>, <em>name_extension</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils.html#build_filename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.utils.build_filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build a custom destination filepath.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.utils.check_folder">
+<code class="descclassname">src.utils.</code><code class="descname">check_folder</code><span class="sig-paren">(</span><em>folder_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils.html#check_folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.utils.check_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if a folder exists, and if not, create it.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.utils.clean_files">
+<code class="descclassname">src.utils.</code><code class="descname">clean_files</code><span class="sig-paren">(</span><em>files</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils.html#clean_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.utils.clean_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Separate WBB and force plate data.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.utils.get_path_to_all_files">
+<code class="descclassname">src.utils.</code><code class="descname">get_path_to_all_files</code><span class="sig-paren">(</span><em>folder_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils.html#get_path_to_all_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.utils.get_path_to_all_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursively get all filepaths from a directory tree.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.utils.load_config">
+<code class="descclassname">src.utils.</code><code class="descname">load_config</code><span class="sig-paren">(</span><em>filename='config'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils.html#load_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.utils.load_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a configuration file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.utils.save_as_json">
+<code class="descclassname">src.utils.</code><code class="descname">save_as_json</code><span class="sig-paren">(</span><em>data</em>, <em>filepath</em>, <em>destination_folder</em>, <em>name_extension</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils.html#save_as_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.utils.save_as_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save results data to json format.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.utils.setup_logging">
+<code class="descclassname">src.utils.</code><code class="descname">setup_logging</code><span class="sig-paren">(</span><em>default_level=20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils.html#setup_logging"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.utils.setup_logging" title="Permalink to this definition">¶</a></dt>
+<dd><p>Setup the logging module configuration from configuration file.</p>
+</dd></dl>
+
 </div>
 </div>
 
@@ -534,11 +146,13 @@ Scipy documentation: <a class="reference external" href="https://docs.scipy.org/
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="background.html">Background</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-src.sensor">Raw acquisition data extraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-src.preprocess">Data preprocessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#raw-acquisition-data-extraction">Raw acquisition data extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-preprocessing">Data preprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#center-of-pressure-computations">Center of Pressure computations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-src.features">Feature computations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#feature-computations">Feature computations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#data-pipelining">Data pipelining</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#statistics">Statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-src.utils">Utilities</a></li>
 </ul>
 </li>
 </ul>
@@ -579,10 +193,6 @@ Scipy documentation: <a class="reference external" href="https://docs.scipy.org/
           rel="nofollow">Page source</a>
     </div>
 
-    
-    <a href="https://github.com/Antoninj/" class="github">
-        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
-    </a>
     
 
     

@@ -24,9 +24,12 @@ class FrequencyFeatures(CopFeatures):
         self.frequency_features = self.compute_frequency_features()
 
     def compute_power_spectral_density(self, array):
-        """Function to compute the power spectral density using the scipy implementation of the Welch method."
+        """
+        Function to compute the power spectral density using the scipy implementation of the Welch method.
 
-        Scipy documentation: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.welch.html#scipy.signal.welch
+        References
+        ----------
+         ..[1] Scipy documentation: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.welch.html#scipy.signal.welch
         """
 
         (f, psd) = welch(array, fs=self.fs, nperseg=self.nperseg)

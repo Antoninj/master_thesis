@@ -43,6 +43,11 @@ Data pipelining
 .. automodule:: src.pipeline
   :members:
 
+Statistics
+----------
+
+.. automodule:: src.stats
+  :members:
 
 Utilities
 ---------

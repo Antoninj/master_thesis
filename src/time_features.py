@@ -387,7 +387,7 @@ class HybridFeatures(AreaFeatures):
 
 class TimeFeatures(HybridFeatures):
     """
-    Class that merges all the time domain features.
+    Class that computes and merges all the time domain features.
     """
 
     def __init__(self, cop_x, cop_y):
