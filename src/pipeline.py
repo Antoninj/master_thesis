@@ -97,4 +97,11 @@ class DataPipeline(SensorDataReader, DataPreprocessor):
         if self.data is not None:
             for file in tqdm(self.data):
                 self.save_features(file, balance_board)
+        else:
+            logger.info("No files to process.")
+
+    def set_pipeline_data(files):
+        """Set the input data of the pipeline."""
+
+        self.data = files
 
