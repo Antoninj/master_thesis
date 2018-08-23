@@ -70,13 +70,10 @@ class DataPreprocessor:
 
         return scipy.signal.detrend(input_signal, type=self.detrending_type)
 
-    def cut_data(self, input_signal, threshold=None):
+    def cut_data(self, input_signal, threshold_1=500, threshold_2=2500):
         """Cut beginning of the input signal based on a given threshold."""
 
-        if threshold:
-            return input_signal[threshold:]
-        else:
-            return input_signal[self.threshold:]
+        return input_signal[threshold_1:threshold_2]
 
     def preprocess_sensor_data(self, input_signal, analog_frequency, balance_board=False):
         """
@@ -87,17 +84,17 @@ class DataPreprocessor:
 
         if balance_board:
             signal = input_signal[:, 0]
-            cut_signal = self.cut_data(signal, 500)
-            resampled_signal = self.apply_resampling(cut_signal)
+            resampled_signal = self.apply_resampling(signal)
             filtered_signal = self.apply_filtering(
                 resampled_signal, analog_frequency)
         else:
             signal = input_signal.flatten()
-            cut_signal = self.cut_data(signal, 5000)
             filtered_signal = self.apply_filtering(
-                cut_signal, analog_frequency)
+                signal, analog_frequency)
 
-        return filtered_signal
+        troncated_signal = self.cut_data(filtered_signal, 5000, 25000)
+
+        return troncated_signal
 
     def preprocess_raw_data(self, data, frequency, balance_board=False):
         """Preprocess the raw force sensor data"""

@@ -1,15 +1,15 @@
 {
     "wbb_parameters": {
-        "width": 43.3,
-        "length": 23.8,
-        "height": 3.25
+        "width": 433,
+        "length": 238,
+        "height": 55
     },
     "preprocessing_parameters": {
-        "filter_order": 4,
+        "filter_order": 2,
         "cutoff_frequency": 12,
         "detrending_type": "constant",
-        "upsampling_factor": 100,
-        "downsampling_factor": 3,
+        "upsampling_factor": 20,
+        "downsampling_factor": 2,
         "acquisition_frequency": 1000,
         "cut_threshold": 500
     },

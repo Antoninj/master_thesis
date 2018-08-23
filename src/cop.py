@@ -27,10 +27,10 @@ def fill_zeros_with_last(arr):
 
 
 def compute_cop_wbb_x(data):
-    """Compute the x coordinate of the WBB center of pressure."""
+    """Compute the x coordinate of the WBB center of pressure (ML direction)."""
 
     # Wbb width (in mm)
-    lx = config["wbb_parameters"]["width"] * 10
+    lx = config["wbb_parameters"]["width"]
 
     # Wbb force sensor values
     TR = data["TopRight Kg"]
@@ -53,11 +53,10 @@ def compute_cop_wbb_x(data):
 
 
 def compute_cop_wbb_y(data):
-    """Compute the y coordinate of the WBB center of pressure."""
+    """Compute the y coordinate of the WBB center of pressure (AP direction)."""
 
     # Wbb length (in mm)
-    ly = config["wbb_parameters"]["length"] * 10
-
+    ly = config["wbb_parameters"]["length"]
     # Wbb force sensor values
     TR = data["TopRight Kg"]
     BR = data["BottomRight Kg"]
@@ -81,7 +80,7 @@ def compute_cop_wbb_y(data):
 def compute_cop_fp_x(data, debug=False):
     """Compute the x coordinate of the force plate center of pressure."""
 
-    # Force plate heigth (in mm)
+    # Force plate height (in mm)
     dz = config["wbb_parameters"]["height"]
 
     # Force plate sensor values
@@ -93,11 +92,6 @@ def compute_cop_fp_x(data, debug=False):
     My = pd.DataFrame(My)[0].replace(to_replace=0, value=1).values
     Fz = pd.DataFrame(Fz)[0].replace(to_replace=0, value=1).values
 
-    if debug:
-        print(Fx)
-        # print(np.where(FZ == 0)[0])
-        # print(FZ[0:600])
-
     cop_fp_x = -(My + dz * Fx) / (Fz)
 
     return cop_fp_x
@@ -106,7 +100,7 @@ def compute_cop_fp_x(data, debug=False):
 def compute_cop_fp_y(data):
     """Compute the y coordinate of the force plate center of pressure."""
 
-    # Force plate heigth (in mm)
+    # Force plate height (in mm)
     dz = config["wbb_parameters"]["height"]
 
     # Force plate sensor values
@@ -118,6 +112,6 @@ def compute_cop_fp_y(data):
     Mx = pd.DataFrame(Mx)[0].replace(to_replace=0, value=1).values
     Fz = pd.DataFrame(Fz)[0].replace(to_replace=0, value=1).values
 
-    cop_fp_y = (Mx - dz * Fy) / (Fz)
+    cop_fp_y = (Mx + dz * Fy) / (Fz)
 
     return cop_fp_y
