@@ -41,17 +41,17 @@ def load_config(filename="config"):
 
 
 def save_as_json(data, filepath, destination_folder, name_extension):
-    """Save results data to json format."""
+    """Save results to json format."""
 
     filename = build_filename(filepath, destination_folder, name_extension)
     with open(filename, 'w') as outfile:
         json.dump(data, outfile, cls=NumpyEncoder, sort_keys=False, indent=4, ensure_ascii=False)
 
 
-def build_filename(filepath, destination_folder, name_extension):
-    """Build a custom destination filepath."""
+def build_filename(input_file, destination_folder, name_extension):
+    """Build a custom destination filepath from the input file."""
 
-    base_name = os.path.splitext(filepath)[0]
+    base_name = os.path.splitext(input_file)[0]
     replacement_string = "results/{}".format(destination_folder)
     filename = base_name.replace("BalanceBoard_Static", replacement_string) + "_{}.json".format(name_extension)
     dir_name = os.path.dirname(filename)

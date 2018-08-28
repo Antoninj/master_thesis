@@ -26,8 +26,10 @@ if __name__ == "__main__":
     parser = ArgumentParser(
         description="")
     parser.add_argument("-w", "--wbb", action='store_true', help="Process WBB data")
+    parser.add_argument("-c", "--cop", action='store_true', help="Save cop data")
     args = parser.parse_args()
     WBB = args.wbb
+    COP = args.cop
 
     # Create a data pipeline object
     cop_data_pipeline = DataPipeline()
@@ -42,9 +44,9 @@ if __name__ == "__main__":
         logger.info("Processing Wii Balance Board data.")
         logger.info("Test file: {}".format(filepath_wbb))
 
-        cop_data_pipeline.save_features(filepath_wbb, balance_board=True)
+        cop_data_pipeline.save_features(filepath_wbb, balance_board=WBB, save_cop=COP)
     else:
         logger.info("Processing Force Plate data.")
         logger.info("Test file: {}".format(filepath_fp))
 
-        cop_data_pipeline.save_features(filepath_fp)
+        cop_data_pipeline.save_features(filepath_fp, save_cop=COP)

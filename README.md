@@ -7,4 +7,4 @@ Previous studies focusing on time domain measures derived from the Center Of Pre
 
 My work is aiming at validating COP-based measurements both in the time and frequency domains. The repository can be seen as a posturography software toolbox which consists of a python implementation of various postural steadiness measurements derived from the time and spectral analysis of the signal.
 
-![img](docs/stabilogram_example.png)
+![img](docs/stabilogram_example_fp.png)
