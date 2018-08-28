@@ -70,8 +70,8 @@ class DataPreprocessor:
 
         return scipy.signal.detrend(input_signal, type=self.detrending_type)
 
-    def cut_data(self, input_signal, threshold_1=500, threshold_2=2500):
-        """Cut beginning of the input signal based on a given threshold."""
+    def cut_data(self, input_signal, threshold_1=5000, threshold_2=25000):
+        """Remove the beginning and the end of the input signal based on some given thresholds."""
 
         return input_signal[threshold_1:threshold_2]
 
@@ -92,7 +92,7 @@ class DataPreprocessor:
             filtered_signal = self.apply_filtering(
                 signal, analog_frequency)
 
-        troncated_signal = self.cut_data(filtered_signal, 5000, 25000)
+        troncated_signal = self.cut_data(filtered_signal)
 
         return troncated_signal
 

@@ -5,7 +5,7 @@
         "height": 55
     },
     "preprocessing_parameters": {
-        "filter_order": 2,
+        "filter_order": 1,
         "cutoff_frequency": 12,
         "detrending_type": "constant",
         "upsampling_factor": 20,
@@ -30,6 +30,7 @@
             "My1"
         ],
         "data_points_labels": [
+            "COP x y body weight",
             "BottomLeft Kg",
             "BottomRight Kg",
             "TopRight Kg",
@@ -37,10 +38,10 @@
         ]
     },
     "test_files": {
-        "wbb_raw_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet1/Session1/BalanceBoard/1.c3d",
+        "wbb_raw_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet4/Session2/BalanceBoard/10.c3d",
         "fp_raw_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet1/Session1/Vicon/1.c3d",
-        "wbb_cop_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/Sujet1/Session1/BalanceBoard/1_cop.json",
-        "fp_cop_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/Sujet1/Session1/Vicon/1_cop.c3d"
+        "wbb_cop_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/cop_results/Sujet1/Session1/BalanceBoard/1_cop.json",
+        "fp_cop_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/cop_results/Sujet1/Session1/Vicon/1_cop.c3d"
     },
     "data_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static",
     "feature_results_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/feature_results",

@@ -28,7 +28,7 @@ if __name__ == "__main__":
     # Command line argument parser to choose between wbb or force plate data
     parser = ArgumentParser(
         description="")
-    parser.add_argument("-d", "--debug", action='store_true', help="Show debug messages")
+    parser.add_argument("-d", "--debug", action='store_true', help="Show debugging messages")
     args = parser.parse_args()
     debug = args.debug
 

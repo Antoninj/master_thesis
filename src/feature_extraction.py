@@ -16,7 +16,7 @@ if __name__ == "__main__":
     # Boilerplate code
     ##################
 
-    # Load configuration files
+    # Load configuration file
     config = load_config()
 
     # Data folder path
@@ -72,7 +72,7 @@ if __name__ == "__main__":
         data_pipeline.set_pipeline_data(fp_files)
 
         # Process all the force plate data
-        data_pipeline.process_all_files()
+        data_pipeline.process_all_files(logger)
 
         logger.info("End of Force Plate data processing")
 

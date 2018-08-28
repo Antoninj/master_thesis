@@ -57,6 +57,7 @@ def compute_cop_wbb_y(data):
 
     # Wbb length (in mm)
     ly = config["wbb_parameters"]["length"]
+
     # Wbb force sensor values
     TR = data["TopRight Kg"]
     BR = data["BottomRight Kg"]
@@ -112,6 +113,6 @@ def compute_cop_fp_y(data):
     Mx = pd.DataFrame(Mx)[0].replace(to_replace=0, value=1).values
     Fz = pd.DataFrame(Fz)[0].replace(to_replace=0, value=1).values
 
-    cop_fp_y = (Mx + dz * Fy) / (Fz)
+    cop_fp_y = (Mx - dz * Fy) / (Fz)
 
     return cop_fp_y

@@ -54,6 +54,7 @@ if __name__ == "__main__":
         analog_freq = data_reader.get_frequency(filepath=filepath_wbb)
 
         logger.debug("Raw data: {} \nAnalog Frequency: {}".format(raw_data, analog_freq))
+        logger.debug(raw_data['BottomLeft Kg'][2500:][0])
 
         preprocessed_data = data_preprocessor.preprocess_raw_data(raw_data, 1000, True)
 
@@ -81,6 +82,8 @@ if __name__ == "__main__":
         logger.debug("Raw data: {} \nAnalog Frequency: {}".format(raw_data, analog_freq))
 
         logger.debug("Fz1 size: {}".format(len(raw_data["Fz1"])))
+
+        #logger.debug(raw_data['Fz1'][:])
 
         preprocessed_data = data_preprocessor.preprocess_raw_data(raw_data, analog_freq)
 
