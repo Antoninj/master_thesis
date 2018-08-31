@@ -21,13 +21,24 @@
         "sampling_frequency": 10,
         "nperseg": 200
     },
-    "sensor_labels": {
+    "force_plate_labels": {
         "analog_labels": [
             "Fx1",
             "Fy1",
             "Fz1",
             "Mx1",
             "My1"
+        ]
+    },
+    "wbb_labels": {
+        "analog_labels": [
+            "year",
+            "month",
+            "day",
+            "hour",
+            "minute",
+            "second",
+            "milisecond"
         ],
         "data_points_labels": [
             "COP x y body weight",

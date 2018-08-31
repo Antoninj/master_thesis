@@ -24,8 +24,9 @@ class SensorDataReader(btkAcquisitionFileReader):
 
     """
 
-    data_labels = config["sensor_labels"]["data_points_labels"]
-    analog_labels = config["sensor_labels"]["analog_labels"]
+    wbb_data_points_labels = config["wbb_labels"]["data_points_labels"]
+    wbb_analog_labels = config["wbb_labels"]["analog_labels"]
+    force_plate_analog_labels = config["force_plate_labels"]["analog_labels"]
 
     def __init__(self):
         super(SensorDataReader, self).__init__()
@@ -35,6 +36,50 @@ class SensorDataReader(btkAcquisitionFileReader):
 
         self.SetFilename(filepath)
         self.Update()
+
+    def get_point_data(self, acquisition, labels):
+        try:
+            points = [acquisition.GetPoint(label) for label in labels]
+            values = [point.GetValues() for point in points]
+        except RuntimeError:
+            raise
+
+        return dict(zip(labels, values))
+
+    def get_analog_data(self, acquisition, labels):
+        try:
+            points = [acquisition.GetAnalog(label) for label in labels]
+            values = [point.GetValues() for point in points]
+        except RuntimeError:
+            raise
+
+        return dict(zip(labels, values))
+
+    def get_data(self, filepath, balance_board=False):
+        """
+        Extract and aggregate raw sensor data of interest.
+
+        The data being extracted can be modified through the configuration file.
+        """
+
+        self.set_reader_filename(filepath)
+        acq = self.GetOutput()
+
+        if balance_board:
+            analog_labels = self.wbb_analog_labels
+            data_points_labels = self.wbb_data_points_labels
+
+            analog_data = self.get_analog_data(acq, analog_labels)
+            point_data = self.get_point_data(acq, data_points_labels)
+
+            return [analog_data, point_data]
+
+        else:
+            analog_labels = self.force_plate_analog_labels
+
+            analog_data = self.get_analog_data(acq, analog_labels)
+
+            return analog_data
 
     def get_raw_data(self, filepath, balance_board=False):
         """
@@ -47,7 +92,7 @@ class SensorDataReader(btkAcquisitionFileReader):
         acq = self.GetOutput()
 
         if balance_board:
-            labels = self.data_labels
+            labels = self.wbb_data_points_labels
             try:
                 points = [acq.GetPoint(label)
                           for label in labels]
@@ -56,7 +101,7 @@ class SensorDataReader(btkAcquisitionFileReader):
                 raise
 
         else:
-            labels = self.analog_labels
+            labels = self.force_plate_analog_labels
             try:
                 analogs = [acq.GetAnalog(label)
                            for label in labels]

@@ -50,14 +50,15 @@ if __name__ == "__main__":
         logger.info("Processing Wii Balance Board data.")
         logger.info("Test file: {}".format(filepath_wbb))
 
-        raw_data = data_reader.get_raw_data(filepath=filepath_wbb, balance_board=True)
+        raw_data = data_reader.get_data(filepath=filepath_wbb, balance_board=True)
         analog_freq = data_reader.get_frequency(filepath=filepath_wbb)
 
-        logger.debug("Raw data: {} \nAnalog Frequency: {}".format(raw_data, analog_freq))
-        logger.debug(raw_data['BottomLeft Kg'][2500:][0])
+        logger.debug("Analog data: {} \nAnalog Frequency: {}".format(raw_data[0], analog_freq))
+        logger.debug("Point data :{}".format(raw_data[1]))
 
-        preprocessed_data = data_preprocessor.preprocess_raw_data(raw_data, 1000, True)
+        preprocessed_data = data_preprocessor.preprocess_raw_data(raw_data[1], 1000, True)
 
+        #print(preprocessed_data)
         cop_wbb_x = compute_cop_wbb_x(preprocessed_data)
         cop_wbb_y = compute_cop_wbb_y(preprocessed_data)
 
@@ -76,14 +77,10 @@ if __name__ == "__main__":
         logger.info("Processing Force Plate data.")
         logger.info("Test file: {}".format(filepath_fp))
 
-        raw_data = data_reader.get_raw_data(filepath=filepath_fp)
+        raw_data = data_reader.get_data(filepath=filepath_fp)
         analog_freq = data_reader.get_frequency(filepath=filepath_fp)
 
         logger.debug("Raw data: {} \nAnalog Frequency: {}".format(raw_data, analog_freq))
-
-        logger.debug("Fz1 size: {}".format(len(raw_data["Fz1"])))
-
-        #logger.debug(raw_data['Fz1'][:])
 
         preprocessed_data = data_preprocessor.preprocess_raw_data(raw_data, analog_freq)
 

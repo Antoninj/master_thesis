@@ -3,6 +3,7 @@ import scipy.signal
 
 # Built-in modules imports
 from utils import load_config
+from resampling import SWARII
 
 config = load_config()
 
