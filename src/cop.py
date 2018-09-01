@@ -18,14 +18,6 @@ logging.captureWarnings(True)
 config = load_config()
 
 
-def fill_zeros_with_last(arr):
-    prev = np.arange(len(arr))
-    prev[arr == 0] = 0
-    prev = np.maximum.accumulate(prev)
-
-    return arr[prev]
-
-
 def compute_cop_wbb_x(data):
     """Compute the x coordinate of the WBB center of pressure (ML direction)."""
 
@@ -79,40 +71,40 @@ def compute_cop_wbb_y(data):
 
 
 def compute_cop_fp_x(data, debug=False):
-    """Compute the x coordinate of the force plate center of pressure."""
+    """Compute the x coordinate of the force plate center of pressure (ML direction)."""
 
     # Force plate height (in mm)
     dz = config["wbb_parameters"]["height"]
 
     # Force plate sensor values
-    Fx = data["Fx1"]
-    My = data["My1"]
-    Fz = data["Fz1"]
+    Fx1 = data["Fx1"]
+    My1 = data["My1"]
+    Fz1 = data["Fz1"]
 
-    Fx = pd.DataFrame(Fx)[0].replace(to_replace=0, value=1).values
-    My = pd.DataFrame(My)[0].replace(to_replace=0, value=1).values
-    Fz = pd.DataFrame(Fz)[0].replace(to_replace=0, value=1).values
+    Fx1 = pd.DataFrame(Fx1)[0].replace(to_replace=0, value=1).values
+    My1 = pd.DataFrame(My1)[0].replace(to_replace=0, value=1).values
+    Fz1 = pd.DataFrame(Fz1)[0].replace(to_replace=0, value=1).values
 
-    cop_fp_x = -(My + dz * Fx) / (Fz)
+    cop_fp_x = -(My1 + dz * Fx1) / (Fz1)
 
     return cop_fp_x
 
 
 def compute_cop_fp_y(data):
-    """Compute the y coordinate of the force plate center of pressure."""
+    """Compute the y coordinate of the force plate center of pressure (AP direction)."""
 
     # Force plate height (in mm)
     dz = config["wbb_parameters"]["height"]
 
     # Force plate sensor values
-    Fy = data["Fy1"]
-    Mx = data["Mx1"]
-    Fz = data["Fz1"]
+    Fy1 = data["Fy1"]
+    Mx1 = data["Mx1"]
+    Fz1 = data["Fz1"]
 
-    Fy = pd.DataFrame(Fy)[0].replace(to_replace=0, value=1).values
-    Mx = pd.DataFrame(Mx)[0].replace(to_replace=0, value=1).values
-    Fz = pd.DataFrame(Fz)[0].replace(to_replace=0, value=1).values
+    Fy1 = pd.DataFrame(Fy1)[0].replace(to_replace=0, value=1).values
+    Mx1 = pd.DataFrame(Mx1)[0].replace(to_replace=0, value=1).values
+    Fz1 = pd.DataFrame(Fz1)[0].replace(to_replace=0, value=1).values
 
-    cop_fp_y = (Mx - dz * Fy) / (Fz)
+    cop_fp_y = (Mx1 - dz * Fy1) / (Fz1)
 
     return cop_fp_y

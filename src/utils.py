@@ -83,7 +83,7 @@ def get_path_to_all_files(folder_name):
         sys.exit()
 
 
-def clean_files(files):
+def separate_files(files):
     """Separate WBB and force plate data."""
 
     wbb_files = [file for file in files if "Vicon" not in file and "cop" not in file]

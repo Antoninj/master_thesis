@@ -55,11 +55,11 @@ class SensorDataReader(btkAcquisitionFileReader):
 
         return dict(zip(labels, values))
 
-    def get_data(self, filepath, balance_board=False):
+    def get_raw_data(self, filepath, balance_board=False):
         """
-        Extract and aggregate raw sensor data of interest.
+        Extract and aggregate raw sensor data from the c3d acquisition file.
 
-        The data being extracted can be modified through the configuration file.
+        The data that is extracted can be modified through the configuration file.
         """
 
         self.set_reader_filename(filepath)
@@ -76,40 +76,9 @@ class SensorDataReader(btkAcquisitionFileReader):
 
         else:
             analog_labels = self.force_plate_analog_labels
-
             analog_data = self.get_analog_data(acq, analog_labels)
 
             return analog_data
-
-    def get_raw_data(self, filepath, balance_board=False):
-        """
-        Extract and aggregate raw sensor data of interest.
-
-        The data being extracted can be modified through the configuration file.
-        """
-
-        self.set_reader_filename(filepath)
-        acq = self.GetOutput()
-
-        if balance_board:
-            labels = self.wbb_data_points_labels
-            try:
-                points = [acq.GetPoint(label)
-                          for label in labels]
-                values = [point.GetValues() for point in points]
-            except RuntimeError:
-                raise
-
-        else:
-            labels = self.force_plate_analog_labels
-            try:
-                analogs = [acq.GetAnalog(label)
-                           for label in labels]
-                values = [analog.GetValues() for analog in analogs]
-            except RuntimeError:
-                raise
-
-        return dict(zip(labels, values))
 
     def get_frequency(self, filepath, point=False):
         """Extract analog/point frequencies."""

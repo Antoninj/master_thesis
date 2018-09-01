@@ -1,5 +1,6 @@
 # Third-party module imports
 import scipy.signal
+from datetime import datetime
 
 # Built-in modules imports
 from utils import load_config
@@ -10,7 +11,7 @@ config = load_config()
 
 class DataPreprocessor:
     """
-    Class that handles the preprocessing related tasks of the acquisition signal using the open source Scipy library.
+    Class that handles the preprocessing related tasks of the acquisition signal using the Scipy open source library and an open source implementation of the SWARII algorithm.
 
     More specifically, it relies on the implementations found in the latest release of the scipy signal processing package scipy.signal.
 
@@ -18,6 +19,7 @@ class DataPreprocessor:
     ----------
     .. [1] Scipy: https://scipy.org
     .. [2] Scipy.signal documentation: https://docs.scipy.org/doc/scipy-1.1.0/reference/signal.html
+    .. [3] SWARII implementation : https://reine.cmla.ens-cachan.fr/j.audiffren/SWARII
     """
 
     up = config["preprocessing_parameters"]["upsampling_factor"]
@@ -28,9 +30,17 @@ class DataPreprocessor:
     threshold = config["preprocessing_parameters"]["cut_threshold"]
 
     def __init__(self):
-        pass
+        self.swarii = SWARII(window_size=0.25, desired_frequency=1000)
 
-    def apply_resampling(self, input_signal):
+    def apply_swarii(self, input_signal, time):
+        """Apply the SWARII to resample a given signal."""
+
+        resampled_time, resampled_signal = self.swarii.resample(time, input_signal)
+
+        print("Resampled signal :{}".format(resampled_signal))
+        return resampled_signal
+
+    def apply_polyphase_resampling(self, input_signal):
         """
         Resample the input signal using polyphase resampling.
 
@@ -71,21 +81,22 @@ class DataPreprocessor:
 
         return scipy.signal.detrend(input_signal, type=self.detrending_type)
 
-    def cut_data(self, input_signal, threshold_1=5000, threshold_2=25000):
+    def resize_data(self, input_signal, threshold_1=5000, threshold_2=25000):
         """Remove the beginning and the end of the input signal based on some given thresholds."""
 
         return input_signal[threshold_1:threshold_2]
 
-    def preprocess_sensor_data(self, input_signal, analog_frequency, balance_board=False):
+    def preprocess_sensor_data(self, input_signal, analog_frequency, balance_board=False, time=None):
         """
-        Pipeline all the preprocessing steps.
+        Pipeline the preprocessing steps.
 
-        The resampling is only applied to the wii balance board data in order to match the force plate acquisition frequency.
+        The resampling is only applied to the wii balance board data in order to match the force plate acquisition sampling frequency.
         """
 
         if balance_board:
             signal = input_signal[:, 0]
-            resampled_signal = self.apply_resampling(signal)
+            resampled_signal = self.apply_swarii(signal, time)
+            #resampled_signal = self.apply_polyphase_resampling(signal)
             filtered_signal = self.apply_filtering(
                 resampled_signal, analog_frequency)
         else:
@@ -93,15 +104,50 @@ class DataPreprocessor:
             filtered_signal = self.apply_filtering(
                 signal, analog_frequency)
 
-        troncated_signal = self.cut_data(filtered_signal)
+        resized_signal = self.resize_data(filtered_signal)
 
-        return troncated_signal
+        return resized_signal
+
+    def compute_timestamps(self, time_dict):
+
+        time_strings_lists = []
+        for key, value in time_dict.items():
+            flatten_values = time_dict[key].flatten()
+            time_strings = ['{0:g}'.format(float(value)) for value in flatten_values]
+            if key == "milisecond":
+                for i in range(len(time_strings)):
+                    if len(time_strings[i]) == 1:
+                        time_strings[i] = "00" + time_strings[i]
+                    if len(time_strings[i]) == 2:
+                        time_strings[i] = "0" + time_strings[i]
+            time_strings_lists.append(time_strings)
+
+        date_strings = [" ".join(date) for date in list(zip(*time_strings_lists))]
+        fmt = '%Y %m %d %H %M %S %f'
+        datetimes = [datetime.strptime(string, fmt) for string in date_strings]
+
+        timestamps_seconds = []
+        duration = 0
+        timestamps_seconds.append(duration)
+        for i in range(len(datetimes) - 1):
+            duration += (datetimes[i + 1] - datetimes[i]).total_seconds()
+            timestamps_seconds.append(duration)
+
+        return timestamps_seconds
 
     def preprocess_raw_data(self, data, frequency, balance_board=False):
         """Preprocess the raw force sensor data"""
 
-        for key, value in data.items():
-            data[key] = self.preprocess_sensor_data(value, frequency, balance_board)
+        if balance_board:
+            timestamps = self.compute_timestamps(data[0])
+            data = data[1]
+
+            for key, value in data.items():
+                data[key] = self.preprocess_sensor_data(input_signal=value, analog_frequency=frequency, balance_board=balance_board, time=timestamps)
+
+        else:
+            for key, value in data.items():
+                data[key] = self.preprocess_sensor_data(input_signal=value, analog_frequency=frequency, balance_board=balance_board)
 
         return data
 

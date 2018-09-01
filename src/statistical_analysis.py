@@ -1,5 +1,5 @@
 # Built-in modules imports
-from utils import load_config, get_path_to_all_files, setup_logging, check_folder, clean_files
+from utils import load_config, get_path_to_all_files, setup_logging, check_folder, separate_files
 
 # Third-party module imports
 import stats
@@ -41,7 +41,7 @@ if __name__ == "__main__":
 
     # Get all the paths to the files that need to be processed
     files = get_path_to_all_files(feature_data_folder)
-    wbb_files_curated, fp_files_curated = clean_files(files)
+    wbb_files_curated, fp_files_curated = separate_files(files)
 
     logger.info("Processing data located in: {}".format(feature_data_folder))
 

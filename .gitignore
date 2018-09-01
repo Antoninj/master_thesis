@@ -14,9 +14,9 @@ __pycache__
 .git
 .pylintrc
 *.ipynb_checkpoints
-BalanceBoard_Static
 *.png
 misc.md
 *.pyc
 *.pdf
 *.log
+data/

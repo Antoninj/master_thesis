@@ -56,7 +56,7 @@ class DataPipeline(SensorDataReader, DataPreprocessor):
 
     def save_features(self, filepath, balance_board=False, save_cop=False):
         """
-        Pipeline the COP computations, preprocessing and feature extraction steps and save the results to a json file."""
+        Pipeline the preprocessing, COP computations and feature extraction steps and save the results to a json file."""
 
         try:
             # Get the raw data
