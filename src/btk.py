@@ -5545,6 +5545,8 @@ class btkAcquisitionFileReader(_object):
         The use of the manual setting should be only used if you want to read a file with a selected file format. To go back to the automatic mode
         from the manual mode, you only have to use the method btkAcquisitionFileReader::SetAcquisitionIO() without any argument.
         """
+        super(btkAcquisitionFileReader, self).__init__()
+
         this = _btk.new_btkAcquisitionFileReader()
         try:
             self.this.append(this)

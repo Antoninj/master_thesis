@@ -9,7 +9,7 @@ from resampling import SWARII
 config = load_config()
 
 
-class DataPreprocessor:
+class DataPreprocessor(SWARII):
     """
     Class that handles the preprocessing related tasks of the acquisition signal using the Scipy open source library and an open source implementation of the SWARII algorithm.
 
@@ -30,12 +30,12 @@ class DataPreprocessor:
     threshold = config["preprocessing_parameters"]["cut_threshold"]
 
     def __init__(self):
-        self.swarii = SWARII(window_size=0.25, desired_frequency=1000)
+        super(DataPreprocessor, self).__init__(window_size=0.25, desired_frequency=1000)
 
     def apply_swarii(self, input_signal, time):
         """Apply the SWARII to resample a given signal."""
 
-        resampled_time, resampled_signal = self.swarii.resample(time, input_signal)
+        resampled_time, resampled_signal = self.resample(time, input_signal)
 
         print("Resampled signal :{}".format(resampled_signal))
         return resampled_signal
@@ -95,8 +95,8 @@ class DataPreprocessor:
 
         if balance_board:
             signal = input_signal[:, 0]
-            resampled_signal = self.apply_swarii(signal, time)
-            #resampled_signal = self.apply_polyphase_resampling(signal)
+            #resampled_signal = self.apply_swarii(signal, time)
+            resampled_signal = self.apply_polyphase_resampling(signal)
             filtered_signal = self.apply_filtering(
                 resampled_signal, analog_frequency)
         else:
