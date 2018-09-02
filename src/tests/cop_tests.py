@@ -56,8 +56,9 @@ if __name__ == "__main__":
         logger.debug("Analog data: {} \nAnalog Frequency: {}".format(raw_data[0], analog_freq))
         logger.debug("Point data :{}".format(raw_data[1]))
 
-        preprocessed_data = data_preprocessor.preprocess_raw_data(raw_data, 1000, True)
-        #print(preprocessed_data)
+        preprocessed_data = data_preprocessor.preprocess_raw_data(raw_data, True)
+
+        #logger.debug(preprocessed_data)
 
         cop_wbb_x = compute_cop_wbb_x(preprocessed_data)
         cop_wbb_y = compute_cop_wbb_y(preprocessed_data)
@@ -84,7 +85,7 @@ if __name__ == "__main__":
 
         logger.debug("Fz1 size: {}".format(len(raw_data["Fz1"])))
 
-        preprocessed_data = data_preprocessor.preprocess_raw_data(raw_data, analog_freq)
+        preprocessed_data = data_preprocessor.preprocess_raw_data(raw_data)
 
         cop_fp_x = compute_cop_fp_x(preprocessed_data)
         cop_fp_y = compute_cop_fp_y(preprocessed_data)

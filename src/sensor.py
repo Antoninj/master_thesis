@@ -4,7 +4,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../bin')))
 
 # Built-in modules imports
-from btk import btkAcquisitionFileReader
+from btk import btkAcquisitionFileReader, btkAcquisition
 from utils import load_config
 
 config = load_config()
@@ -12,7 +12,7 @@ config = load_config()
 
 class SensorDataReader(btkAcquisitionFileReader):
     """
-    Class to collect and format the raw sensor data values from the WBB and force plate acquisition files which are stored in the c3d file format.
+    Class used to extract the raw sensor data values from the WBB and force plate acquisition files which are stored in the c3d file format.
 
     The locally compiled and installed binaries of the biomechanical toolkit python wrapper are used to read
     and extract the data.
@@ -49,6 +49,12 @@ class SensorDataReader(btkAcquisitionFileReader):
     def get_analog_data(self, acquisition, labels):
         try:
             points = [acquisition.GetAnalog(label) for label in labels]
+            """
+            print("Gain: ", points[0].GetGain())
+            print("Scale: ", points[0].GetScale())
+            print("Offset: ", points[0].GetOffset())
+            print("Unit: ", points[0].GetUnit())
+            """
             values = [point.GetValues() for point in points]
         except RuntimeError:
             raise
@@ -64,6 +70,14 @@ class SensorDataReader(btkAcquisitionFileReader):
 
         self.set_reader_filename(filepath)
         acq = self.GetOutput()
+
+        """
+        resolution = acq.GetAnalogResolution()
+        print("Analog resolution: {}".format(resolution))
+        acq.SetAnalogResolution(btkAcquisition.Bit16)
+        resolution = acq.GetAnalogResolution()
+        print("New analog resolution: {}".format(resolution))
+        """
 
         if balance_board:
             analog_labels = self.wbb_analog_labels

@@ -63,8 +63,7 @@ class DataPipeline(SensorDataReader, DataPreprocessor):
             raw_data = self.get_raw_data(filepath, balance_board)
 
             # Preprocess the raw data
-            frequency = config["preprocessing_parameters"]["acquisition_frequency"]
-            preprocessed_data = self.preprocess_raw_data(raw_data, frequency, balance_board)
+            preprocessed_data = self.preprocess_raw_data(raw_data, balance_board)
 
             # Compute the COP positions
             cop_data = self.compute_cop_positions(preprocessed_data, balance_board)

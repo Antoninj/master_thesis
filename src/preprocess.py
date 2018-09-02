@@ -27,17 +27,19 @@ class DataPreprocessor(SWARII):
     order = config["preprocessing_parameters"]["filter_order"]
     fc = config["preprocessing_parameters"]["cutoff_frequency"]
     detrending_type = config["preprocessing_parameters"]["detrending_type"]
-    threshold = config["preprocessing_parameters"]["cut_threshold"]
+    low_thresh = config["preprocessing_parameters"]["lower_threshold"]
+    up_thresh = config["preprocessing_parameters"]["upper_threshold"]
+    swarii_window = config["preprocessing_parameters"]["swarii_window_size"]
+    acq_frequency = config["preprocessing_parameters"]["acquisition_frequency"]
 
     def __init__(self):
-        super(DataPreprocessor, self).__init__(window_size=0.25, desired_frequency=1000)
+        super(DataPreprocessor, self).__init__(window_size=self.swarii_window, desired_frequency=self.acq_frequency)
 
     def apply_swarii(self, input_signal, time):
         """Apply the SWARII to resample a given signal."""
 
         resampled_time, resampled_signal = self.resample(time, input_signal)
 
-        print("Resampled signal :{}".format(resampled_signal))
         return resampled_signal
 
     def apply_polyphase_resampling(self, input_signal):
@@ -51,7 +53,7 @@ class DataPreprocessor(SWARII):
 
         return scipy.signal.resample_poly(input_signal, self.up, self.down)
 
-    def apply_filtering(self, input_signal, analog_frequency):
+    def apply_filtering(self, input_signal):
         """
         Create and apply a low pass butterworth filter. The order and the cutoff frequencies of the filter can be specified through the configuration file. Then it applies the butter digital filter forward and backward to the input signal.
 
@@ -63,7 +65,7 @@ class DataPreprocessor(SWARII):
         """
 
         # Create the low pass butterworth filter
-        b, a = scipy.signal.butter(self.order, self.fc / (0.5 * analog_frequency))
+        b, a = scipy.signal.butter(self.order, self.fc / (0.5 * self.acq_frequency))
 
         # Apply the filter to the input signal
         filtered_signal = scipy.signal.filtfilt(b, a, input_signal)
@@ -81,12 +83,12 @@ class DataPreprocessor(SWARII):
 
         return scipy.signal.detrend(input_signal, type=self.detrending_type)
 
-    def resize_data(self, input_signal, threshold_1=5000, threshold_2=25000):
+    def resize_data(self, input_signal, threshold_1=low_thresh, threshold_2=up_thresh):
         """Remove the beginning and the end of the input signal based on some given thresholds."""
 
         return input_signal[threshold_1:threshold_2]
 
-    def preprocess_sensor_data(self, input_signal, analog_frequency, balance_board=False, time=None):
+    def preprocess_sensor_data(self, input_signal, balance_board=False, time=None):
         """
         Pipeline the preprocessing steps.
 
@@ -97,12 +99,10 @@ class DataPreprocessor(SWARII):
             signal = input_signal[:, 0]
             #resampled_signal = self.apply_swarii(signal, time)
             resampled_signal = self.apply_polyphase_resampling(signal)
-            filtered_signal = self.apply_filtering(
-                resampled_signal, analog_frequency)
+            filtered_signal = self.apply_filtering(resampled_signal)
         else:
             signal = input_signal.flatten()
-            filtered_signal = self.apply_filtering(
-                signal, analog_frequency)
+            filtered_signal = self.apply_filtering(signal)
 
         resized_signal = self.resize_data(filtered_signal)
 
@@ -135,19 +135,21 @@ class DataPreprocessor(SWARII):
 
         return timestamps_seconds
 
-    def preprocess_raw_data(self, data, frequency, balance_board=False):
+    def preprocess_raw_data(self, data, balance_board=False):
         """Preprocess the raw force sensor data"""
 
         if balance_board:
-            timestamps = self.compute_timestamps(data[0])
+            # The data seems corrupted so there is no point computing this at the moment
+            #timestamps = self.compute_timestamps(data[0])
+            timestamps = None
             data = data[1]
 
             for key, value in data.items():
-                data[key] = self.preprocess_sensor_data(input_signal=value, analog_frequency=frequency, balance_board=balance_board, time=timestamps)
+                data[key] = self.preprocess_sensor_data(input_signal=value, balance_board=balance_board, time=timestamps)
 
         else:
             for key, value in data.items():
-                data[key] = self.preprocess_sensor_data(input_signal=value, analog_frequency=frequency, balance_board=balance_board)
+                data[key] = self.preprocess_sensor_data(input_signal=value)
 
         return data
 

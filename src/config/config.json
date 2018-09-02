@@ -11,7 +11,9 @@
         "upsampling_factor": 20,
         "downsampling_factor": 2,
         "acquisition_frequency": 1000,
-        "cut_threshold": 500
+        "lower_threshold": 5000,
+        "upper_threshold": 25000,
+        "swarii_window_size": 0.25
     },
     "time_features_parameters": {
         "z_05": 1.645,
