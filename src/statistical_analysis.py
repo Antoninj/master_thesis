@@ -9,46 +9,8 @@ import logging
 setup_logging()
 logger = logging.getLogger("statistics")
 
-if __name__ == "__main__":
 
-    ##################
-    # Boilerplate code
-    ##################
-
-    # Load configuration files
-    config = load_config()
-
-    # Features computations results folder path
-    feature_data_folder = config["feature_results_folder"]
-
-    # Statistics results folder path
-    statistics_results_folder = config["statistics_results_folder"]
-    check_folder(statistics_results_folder)
-
-    # Command line argument parser to choose between wbb or force plate data
-    parser = ArgumentParser(
-        description="")
-    parser.add_argument("-d", "--debug", action='store_true', help="Show debugging messages")
-    args = parser.parse_args()
-    debug = args.debug
-
-    if debug:
-        logger.setLevel("DEBUG")
-
-    ###############
-    # Data handling
-    ###############
-
-    # Get all the paths to the files that need to be processed
-    files = get_path_to_all_files(feature_data_folder)
-    wbb_files_curated, fp_files_curated = separate_files(files)
-
-    logger.info("Processing data located in: {}".format(feature_data_folder))
-
-    # Create the pandas dataframes for further analysis
-    wbb_dfs = stats.construct_results_dfs(wbb_files_curated)
-    fp_dfs = stats.construct_results_dfs(fp_files_curated)
-
+def compute_statistics(wbb_dfs, fp_dfs):
     logger.info("Computing general descriptive statistics.")
 
     #################################
@@ -143,3 +105,50 @@ if __name__ == "__main__":
     #########################
 
     logger.info("Saving results to: {}".format(statistics_results_folder))
+
+
+if __name__ == "__main__":
+
+    ##################
+    # Boilerplate code
+    ##################
+
+    # Load configuration files
+    config = load_config()
+
+    # Features computations results folder path
+    feature_data_folder = config["feature_results_folder"]
+
+    # Statistics results folder path
+    statistics_results_folder = config["statistics_results_folder"]
+    check_folder(statistics_results_folder)
+
+    # Command line argument parser to choose between wbb or force plate data
+    parser = ArgumentParser(
+        description="")
+    parser.add_argument("-d", "--debug", action='store_true', help="Show debugging messages")
+    args = parser.parse_args()
+    debug = args.debug
+
+    if debug:
+        logger.setLevel("DEBUG")
+
+    ###############
+    # Data handling
+    ###############
+
+    # Get all the paths to the files that need to be processed
+    files = get_path_to_all_files(feature_data_folder)
+    wbb_files_curated, fp_files_curated = separate_files(files)
+
+    logger.info("Processing data located in: {}".format(feature_data_folder))
+
+    # Create the pandas dataframes for further analysis
+    wbb_dfs = stats.construct_results_dfs(wbb_files_curated)
+    fp_dfs = stats.construct_results_dfs(fp_files_curated)
+
+    #########################
+    # Statistics computations
+    #########################
+
+    compute_statistics(wbb_dfs, fp_dfs)
