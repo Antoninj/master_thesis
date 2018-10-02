@@ -108,6 +108,7 @@ class DataPreprocessor(SWARII):
 
         return resized_signal
 
+    @staticmethod
     def compute_timestamps(self, time_dict):
 
         time_strings_lists = []

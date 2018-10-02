@@ -23,7 +23,8 @@ class DataPipeline(SensorDataReader, DataPreprocessor):
         super(DataPipeline, self).__init__()
         self.data = files
 
-    def compute_cop_positions(self, preprocessed_data, balance_board=False):
+    @staticmethod
+    def compute_cop_positions(preprocessed_data, balance_board=False):
         """Compute the COP positions in the AP and ML directions."""
 
         cop_data = {}
@@ -40,14 +41,16 @@ class DataPipeline(SensorDataReader, DataPreprocessor):
         except Exception:
             raise
 
-    def compute_time_features(self, cop_x, cop_y):
+    @staticmethod
+    def  compute_time_features(cop_x, cop_y):
         """Compute the time domain features."""
 
         time_domain_features = TimeFeatures(cop_x, cop_y)
 
         return time_domain_features.time_features
 
-    def compute_frequency_features(self, cop_x, cop_y):
+    @staticmethod
+    def compute_frequency_features(cop_x, cop_y):
         """Compute the frequency domain features."""
 
         frequency_domain_features = FrequencyFeatures(cop_x, cop_y)

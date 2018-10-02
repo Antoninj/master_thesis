@@ -37,7 +37,8 @@ class SensorDataReader(btkAcquisitionFileReader):
         self.SetFilename(filepath)
         self.Update()
 
-    def get_point_data(self, acquisition, labels):
+    @staticmethod
+    def get_point_data(acquisition, labels):
         try:
             points = [acquisition.GetPoint(label) for label in labels]
             values = [point.GetValues() for point in points]
@@ -46,7 +47,8 @@ class SensorDataReader(btkAcquisitionFileReader):
 
         return dict(zip(labels, values))
 
-    def get_analog_data(self, acquisition, labels):
+    @staticmethod
+    def get_analog_data(acquisition, labels):
         try:
             points = [acquisition.GetAnalog(label) for label in labels]
             """
