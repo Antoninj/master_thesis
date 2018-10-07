@@ -13,6 +13,7 @@
         "acquisition_frequency": 1000,
         "lower_threshold": 5000,
         "upper_threshold": 25000,
+        "apply_swarii": false,
         "swarii_window_size": 0.25
     },
     "time_features_parameters": {

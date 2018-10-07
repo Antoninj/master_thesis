@@ -1,9 +1,7 @@
 # Built-in modules imports
 from sensor import SensorDataReader
 from preprocess import DataPreprocessor
-from time_features import TimeFeatures
-from frequency_features import FrequencyFeatures
-from cop import *
+from process import DataProcessor
 from utils import save_as_json
 from tqdm import tqdm
 import sys
@@ -14,7 +12,7 @@ import logging
 logger = logging.getLogger("pipeline")
 
 
-class DataPipeline(SensorDataReader, DataPreprocessor):
+class DataPipeline(SensorDataReader, DataPreprocessor, DataProcessor):
     """
     Class that pipelines all the different data processing steps from acquisition file reading to feature extraction.
     """
@@ -22,40 +20,6 @@ class DataPipeline(SensorDataReader, DataPreprocessor):
     def __init__(self, files=None):
         super(DataPipeline, self).__init__()
         self.data = files
-
-    @staticmethod
-    def compute_cop_positions(preprocessed_data, balance_board=False):
-        """Compute the COP positions in the AP and ML directions."""
-
-        cop_data = {}
-        try:
-            if balance_board:
-                cop_data["COP_x"] = compute_cop_wbb_x(preprocessed_data)
-                cop_data["COP_y"] = compute_cop_wbb_y(preprocessed_data)
-            else:
-                cop_data["COP_x"] = compute_cop_fp_x(preprocessed_data)
-                cop_data["COP_y"] = compute_cop_fp_y(preprocessed_data)
-
-            return cop_data
-
-        except Exception:
-            raise
-
-    @staticmethod
-    def  compute_time_features(cop_x, cop_y):
-        """Compute the time domain features."""
-
-        time_domain_features = TimeFeatures(cop_x, cop_y)
-
-        return time_domain_features.time_features
-
-    @staticmethod
-    def compute_frequency_features(cop_x, cop_y):
-        """Compute the frequency domain features."""
-
-        frequency_domain_features = FrequencyFeatures(cop_x, cop_y)
-
-        return frequency_domain_features.frequency_features
 
     def save_features(self, filepath, balance_board=False, save_cop=False):
         """
@@ -71,8 +35,8 @@ class DataPipeline(SensorDataReader, DataPreprocessor):
             # Compute the COP positions
             cop_data = self.compute_cop_positions(preprocessed_data, balance_board)
 
-            # Preprocess the COP positions
-            preprocessed_cop_data = self.preprocess_cop_data(cop_data)
+            # Detrend the COP positions
+            preprocessed_cop_data = self.detrend_cop_data(cop_data)
 
             if save_cop:
                 # Save intermediate results of COP computations

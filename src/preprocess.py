@@ -31,14 +31,15 @@ class DataPreprocessor(SWARII):
     up_thresh = config["preprocessing_parameters"]["upper_threshold"]
     swarii_window = config["preprocessing_parameters"]["swarii_window_size"]
     acq_frequency = config["preprocessing_parameters"]["acquisition_frequency"]
+    swarii = config["preprocessing_parameters"]["apply_swarii"]
 
     def __init__(self):
         super(DataPreprocessor, self).__init__(window_size=self.swarii_window, desired_frequency=self.acq_frequency)
 
-    def apply_swarii(self, input_signal, time):
+    def apply_swarii(self, input_signal, timestamps):
         """Apply the SWARII to resample a given signal."""
 
-        resampled_time, resampled_signal = self.resample(time, input_signal)
+        resampled_time, resampled_signal = self.resample(timestamps, input_signal)
 
         return resampled_signal
 
@@ -88,7 +89,7 @@ class DataPreprocessor(SWARII):
 
         return input_signal[threshold_1:threshold_2]
 
-    def preprocess_sensor_data(self, input_signal, balance_board=False, time=None):
+    def preprocess_sensor_data(self, input_signal, balance_board=False, timestamps=None):
         """
         Pipeline the preprocessing steps.
 
@@ -97,8 +98,11 @@ class DataPreprocessor(SWARII):
 
         if balance_board:
             signal = input_signal[:, 0]
-            #resampled_signal = self.apply_swarii(signal, time)
-            resampled_signal = self.apply_polyphase_resampling(signal)
+            if timestamps is not None:
+                resampled_signal = self.apply_swarii(signal, timestamps)
+            else:
+                resampled_signal = self.apply_polyphase_resampling(signal)
+
             filtered_signal = self.apply_filtering(resampled_signal)
         else:
             signal = input_signal.flatten()
@@ -109,7 +113,8 @@ class DataPreprocessor(SWARII):
         return resized_signal
 
     @staticmethod
-    def compute_timestamps(self, time_dict):
+    def compute_timestamps(time_dict):
+        """ Reformat the acquisition timestamps from absolute dates to relative timestamps in seconds. """
 
         time_strings_lists = []
         for key, value in time_dict.items():
@@ -141,12 +146,14 @@ class DataPreprocessor(SWARII):
 
         if balance_board:
             # The data seems corrupted so there is no point computing this at the moment
-            #timestamps = self.compute_timestamps(data[0])
-            timestamps = None
-            data = data[1]
+            if self.swarii:
+                relative_timestamps = self.compute_timestamps(data[0])
+            else:
+                relative_timestamps = None
 
+            data = data[1]
             for key, value in data.items():
-                data[key] = self.preprocess_sensor_data(input_signal=value, balance_board=balance_board, time=timestamps)
+                data[key] = self.preprocess_sensor_data(input_signal=value, balance_board=balance_board, timestamps=relative_timestamps)
 
         else:
             for key, value in data.items():
@@ -154,7 +161,7 @@ class DataPreprocessor(SWARII):
 
         return data
 
-    def preprocess_cop_data(self, data):
+    def detrend_cop_data(self, data):
         """Preprocess the cop data"""
 
         for key, value in data.items():
