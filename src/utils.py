@@ -53,7 +53,7 @@ def build_filename(input_file, destination_folder, name_extension):
 
     base_name = os.path.splitext(input_file)[0]
     replacement_string = "results/{}".format(destination_folder)
-    filename = base_name.replace("BalanceBoard_Static", replacement_string) + "_{}.json".format(name_extension)
+    filename = base_name.replace("BalanceBoard", replacement_string) + "_{}.json".format(name_extension)
     dir_name = os.path.dirname(filename)
     check_folder(dir_name)
 
@@ -70,11 +70,12 @@ def check_folder(folder_name):
 def get_path_to_all_files(folder_name):
     """Recursively get all filepaths from a directory tree."""
 
+    exceptions_extensions = [".DS_Store", ".xls", ".tif"]
     try:
         filepaths = []
         for dirname, dirnames, filenames in os.walk(folder_name):
             for filename in filenames:
-                if '.DS_Store' not in filename:
+                if not any(ext in filename for ext in exceptions_extensions):
                     filepaths.append(os.path.join(dirname, filename))
         return filepaths
 
@@ -86,11 +87,11 @@ def get_path_to_all_files(folder_name):
 def separate_files(files):
     """Separate WBB and force plate data."""
 
-    wbb_files = [file for file in files if "Vicon" not in file and "cop" not in file]
-    fp_files = [file for file in files if "Vicon" in file and "cop" not in file]
+    wbb_files = [file for file in files if "FP" not in file and "cop" not in file]
+    fp_files = [file for file in files if "FP" in file and "cop" not in file]
 
-    wbb_files_modified = [filename.replace("BalanceBoard", "Vicon") for filename in wbb_files]
-    fp_files_modified = [filename.replace("Vicon", "BalanceBoard") for filename in fp_files]
+    wbb_files_modified = [filename.replace("BB", "FP") for filename in wbb_files]
+    fp_files_modified = [filename.replace("FP", "BB") for filename in fp_files]
 
     fp_files_curated = [file for file in fp_files if file in wbb_files_modified]
     wbb_files_curated = [file for file in wbb_files if file in fp_files_modified]

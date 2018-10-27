@@ -97,11 +97,10 @@ class DataPreprocessor(SWARII):
         """
 
         if balance_board:
-            signal = input_signal[:, 0]
             if timestamps is not None:
-                resampled_signal = self.apply_swarii(signal, timestamps)
+                resampled_signal = self.apply_swarii(input_signal, timestamps)
             else:
-                resampled_signal = self.apply_polyphase_resampling(signal)
+                resampled_signal = self.apply_polyphase_resampling(input_signal)
 
             filtered_signal = self.apply_filtering(resampled_signal)
         else:
@@ -148,13 +147,13 @@ class DataPreprocessor(SWARII):
             # The data seems corrupted so there is no point computing this at the moment
             if self.use_swarii:
                 relative_timestamps = self.compute_timestamps(data[0])
+
             else:
                 relative_timestamps = None
-
             data = data[1]
+
             for key, value in data.items():
                 data[key] = self.preprocess_sensor_data(input_signal=value, balance_board=balance_board, timestamps=relative_timestamps)
-
         else:
             for key, value in data.items():
                 data[key] = self.preprocess_sensor_data(input_signal=value)

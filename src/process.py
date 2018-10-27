@@ -27,10 +27,9 @@ class DataProcessor:
 
         cop_data = {}
         try:
-            print(preprocessed_data["Accelerometer"])
             if balance_board:
-                cop_data["COP_x"] = preprocessed_data["Accelerometer"][:, 0]
-                cop_data["COP_y"] = preprocessed_data["Accelerometer"][:, 1]
+                cop_data["COP_x"] = preprocessed_data["COP_x"]
+                cop_data["COP_y"] = preprocessed_data["COP_y"]
             else:
                 cop_data["COP_x"] = self.compute_cop_fp_x(preprocessed_data)
                 cop_data["COP_y"] = self.compute_cop_fp_y(preprocessed_data)
@@ -57,59 +56,7 @@ class DataProcessor:
         return frequency_domain_features.frequency_features
 
     @staticmethod
-    def compute_cop_wbb_x(data):
-        """Compute the x coordinate of the WBB center of pressure (ML direction)."""
-
-        # Wbb width (in mm)
-        lx = config["wbb_parameters"]["width"]
-
-        # Wbb force sensor values
-        TR = data["TopRight Kg"]
-        BR = data["BottomRight Kg"]
-        TL = data["TopLeft Kg"]
-        BL = data["BottomLeft Kg"]
-
-        TR = pd.DataFrame(TR)[0].replace(to_replace=0, value=1).values
-        BR = pd.DataFrame(BR)[0].replace(to_replace=0, value=1).values
-        TL = pd.DataFrame(TL)[0].replace(to_replace=0, value=1).values
-        BL = pd.DataFrame(BL)[0].replace(to_replace=0, value=1).values
-
-        try:
-            cop_wbb_x = np.array((lx / 2) * ((TR + BR) - (TL + BL)) / (TR + BR + TL + BL))
-
-            return cop_wbb_x
-
-        except Warning:
-            return np.ones_like(TR)
-
-    @staticmethod
-    def compute_cop_wbb_y(data):
-        """Compute the y coordinate of the WBB center of pressure (AP direction)."""
-
-        # Wbb length (in mm)
-        ly = config["wbb_parameters"]["length"]
-
-        # Wbb force sensor values
-        TR = data["TopRight Kg"]
-        BR = data["BottomRight Kg"]
-        TL = data["TopLeft Kg"]
-        BL = data["BottomLeft Kg"]
-
-        TR = pd.DataFrame(TR)[0].replace(to_replace=0, value=1).values
-        BR = pd.DataFrame(BR)[0].replace(to_replace=0, value=1).values
-        TL = pd.DataFrame(TL)[0].replace(to_replace=0, value=1).values
-        BL = pd.DataFrame(BL)[0].replace(to_replace=0, value=1).values
-
-        try:
-            cop_wbb_y = np.array((ly / 2) * ((TL + TR) - (BR + BL)) / (TR + BR + TL + BL))
-
-            return cop_wbb_y
-
-        except Warning:
-            return np.ones_like(TR)
-
-    @staticmethod
-    def compute_cop_fp_x(data, debug=False):
+    def compute_cop_fp_x(data):
         """Compute the x coordinate of the force plate center of pressure (ML direction)."""
 
         # Force plate height (in mm)

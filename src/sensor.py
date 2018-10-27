@@ -88,7 +88,11 @@ class SensorDataReader(btkAcquisitionFileReader):
             analog_data = self.get_analog_data(acq, analog_labels)
             point_data = self.get_point_data(acq, data_points_labels)
 
-            return [analog_data, point_data]
+            result_dic = {}
+            result_dic["COP_x"] = point_data["Accelerometer"][:, 0]
+            result_dic["COP_y"] = point_data["Accelerometer"][:, 1]
+
+            return [analog_data, result_dic]
 
         else:
             analog_labels = self.force_plate_analog_labels

@@ -67,8 +67,6 @@ if __name__ == "__main__":
         cop_wbb_x = cop_data["COP_x"]
         cop_wbb_y = cop_data["COP_y"]
 
-        logger.debug("WBB COP x: {} \n WBB COP y: {}".format(cop_wbb_x, cop_wbb_y))
-
         cop_wbb_x_detrended = data_preprocessor.apply_detrending(cop_wbb_x)
         cop_wbb_y_detrended = data_preprocessor.apply_detrending(cop_wbb_y)
 

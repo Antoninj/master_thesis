@@ -41,8 +41,8 @@ if __name__ == "__main__":
     files = get_path_to_all_files(data_folder)
 
     # Separate WBB and force plate data
-    wbb_files = [file for file in files if "Vicon" not in file]
-    fp_files = [file for file in files if "Vicon" in file]
+    wbb_files = [file for file in files if "FP" not in file]
+    fp_files = [file for file in files if "FP" in file]
 
     ####################
     # Feature extraction
