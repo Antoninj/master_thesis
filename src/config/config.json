@@ -44,20 +44,16 @@
             "milisecond"
         ],
         "data_points_labels": [
-            "COP x y body weight",
-            "BottomLeft Kg",
-            "BottomRight Kg",
-            "TopRight Kg",
-            "TopLeft Kg"
+            "Accelerometer"
         ]
     },
     "test_files": {
-        "wbb_raw_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet1/Session1/BalanceBoard/1.c3d",
-        "fp_raw_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static/Sujet1/Session1/Vicon/1.c3d",
-        "wbb_cop_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/cop_results/Sujet1/Session1/BalanceBoard/1_cop.json",
-        "fp_cop_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/cop_results/Sujet1/Session1/Vicon/1_cop.c3d"
+        "wbb_raw_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard/Repro/Repro1/BB/1_1.c3d",
+        "fp_raw_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard/Repro/Repro1/FP/1_1.c3d",
+        "wbb_cop_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/cop_results/Repro/Repro1/BB/1_1_cop.c3d",
+        "fp_cop_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/cop_results/Repro/Repro1/FP/1_1_cop.c3d"
     },
-    "data_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard_Static",
+    "data_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard/Repro",
     "feature_results_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/feature_results",
     "statistics_results_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/statistics"
 }

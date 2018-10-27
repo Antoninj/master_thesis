@@ -31,7 +31,7 @@ class DataPreprocessor(SWARII):
     up_thresh = config["preprocessing_parameters"]["upper_threshold"]
     swarii_window = config["preprocessing_parameters"]["swarii_window_size"]
     acq_frequency = config["preprocessing_parameters"]["acquisition_frequency"]
-    swarii = config["preprocessing_parameters"]["apply_swarii"]
+    use_swarii = config["preprocessing_parameters"]["apply_swarii"]
 
     def __init__(self):
         super(DataPreprocessor, self).__init__(window_size=self.swarii_window, desired_frequency=self.acq_frequency)
@@ -146,7 +146,7 @@ class DataPreprocessor(SWARII):
 
         if balance_board:
             # The data seems corrupted so there is no point computing this at the moment
-            if self.swarii:
+            if self.use_swarii:
                 relative_timestamps = self.compute_timestamps(data[0])
             else:
                 relative_timestamps = None

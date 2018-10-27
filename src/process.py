@@ -27,9 +27,10 @@ class DataProcessor:
 
         cop_data = {}
         try:
+            print(preprocessed_data["Accelerometer"])
             if balance_board:
-                cop_data["COP_x"] = self.compute_cop_wbb_x(preprocessed_data)
-                cop_data["COP_y"] = self.compute_cop_wbb_y(preprocessed_data)
+                cop_data["COP_x"] = preprocessed_data["Accelerometer"][:, 0]
+                cop_data["COP_y"] = preprocessed_data["Accelerometer"][:, 1]
             else:
                 cop_data["COP_x"] = self.compute_cop_fp_x(preprocessed_data)
                 cop_data["COP_y"] = self.compute_cop_fp_y(preprocessed_data)
