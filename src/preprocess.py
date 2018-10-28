@@ -85,7 +85,7 @@ class DataPreprocessor(SWARII):
         return scipy.signal.detrend(input_signal, type=self.detrending_type)
 
     def resize_data(self, input_signal, threshold_1=low_thresh, threshold_2=up_thresh):
-        """Remove the beginning and the end of the input signal based on some given thresholds."""
+        """Remove the beginning and the end of the input signal based on some arbitrary chosen thresholds."""
 
         return input_signal[threshold_1:threshold_2]
 
@@ -144,7 +144,6 @@ class DataPreprocessor(SWARII):
         """Preprocess the raw force sensor data"""
 
         if balance_board:
-            # The data seems corrupted so there is no point computing this at the moment
             if self.use_swarii:
                 relative_timestamps = self.compute_timestamps(data[0])
 
