@@ -33,9 +33,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
     WBB = args.wbb
 
-    ###############
-    # Data handling
-    ###############
+    ################
+    # Files handling
+    ################
 
     # Get all the paths to the files that need to be processed
     files = get_path_to_all_files(data_folder)

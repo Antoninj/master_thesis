@@ -190,7 +190,7 @@ class DataPreprocessor(SWARII):
 
     @staticmethod
     def compute_cop_fp_x(data):
-        """Compute the y coordinate of the force plate center of pressure (AP direction)."""
+        """Compute the y coordinate of the force plate center of pressure (ML direction)."""
 
         # Force plate height (in mm)
         dz = config["wbb_parameters"]["height"]
@@ -204,13 +204,13 @@ class DataPreprocessor(SWARII):
         Mx1 = pd.DataFrame(Mx1)[0].replace(to_replace=0, value=1).values
         Fz1 = pd.DataFrame(Fz1)[0].replace(to_replace=0, value=1).values
 
-        cop_fp_x = (Mx1 - dz * Fy1) / (Fz1)
+        cop_fp_x = -(Mx1 - dz * Fy1) / (Fz1)
 
         return cop_fp_x
 
     @staticmethod
     def compute_cop_fp_y(data):
-        """Compute the x coordinate of the force plate center of pressure (ML direction)."""
+        """Compute the x coordinate of the force plate center of pressure (AP direction)."""
 
         # Force plate height (in mm)
         dz = config["wbb_parameters"]["height"]

@@ -31,8 +31,8 @@ class FrequencyFeatures(CopFeatures):
         ----------
          ..[1] Scipy documentation: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.welch.html#scipy.signal.welch
         """
-
-        (f, psd) = welch(array, fs=self.fs, nperseg=self.nperseg)
+        nfft = len(array) * 2
+        (f, psd) = welch(array, fs=self.fs, nperseg=self.nperseg, nfft=nfft)
 
         return (f, psd)
 

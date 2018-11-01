@@ -8,8 +8,8 @@
         "filter_order": 1,
         "cutoff_frequency": 12,
         "detrending_type": "constant",
-        "upsampling_factor": 20,
-        "downsampling_factor": 2,
+        "upsampling_factor": 1000,
+        "downsampling_factor": 30,
         "acquisition_frequency": 1000,
         "lower_threshold": 8000,
         "upper_threshold": 28000,
@@ -21,8 +21,8 @@
         "F_05": 3
     },
     "frequency_features_parameters": {
-        "sampling_frequency": 10,
-        "nperseg": 200
+        "sampling_frequency": 1,
+        "nperseg": 100
     },
     "force_plate_labels": {
         "analog_labels": [
@@ -48,8 +48,8 @@
         ]
     },
     "test_files": {
-        "wbb_raw_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard/Repro/Repro1/BB/1_1.c3d",
-        "fp_raw_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard/Repro/Repro1/FP/1_1.c3d",
+        "wbb_raw_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard/Repro/Repro1/BB/1_2.c3d",
+        "fp_raw_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard/Repro/Repro1/FP/1_2.c3d",
         "wbb_cop_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/cop_results/Repro/Repro1/BB/1_1_cop.json",
         "fp_cop_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/cop_results/Repro/Repro1/FP/1_1_cop.json"
     },
