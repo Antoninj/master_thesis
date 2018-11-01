@@ -73,14 +73,6 @@ class SensorDataReader(btkAcquisitionFileReader):
         self.set_reader_filename(filepath)
         acq = self.GetOutput()
 
-        """
-        resolution = acq.GetAnalogResolution()
-        print("Analog resolution: {}".format(resolution))
-        acq.SetAnalogResolution(btkAcquisition.Bit16)
-        resolution = acq.GetAnalogResolution()
-        print("New analog resolution: {}".format(resolution))
-        """
-
         if balance_board:
             analog_labels = self.wbb_analog_labels
             data_points_labels = self.wbb_data_points_labels
@@ -88,11 +80,7 @@ class SensorDataReader(btkAcquisitionFileReader):
             analog_data = self.get_analog_data(acq, analog_labels)
             point_data = self.get_point_data(acq, data_points_labels)
 
-            result_dic = {}
-            result_dic["COP_x"] = point_data["Accelerometer"][:, 0]
-            result_dic["COP_y"] = point_data["Accelerometer"][:, 1]
-
-            return [analog_data, result_dic]
+            return [analog_data, point_data]
 
         else:
             analog_labels = self.force_plate_analog_labels

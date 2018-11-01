@@ -47,7 +47,7 @@ if __name__ == "__main__":
     # Tests
     ##################
 
-    logger.info("Testing Center Of Pressure (COP) computations module")
+    logger.info("Testing preprocessing module")
 
     if WBB:
         logger.info("Processing Wii Balance Board data.")
@@ -59,23 +59,21 @@ if __name__ == "__main__":
         logger.debug("Analog data: {} \nAnalog Frequency: {}".format(raw_data[0], analog_freq))
         logger.debug("Point data :{}".format(raw_data[1]))
 
-        preprocessed_data = data_preprocessor.preprocess_raw_data(raw_data, True)
+        preprocessed_cop_data = data_preprocessor.preprocess_raw_data(raw_data, True)
 
-        logger.debug("Preprocessed data: {}".format(preprocessed_data))
+        logger.debug("Preprocessed data: {}".format(preprocessed_cop_data))
 
-        cop_data = data_processor.compute_cop_positions(preprocessed_data, WBB)
-        cop_wbb_x = cop_data["COP_x"]
-        cop_wbb_y = cop_data["COP_y"]
+        cop_wbb_x = preprocessed_cop_data["COP_x"]
+        cop_wbb_y = preprocessed_cop_data["COP_y"]
 
-        cop_wbb_x_detrended = data_preprocessor.apply_detrending(cop_wbb_x)
-        cop_wbb_y_detrended = data_preprocessor.apply_detrending(cop_wbb_y)
-
-        logger.debug("WBB COP x: {} \n WBB COP y: {}".format(cop_wbb_x_detrended, cop_wbb_y_detrended))
+        logger.debug("WBB COP x: {} \n WBB COP y: {}".format(cop_wbb_x, cop_wbb_y))
 
         if plot:
             plt.figure()
-            plt.plot(cop_wbb_x_detrended)
-            plt.plot(cop_wbb_y_detrended)
+            plt.title("WBB data")
+            plt.plot(cop_wbb_x, label="COP x")
+            plt.plot(cop_wbb_y, label="COP y")
+            plt.legend()
             plt.show()
 
     else:
@@ -89,18 +87,17 @@ if __name__ == "__main__":
 
         logger.debug("Fz1 size: {}".format(len(raw_data["Fz1"])))
 
-        preprocessed_data = data_preprocessor.preprocess_raw_data(raw_data)
+        preprocessed_cop_data = data_preprocessor.preprocess_raw_data(raw_data)
 
-        cop_fp_x = data_processor.compute_cop_fp_x(preprocessed_data)
-        cop_fp_y = data_processor.compute_cop_fp_y(preprocessed_data)
+        cop_wbb_x = preprocessed_cop_data["COP_x"]
+        cop_wbb_y = preprocessed_cop_data["COP_y"]
 
-        cop_fp_x_detrended = data_preprocessor.apply_detrending(cop_fp_x)
-        cop_fp_y_detrended = data_preprocessor.apply_detrending(cop_fp_y)
-
-        logger.debug("FP COP x: {} \n FP COP y: {}".format(cop_fp_x_detrended, cop_fp_y_detrended))
+        logger.debug("FP COP x: {} \n FP COP y: {}".format(cop_wbb_x, cop_wbb_y))
 
         if plot:
             plt.figure()
-            plt.plot(cop_fp_x_detrended)
-            plt.plot(cop_fp_y_detrended)
+            plt.title("Force plate data")
+            plt.plot(cop_wbb_x, label="COP x")
+            plt.plot(cop_wbb_y, label="COP y")
+            plt.legend()
             plt.show()

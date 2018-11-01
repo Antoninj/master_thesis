@@ -5,8 +5,21 @@ from datetime import datetime
 # Built-in modules imports
 from utils import load_config
 from resampling import SWARII
+import pandas as pd
+import numpy as np
+import warnings
+import logging
 
 config = load_config()
+
+# Set numpy error level to warning
+np.seterr(all='warn')
+
+warnings.filterwarnings("ignore", message="numpy.dtype size changed")
+warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
+warnings.filterwarnings('error')
+
+logging.captureWarnings(True)
 
 
 class DataPreprocessor(SWARII):
@@ -89,7 +102,7 @@ class DataPreprocessor(SWARII):
 
         return input_signal[threshold_1:threshold_2]
 
-    def preprocess_sensor_data(self, input_signal, balance_board=False, timestamps=None):
+    def preprocess_signal(self, input_signal, balance_board=False, timestamps=None):
         """
         Pipeline the preprocessing steps.
 
@@ -104,12 +117,12 @@ class DataPreprocessor(SWARII):
 
             filtered_signal = self.apply_filtering(resampled_signal)
         else:
-            signal = input_signal.flatten()
-            filtered_signal = self.apply_filtering(signal)
+            filtered_signal = self.apply_filtering(input_signal)
 
         resized_signal = self.resize_data(filtered_signal)
+        detrended_data = self.apply_detrending(resized_signal)
 
-        return resized_signal
+        return detrended_data
 
     @staticmethod
     def compute_timestamps(time_dict):
@@ -141,28 +154,77 @@ class DataPreprocessor(SWARII):
         return timestamps_seconds
 
     def preprocess_raw_data(self, data, balance_board=False):
-        """Preprocess the raw force sensor data"""
+        """Preprocess the raw data"""
+
+        if self.use_swarii and balance_board:
+            time_data = data[0]
+            relative_timestamps = self.compute_timestamps(time_data)
+        else:
+            relative_timestamps = None
 
         if balance_board:
-            if self.use_swarii:
-                relative_timestamps = self.compute_timestamps(data[0])
-
-            else:
-                relative_timestamps = None
             data = data[1]
 
-            for key, value in data.items():
-                data[key] = self.preprocess_sensor_data(input_signal=value, balance_board=balance_board, timestamps=relative_timestamps)
-        else:
-            for key, value in data.items():
-                data[key] = self.preprocess_sensor_data(input_signal=value)
+        cop_data = self.compute_cop_positions(data, balance_board)
+        for key, value in cop_data.items():
+            cop_data[key] = self.preprocess_signal(input_signal=value, balance_board=balance_board, timestamps=relative_timestamps)
 
-        return data
+        return cop_data
 
-    def detrend_cop_data(self, data):
-        """Preprocess the cop data"""
+    def compute_cop_positions(self, raw_data, balance_board=False):
+        """Compute the COP positions in the AP and ML directions."""
 
-        for key, value in data.items():
-            data[key] = self.apply_detrending(value)
+        cop_data = {}
+        try:
+            if balance_board:
+                cop_data["COP_x"] = raw_data["Accelerometer"][:, 0]
+                cop_data["COP_y"] = raw_data["Accelerometer"][:, 1]
+            else:
+                cop_data["COP_x"] = self.compute_cop_fp_x(raw_data)
+                cop_data["COP_y"] = self.compute_cop_fp_y(raw_data)
 
-        return data
+            return cop_data
+
+        except Exception:
+            raise
+
+    @staticmethod
+    def compute_cop_fp_x(data):
+        """Compute the y coordinate of the force plate center of pressure (AP direction)."""
+
+        # Force plate height (in mm)
+        dz = config["wbb_parameters"]["height"]
+
+        # Force plate sensor values
+        Fy1 = data["Fy1"].flatten()
+        Mx1 = data["Mx1"].flatten()
+        Fz1 = data["Fz1"].flatten()
+
+        Fy1 = pd.DataFrame(Fy1)[0].replace(to_replace=0, value=1).values
+        Mx1 = pd.DataFrame(Mx1)[0].replace(to_replace=0, value=1).values
+        Fz1 = pd.DataFrame(Fz1)[0].replace(to_replace=0, value=1).values
+
+        cop_fp_x = (Mx1 - dz * Fy1) / (Fz1)
+
+        return cop_fp_x
+
+    @staticmethod
+    def compute_cop_fp_y(data):
+        """Compute the x coordinate of the force plate center of pressure (ML direction)."""
+
+        # Force plate height (in mm)
+        dz = config["wbb_parameters"]["height"]
+
+        # Force plate sensor values
+        Fx1 = data["Fx1"].flatten()
+        My1 = data["My1"].flatten()
+        Fz1 = data["Fz1"].flatten()
+
+        Fx1 = pd.DataFrame(Fx1)[0].replace(to_replace=0, value=1).values
+        My1 = pd.DataFrame(My1)[0].replace(to_replace=0, value=1).values
+        Fz1 = pd.DataFrame(Fz1)[0].replace(to_replace=0, value=1).values
+
+        cop_fp_y = -(My1 + dz * Fx1) / (Fz1)
+
+        return cop_fp_y
+

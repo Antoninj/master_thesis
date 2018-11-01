@@ -21,40 +21,45 @@ if __name__ == "__main__":
     # WBB data test file
     wbb_cop_data = config["test_files"]["wbb_cop_data"]
 
+    # FP data test file
+    fp_cop_data = config["test_files"]["fp_cop_data"]
+
     # Command line argument parser to choose between frequency or time domain features
     parser = ArgumentParser(
         description="")
-    parser.add_argument("-f", "--freq", action='store_true', help="Compute frequency features")
-    parser.add_argument("-p", "--plot", action='store_true', help="Plot results")
+    parser.add_argument("-w", "--wbb", action='store_true', help="Compute WBB features")
+    parser.add_argument("-p", "--plot", action='store_true', help="Plot frequency results")
 
     args = parser.parse_args()
-    freq = args.freq
+    WBB = args.wbb
     plot = args.plot
 
     ##################
     # Tests
     ##################
 
-    logger.info("Testing feature computation modules.")
-    logger.info("Test file: {}".format(wbb_cop_data))
-
-    if not freq:
-        # Time features computations
-        logger.info("Computing time features.")
-
-        time_features = TimeFeatures.from_file(wbb_cop_data)
-        time_features.summary()
-
+    if WBB:
+        data_file = wbb_cop_data
     else:
-        # Frequency features computations
-        logger.info("Computing frequency features.")
-        freq_features = FrequencyFeatures.from_file(wbb_cop_data)
+        data_file = fp_cop_data
 
-        (f, pxx) = freq_features.rd_spectral_density
-        freq_features.summary()
+    logger.info("Testing feature computation modules.")
+    logger.info("Test file: {}".format(data_file))
 
-        if plot:
-            plt.semilogy(f, pxx)
-            plt.xlabel('frequency [Hz]')
-            plt.ylabel('PSD [mm**2/Hz]')
-            plt.show()
+    # Time features computations
+    logger.info("Computing time features.")
+    time_features = TimeFeatures.from_file(data_file)
+    time_features.summary()
+
+    # Frequency features computations
+    logger.info("Computing frequency features.")
+    freq_features = FrequencyFeatures.from_file(data_file)
+
+    (f, pxx) = freq_features.rd_spectral_density
+    freq_features.summary()
+
+    if plot:
+        plt.semilogy(f, pxx)
+        plt.xlabel('frequency [Hz]')
+        plt.ylabel('PSD [mm**2/Hz]')
+        plt.show()
