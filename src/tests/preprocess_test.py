@@ -2,8 +2,32 @@
 import logging
 from matplotlib import pyplot as plt
 from argparse import ArgumentParser
+import numpy as np
 
 from context import *
+
+
+def plot_stabilograms(cop_x, cop_y, cop_rd, device_name):
+    fig, axs = plt.subplots(2, 2, figsize=(15, 10))
+    index = [i / 1000 for i in range(len(cop_x))]
+    fig.suptitle("{} plots".format(device_name), fontsize=16)
+
+    axs[0][0].plot(index, cop_x)
+    axs[0][0].set_xlabel('Time (seconds)')
+    axs[0][0].set_ylabel('ML distance (mm)')
+    axs[0][1].plot(index, cop_y)
+    axs[0][1].set_xlabel('Time (seconds)')
+    axs[0][1].set_ylabel('AP distance (mm)')
+    axs[1][0].plot(index, cop_rd)
+    axs[1][0].set_xlabel('Time (seconds)')
+    axs[1][0].set_ylabel('Resultant distance (mm)')
+    axs[1][1].plot(cop_x, cop_y)
+    axs[1][1].set_xlabel('ML distance (mm)')
+    axs[1][1].set_ylabel('AP distance (mm)')
+
+
+def compute_rd(cop_x, cop_y):
+    return np.array([np.sqrt(x**2 + y**2) for x, y in zip(cop_x, cop_y)])
 
 
 if __name__ == "__main__":
@@ -50,6 +74,7 @@ if __name__ == "__main__":
     logger.info("Testing preprocessing module")
 
     if WBB:
+        device_name = "Wii Balance Board"
         logger.info("Processing Wii Balance Board data.")
         logger.info("Test file: {}".format(filepath_wbb))
 
@@ -61,22 +86,13 @@ if __name__ == "__main__":
 
         preprocessed_cop_data = data_preprocessor.preprocess_raw_data(raw_data, True)
 
-        logger.debug("Preprocessed data: {}".format(preprocessed_cop_data))
+        cop_x = preprocessed_cop_data["COP_x"]
+        cop_y = preprocessed_cop_data["COP_y"]
 
-        cop_wbb_x = preprocessed_cop_data["COP_x"]
-        cop_wbb_y = preprocessed_cop_data["COP_y"]
-
-        logger.debug("WBB COP x: {} \n WBB COP y: {}".format(cop_wbb_x, cop_wbb_y))
-
-        if plot:
-            plt.figure()
-            plt.title("WBB data")
-            plt.plot(cop_wbb_x, label="COP x")
-            plt.plot(cop_wbb_y, label="COP y")
-            plt.legend()
-            plt.show()
+        logger.debug("WBB COP x: {} \n WBB COP y: {}".format(cop_x, cop_y))
 
     else:
+        device_name = "Force plate"
         logger.info("Processing Force Plate data.")
         logger.info("Test file: {}".format(filepath_fp))
 
@@ -89,15 +105,12 @@ if __name__ == "__main__":
 
         preprocessed_cop_data = data_preprocessor.preprocess_raw_data(raw_data)
 
-        cop_wbb_x = preprocessed_cop_data["COP_x"]
-        cop_wbb_y = preprocessed_cop_data["COP_y"]
+        cop_x = preprocessed_cop_data["COP_x"]
+        cop_y = preprocessed_cop_data["COP_y"]
 
-        logger.debug("FP COP x: {} \n FP COP y: {}".format(cop_wbb_x, cop_wbb_y))
+        logger.debug("FP COP x: {} \n FP COP y: {}".format(cop_x, cop_y))
 
-        if plot:
-            plt.figure()
-            plt.title("Force plate data")
-            plt.plot(cop_wbb_x, label="COP x")
-            plt.plot(cop_wbb_y, label="COP y")
-            plt.legend()
-            plt.show()
+    if plot:
+        cop_rd = compute_rd(cop_x, cop_y)
+        plot_stabilograms(cop_x, cop_y, cop_rd, device_name)
+        plt.show()
