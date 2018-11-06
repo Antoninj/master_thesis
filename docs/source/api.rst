@@ -11,16 +11,10 @@ Raw acquisition data extraction
   :members:
 
 
-Data preprocessing
-------------------
+Data preprocessing and Center of Pressure computations
+--------------------------------------------------
 
 .. automodule:: src.preprocess
-  :members:
-
-Center of Pressure computations
--------------------------------
-
-.. automodule:: src.cop
   :members:
 
 

@@ -115,11 +115,10 @@ class DataPreprocessor(SWARII):
             else:
                 resampled_signal = self.apply_polyphase_resampling(input_signal)
 
-            filtered_signal = self.apply_filtering(resampled_signal)
         else:
             resampled_signal = self.apply_polyphase_resampling(input_signal)
-            filtered_signal = self.apply_filtering(resampled_signal)
 
+        filtered_signal = self.apply_filtering(resampled_signal)
         resized_signal = self.resize_data(filtered_signal)
         detrended_data = self.apply_detrending(resized_signal)
 

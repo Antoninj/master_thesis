@@ -13,6 +13,7 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
    
@@ -75,19 +76,19 @@
 
 
 <div class="viewcode-block" id="save_as_json"><a class="viewcode-back" href="../../api.html#src.utils.save_as_json">[docs]</a><span class="k">def</span> <span class="nf">save_as_json</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span> <span class="n">destination_folder</span><span class="p">,</span> <span class="n">name_extension</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Save results data to json format.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Save results to json format.&quot;&quot;&quot;</span>
 
     <span class="n">filename</span> <span class="o">=</span> <span class="n">build_filename</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">destination_folder</span><span class="p">,</span> <span class="n">name_extension</span><span class="p">)</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
         <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">outfile</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">NumpyEncoder</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="build_filename"><a class="viewcode-back" href="../../api.html#src.utils.build_filename">[docs]</a><span class="k">def</span> <span class="nf">build_filename</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">destination_folder</span><span class="p">,</span> <span class="n">name_extension</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Build a custom destination filepath.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="build_filename"><a class="viewcode-back" href="../../api.html#src.utils.build_filename">[docs]</a><span class="k">def</span> <span class="nf">build_filename</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">destination_folder</span><span class="p">,</span> <span class="n">name_extension</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Build a custom destination filepath from the input file.&quot;&quot;&quot;</span>
 
-    <span class="n">base_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filepath</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">base_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">input_file</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">replacement_string</span> <span class="o">=</span> <span class="s2">&quot;results/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">destination_folder</span><span class="p">)</span>
-    <span class="n">filename</span> <span class="o">=</span> <span class="n">base_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;BalanceBoard_Static&quot;</span><span class="p">,</span> <span class="n">replacement_string</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_</span><span class="si">{}</span><span class="s2">.json&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name_extension</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">base_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;BalanceBoard&quot;</span><span class="p">,</span> <span class="n">replacement_string</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_</span><span class="si">{}</span><span class="s2">.json&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name_extension</span><span class="p">)</span>
     <span class="n">dir_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
     <span class="n">check_folder</span><span class="p">(</span><span class="n">dir_name</span><span class="p">)</span>
 
@@ -104,11 +105,12 @@
 <div class="viewcode-block" id="get_path_to_all_files"><a class="viewcode-back" href="../../api.html#src.utils.get_path_to_all_files">[docs]</a><span class="k">def</span> <span class="nf">get_path_to_all_files</span><span class="p">(</span><span class="n">folder_name</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Recursively get all filepaths from a directory tree.&quot;&quot;&quot;</span>
 
+    <span class="n">exceptions_extensions</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;.DS_Store&quot;</span><span class="p">,</span> <span class="s2">&quot;.xls&quot;</span><span class="p">,</span> <span class="s2">&quot;.tif&quot;</span><span class="p">]</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">filepaths</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">dirnames</span><span class="p">,</span> <span class="n">filenames</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">folder_name</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
-                <span class="k">if</span> <span class="s1">&#39;.DS_Store&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">filename</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">ext</span> <span class="ow">in</span> <span class="n">filename</span> <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">exceptions_extensions</span><span class="p">):</span>
                     <span class="n">filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">filepaths</span>
 
@@ -117,14 +119,14 @@
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="clean_files"><a class="viewcode-back" href="../../api.html#src.utils.clean_files">[docs]</a><span class="k">def</span> <span class="nf">clean_files</span><span class="p">(</span><span class="n">files</span><span class="p">):</span>
+<div class="viewcode-block" id="separate_files"><a class="viewcode-back" href="../../api.html#src.utils.separate_files">[docs]</a><span class="k">def</span> <span class="nf">separate_files</span><span class="p">(</span><span class="n">files</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Separate WBB and force plate data.&quot;&quot;&quot;</span>
 
-    <span class="n">wbb_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span> <span class="k">if</span> <span class="s2">&quot;Vicon&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">file</span> <span class="ow">and</span> <span class="s2">&quot;cop&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">file</span><span class="p">]</span>
-    <span class="n">fp_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span> <span class="k">if</span> <span class="s2">&quot;Vicon&quot;</span> <span class="ow">in</span> <span class="n">file</span> <span class="ow">and</span> <span class="s2">&quot;cop&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">file</span><span class="p">]</span>
+    <span class="n">wbb_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span> <span class="k">if</span> <span class="s2">&quot;FP&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">file</span> <span class="ow">and</span> <span class="s2">&quot;cop&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">file</span><span class="p">]</span>
+    <span class="n">fp_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span> <span class="k">if</span> <span class="s2">&quot;FP&quot;</span> <span class="ow">in</span> <span class="n">file</span> <span class="ow">and</span> <span class="s2">&quot;cop&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">file</span><span class="p">]</span>
 
-    <span class="n">wbb_files_modified</span> <span class="o">=</span> <span class="p">[</span><span class="n">filename</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;BalanceBoard&quot;</span><span class="p">,</span> <span class="s2">&quot;Vicon&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">wbb_files</span><span class="p">]</span>
-    <span class="n">fp_files_modified</span> <span class="o">=</span> <span class="p">[</span><span class="n">filename</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;Vicon&quot;</span><span class="p">,</span> <span class="s2">&quot;BalanceBoard&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">fp_files</span><span class="p">]</span>
+    <span class="n">wbb_files_modified</span> <span class="o">=</span> <span class="p">[</span><span class="n">filename</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;BB&quot;</span><span class="p">,</span> <span class="s2">&quot;FP&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">wbb_files</span><span class="p">]</span>
+    <span class="n">fp_files_modified</span> <span class="o">=</span> <span class="p">[</span><span class="n">filename</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;FP&quot;</span><span class="p">,</span> <span class="s2">&quot;BB&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">fp_files</span><span class="p">]</span>
 
     <span class="n">fp_files_curated</span> <span class="o">=</span> <span class="p">[</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">fp_files</span> <span class="k">if</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">wbb_files_modified</span><span class="p">]</span>
     <span class="n">wbb_files_curated</span> <span class="o">=</span> <span class="p">[</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">wbb_files</span> <span class="k">if</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">fp_files_modified</span><span class="p">]</span>
@@ -184,6 +186,14 @@
     </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="clearer"></div>
@@ -192,8 +202,8 @@
       &copy;2018, Antonin Jousson.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
 

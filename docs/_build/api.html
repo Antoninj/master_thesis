@@ -13,6 +13,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="Background" href="background.html" />
@@ -37,11 +38,8 @@
 <div class="section" id="raw-acquisition-data-extraction">
 <h2>Raw acquisition data extraction<a class="headerlink" href="#raw-acquisition-data-extraction" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="data-preprocessing">
-<h2>Data preprocessing<a class="headerlink" href="#data-preprocessing" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="center-of-pressure-computations">
-<h2>Center of Pressure computations<a class="headerlink" href="#center-of-pressure-computations" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="data-preprocessing-and-center-of-pressure-computations">
+<h2>Data preprocessing and Center of Pressure computations<a class="headerlink" href="#data-preprocessing-and-center-of-pressure-computations" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="feature-computations">
 <h2>Feature computations<a class="headerlink" href="#feature-computations" title="Permalink to this headline">¶</a></h2>
@@ -83,20 +81,14 @@ implement default like this:</p>
 
 <dl class="function">
 <dt id="src.utils.build_filename">
-<code class="descclassname">src.utils.</code><code class="descname">build_filename</code><span class="sig-paren">(</span><em>filepath</em>, <em>destination_folder</em>, <em>name_extension</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils.html#build_filename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.utils.build_filename" title="Permalink to this definition">¶</a></dt>
-<dd><p>Build a custom destination filepath.</p>
+<code class="descclassname">src.utils.</code><code class="descname">build_filename</code><span class="sig-paren">(</span><em>input_file</em>, <em>destination_folder</em>, <em>name_extension</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils.html#build_filename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.utils.build_filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build a custom destination filepath from the input file.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="src.utils.check_folder">
 <code class="descclassname">src.utils.</code><code class="descname">check_folder</code><span class="sig-paren">(</span><em>folder_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils.html#check_folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.utils.check_folder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if a folder exists, and if not, create it.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="src.utils.clean_files">
-<code class="descclassname">src.utils.</code><code class="descname">clean_files</code><span class="sig-paren">(</span><em>files</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils.html#clean_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.utils.clean_files" title="Permalink to this definition">¶</a></dt>
-<dd><p>Separate WBB and force plate data.</p>
 </dd></dl>
 
 <dl class="function">
@@ -114,7 +106,13 @@ implement default like this:</p>
 <dl class="function">
 <dt id="src.utils.save_as_json">
 <code class="descclassname">src.utils.</code><code class="descname">save_as_json</code><span class="sig-paren">(</span><em>data</em>, <em>filepath</em>, <em>destination_folder</em>, <em>name_extension</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils.html#save_as_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.utils.save_as_json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save results data to json format.</p>
+<dd><p>Save results to json format.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.utils.separate_files">
+<code class="descclassname">src.utils.</code><code class="descname">separate_files</code><span class="sig-paren">(</span><em>files</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils.html#separate_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.utils.separate_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Separate WBB and force plate data.</p>
 </dd></dl>
 
 <dl class="function">
@@ -147,8 +145,7 @@ implement default like this:</p>
 <li class="toctree-l1"><a class="reference internal" href="background.html">Background</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#raw-acquisition-data-extraction">Raw acquisition data extraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#data-preprocessing">Data preprocessing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#center-of-pressure-computations">Center of Pressure computations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-preprocessing-and-center-of-pressure-computations">Data preprocessing and Center of Pressure computations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#feature-computations">Feature computations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#data-pipelining">Data pipelining</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#statistics">Statistics</a></li>
@@ -177,6 +174,14 @@ implement default like this:</p>
     </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="clearer"></div>
@@ -185,8 +190,8 @@ implement default like this:</p>
       &copy;2018, Antonin Jousson.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
       <a href="_sources/api.rst.txt"
