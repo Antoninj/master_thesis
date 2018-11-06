@@ -42,7 +42,7 @@ if __name__ == "__main__":
 
     # Separate WBB and force plate data
     wbb_files = [file for file in files if "FP" not in file]
-    fp_files = [file for file in files if "FP" in file]
+    fp_files = [file for file in files if "FP" in file and "RSSCAN" not in file]
 
     ####################
     # Feature extraction

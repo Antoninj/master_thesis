@@ -188,21 +188,21 @@ class AreaFeatures(DistanceFeatures):
         """Compute the standard deviation of the resultant distance time series."""
 
         std_rd = np.sqrt(np.square(self.distance_features["Rms distance"]) - np.square(
-            self.distance_features["Rms distance"]))
+            self.distance_features["Mean distance"]))
         return std_rd
 
     def compute_std_ml(self):
         """Compute the standard deviation of the ML time series."""
 
         std_ml = np.sqrt(np.square(self.distance_features["Rms distance-ML"]) - np.square(
-            self.distance_features["Rms distance-ML"]))
+            self.distance_features["Mean distance-ML"]))
         return std_ml
 
     def compute_std_ap(self):
         """Compute the standard deviation of the AP time series."""
 
         std_ap = np.sqrt(np.square(self.distance_features["Rms distance-AP"]) - np.square(
-            self.distance_features["Rms distance-AP"]))
+            self.distance_features["Mean distance-AP"]))
         return std_ap
 
     def compute_confidence_circle_area(self):
@@ -228,26 +228,17 @@ class AreaFeatures(DistanceFeatures):
 
         std_ml = self.compute_std_ml()
         std_ap = self.compute_std_ap()
+        area_ce = np.pi * self.F_05 * np.sqrt(np.square(np.square(std_ml)) + np.square(np.square(std_ap)) + 6 * np.square(std_ml) * np.square(std_ap) -
+                                              4 * np.square(np.cov(self.cop_x, self.cop_y)[0][1]) - (np.square(std_ml) + np.square(std_ap)))
 
-        # For debuging purposes
-        # print(square(square(std_ml)) + square(square(std_ap)) + 6 * square(std_ml) * square(std_ap) -
-        #     4 * square(np.cov(self.cop_x, self.cop_y)[0][1]) - (square(std_ml) + square(std_ap)))
-
-        try:
-            area_ce = np.pi * self.F_05 * np.sqrt(np.square(np.square(std_ml)) + np.square(np.square(std_ap)) + 6 * np.square(
-                std_ml) * np.square(std_ap) - 4 * np.square(np.cov(self.cop_x, self.cop_y)[0][1]) - (np.square(std_ml) + np.square(std_ap)))
-
-            return area_ce
-
-        except Warning:
-            return np.nan
+        return area_ce
 
     def compute_area_features(self):
         """Compute all the area features and store them in a dictionary."""
 
         features = {}
         features["95% confidence circle area"] = self.compute_confidence_circle_area()
-        features["95% confidence elipse area"] = self.compute_confidence_elipse_area()
+        #features["95% confidence elipse area"] = self.compute_confidence_elipse_area()
 
         return features
 
@@ -355,15 +346,9 @@ class HybridFeatures(AreaFeatures):
 
         std_ml = self.compute_std_ml()
         std_ap = self.compute_std_ap()
+        d_fd_ce = np.sqrt(4 * self.F_05 * np.sqrt(np.square(np.square(std_ml)) + np.square(np.square(std_ap)) + 6 * np.square(std_ml) * np.square(std_ap) - 4 * np.square(np.cov(self.cop_x, self.cop_y)[0][1]) - (np.square(std_ml) + np.square(std_ap))))
 
-        try:
-            d_fd_ce = np.sqrt(4 * self.F_05 * np.sqrt(np.square(np.square(std_ml)) + np.square(np.square(std_ap)) + 6 * np.square(
-                std_ml) * np.square(std_ap) - 4 * np.square(np.cov(self.cop_x, self.cop_y)[0][1]) - (np.square(std_ml) + np.square(std_ap))))
-
-            return self.compute_fractal_dimension(d_fd_ce)
-
-        except Warning:
-            return np.nan
+        return self.compute_fractal_dimension(d_fd_ce)
 
     def compute_hybrid_features(self):
         """Compute all the hybrid features and store them in a dictionary."""
@@ -374,7 +359,7 @@ class HybridFeatures(AreaFeatures):
         features["Mean frequency-ML"] = self.compute_mean_frequency_ml()
         features["Mean frequency-AP"] = self.compute_mean_frequency_ap()
         features["Fractal dimension-CC"] = self.compute_fractal_dimension_cc()
-        features["Fractal dimension-CE"] = self.compute_fractal_dimension_ce()
+        #features["Fractal dimension-CE"] = self.compute_fractal_dimension_ce()
 
         return features
 

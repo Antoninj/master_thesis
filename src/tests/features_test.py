@@ -55,8 +55,10 @@ if __name__ == "__main__":
     logger.info("Computing frequency features.")
     freq_features = FrequencyFeatures.from_file(data_file)
 
-    (f, pxx) = freq_features.rd_spectral_density
+    (f, pxx) = freq_features.ap_spectral_density
     freq_features.summary()
+
+    #(f, pxx) = freq_features.rd_multitaper_spectral_density
 
     if plot:
         plt.semilogy(f, pxx)

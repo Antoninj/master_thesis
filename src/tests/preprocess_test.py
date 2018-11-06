@@ -8,8 +8,9 @@ from context import *
 
 
 def plot_stabilograms(cop_x, cop_y, cop_rd, device_name):
+    acq_frequency = config["preprocessing_parameters"]["acquisition_frequency"]
     fig, axs = plt.subplots(2, 2, figsize=(15, 10))
-    index = [i / 1000 for i in range(len(cop_x))]
+    index = [i / acq_frequency for i in range(len(cop_x))]
     fig.suptitle("{} plots".format(device_name), fontsize=16)
 
     axs[0][0].plot(index, cop_x)
@@ -83,6 +84,8 @@ if __name__ == "__main__":
 
         logger.debug("Analog data: {} \nAnalog Frequency: {}".format(raw_data[0], analog_freq))
         logger.debug("Point data :{}".format(raw_data[1]))
+
+        logger.debug("Data size: {}".format(len(raw_data[1]["Accelerometer"])))
 
         preprocessed_cop_data = data_preprocessor.preprocess_raw_data(raw_data, True)
 

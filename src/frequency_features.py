@@ -1,6 +1,7 @@
 # Built-in modules imports
 from features import CopFeatures
 from utils import load_config
+from mtspec import mtspec
 
 # Third-party module imports
 from scipy.signal import welch
@@ -18,10 +19,24 @@ class FrequencyFeatures(CopFeatures):
 
     def __init__(self, cop_x, cop_y):
         super(FrequencyFeatures, self).__init__(cop_x, cop_y)
-        self.rd_spectral_density = self.compute_rd_power_spectral_density()
-        self.ap_spectral_density = self.compute_ap_power_spectral_density()
-        self.ml_spectral_density = self.compute_ml_power_spectral_density()
+        self.rd_multitaper_spectral_density = self.compute_multitaper_power_spectral_density(self.cop_rd)
+        self.rd_spectral_density = self.compute_power_spectral_density(self.cop_rd)
+        self.ap_spectral_density = self.compute_power_spectral_density(self.cop_x)
+        self.ml_spectral_density = self.compute_power_spectral_density(self.cop_y)
         self.frequency_features = self.compute_frequency_features()
+
+    def compute_multitaper_power_spectral_density(self, array):
+        """
+        Estimate the adaptive weighted multitaper spectrum, as in Thomson 1982. This is done by estimating the DPSS (discrete prolate spheroidal sequences), multiplying each of the tapers with the data series, take the FFT, and using the adaptive scheme for a better estimation. It outputs the power spectral density (PSD).
+
+        References
+        ----------
+         ..[1] mtspec package documentation: http://krischer.github.io/mtspec/multitaper_mtspec.html
+        """
+        nfft = len(array) / 2
+        psd, f = mtspec(data=array, delta=1, time_bandwidth=4, number_of_tapers=7)
+
+        return (f, psd)
 
     def compute_power_spectral_density(self, array):
         """
@@ -33,27 +48,6 @@ class FrequencyFeatures(CopFeatures):
         """
         nfft = len(array) * 2
         (f, psd) = welch(array, fs=self.fs, nperseg=self.nperseg, nfft=nfft)
-
-        return (f, psd)
-
-    def compute_rd_power_spectral_density(self):
-        """Function to compute the power spectral density of the resultant distance vector of the COP displacement."""
-
-        (f, psd) = self.compute_power_spectral_density(self.cop_rd)
-
-        return (f, psd)
-
-    def compute_ml_power_spectral_density(self):
-        """Function to compute the power spectral density of  the COP displacement in the ML direction."""
-
-        (f, psd) = self.compute_power_spectral_density(self.cop_x)
-
-        return (f, psd)
-
-    def compute_ap_power_spectral_density(self):
-        """Function to compute the power spectral density of  the COP displacement in the AP direction."""
-
-        (f, psd) = self.compute_power_spectral_density(self.cop_y)
 
         return (f, psd)
 
