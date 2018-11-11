@@ -30,8 +30,11 @@ if __name__ == "__main__":
     parser = ArgumentParser(
         description="")
     parser.add_argument("-w", "--wbb", action='store_true', help="Process WBB data")
+    parser.add_argument("-c", "--cop", action='store_true', help="Save cop data")
+
     args = parser.parse_args()
     WBB = args.wbb
+    COP = args.cop
 
     ################
     # Files handling
@@ -61,7 +64,7 @@ if __name__ == "__main__":
         data_pipeline.set_pipeline_data(wbb_files)
 
         # Process all the WBB data
-        data_pipeline.process_all_files(logger, balance_board=True)
+        data_pipeline.process_all_files(logger, balance_board=True, save_cop=COP)
 
         logger.info("End of Wii Balance Board data processing")
 
@@ -72,7 +75,7 @@ if __name__ == "__main__":
         data_pipeline.set_pipeline_data(fp_files)
 
         # Process all the force plate data
-        data_pipeline.process_all_files(logger)
+        data_pipeline.process_all_files(logger, save_cop=COP)
 
         logger.info("End of Force Plate data processing")
 

@@ -3,32 +3,7 @@ import logging
 from matplotlib import pyplot as plt
 from argparse import ArgumentParser
 import numpy as np
-
 from context import *
-
-
-def plot_stabilograms(cop_x, cop_y, cop_rd, device_name):
-    acq_frequency = config["preprocessing_parameters"]["acquisition_frequency"]
-    fig, axs = plt.subplots(2, 2, figsize=(15, 10))
-    index = [i / acq_frequency for i in range(len(cop_x))]
-    fig.suptitle("{} plots".format(device_name), fontsize=16)
-
-    axs[0][0].plot(index, cop_x)
-    axs[0][0].set_xlabel('Time (seconds)')
-    axs[0][0].set_ylabel('ML distance (mm)')
-    axs[0][1].plot(index, cop_y)
-    axs[0][1].set_xlabel('Time (seconds)')
-    axs[0][1].set_ylabel('AP distance (mm)')
-    axs[1][0].plot(index, cop_rd)
-    axs[1][0].set_xlabel('Time (seconds)')
-    axs[1][0].set_ylabel('Resultant distance (mm)')
-    axs[1][1].plot(cop_x, cop_y)
-    axs[1][1].set_xlabel('ML distance (mm)')
-    axs[1][1].set_ylabel('AP distance (mm)')
-
-
-def compute_rd(cop_x, cop_y):
-    return np.array([np.sqrt(x**2 + y**2) for x, y in zip(cop_x, cop_y)])
 
 
 if __name__ == "__main__":
@@ -114,6 +89,6 @@ if __name__ == "__main__":
         logger.debug("FP COP x: {} \n FP COP y: {}".format(cop_x, cop_y))
 
     if plot:
-        cop_rd = compute_rd(cop_x, cop_y)
-        plot_stabilograms(cop_x, cop_y, cop_rd, device_name)
+        acq_frequency = config["preprocessing_parameters"]["acquisition_frequency"]
+        plot_stabilograms(preprocessed_cop_data, device_name, acq_frequency)
         plt.show()

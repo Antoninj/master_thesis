@@ -54,6 +54,6 @@
         "fp_cop_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/cop_results/Repro/Repro1/FP/1_1_cop.json"
     },
     "data_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard/Repro",
-    "feature_results_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/feature_results",
+    "feature_results_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/feature_data",
     "statistics_results_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/statistics"
 }

@@ -2,7 +2,7 @@
 from sensor import SensorDataReader
 from preprocess import DataPreprocessor
 from process import DataProcessor
-from utils import save_as_json
+from utils import save_as_json, plot_stabilograms
 from tqdm import tqdm
 import sys
 
@@ -33,8 +33,14 @@ class DataPipeline(SensorDataReader, DataPreprocessor, DataProcessor):
             preprocessed_cop_data = self.preprocess_raw_data(raw_data, balance_board)
 
             if save_cop:
+                if balance_board:
+                    device_name = "Wii Balance Board"
+                else:
+                    device_name = "Force plate"
+
                 # Save intermediate results of COP computations
-                save_as_json(preprocessed_cop_data, filepath, destination_folder="cop_results", name_extension="cop")
+                save_as_json(preprocessed_cop_data, filepath, destination_folder="cop_data", name_extension="cop.json")
+                plot_stabilograms(preprocessed_cop_data, device_name, self.acq_frequency, filepath=filepath)
                 return
 
             # Compute time features from COP displacement
@@ -46,17 +52,17 @@ class DataPipeline(SensorDataReader, DataPreprocessor, DataProcessor):
             merged_features = {"filepath": filepath, "time_features": time_features, "frequency_features": frequency_features}
 
             # Save features in json format
-            save_as_json(merged_features, filepath, destination_folder="feature_results", name_extension="features")
+            save_as_json(merged_features, filepath, destination_folder="feature_data", name_extension="features.json")
 
         except Exception as err:
             logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
 
-    def process_all_files(self, logger, balance_board=False):
+    def process_all_files(self, logger, balance_board=False, save_cop=False):
         """Save features from all files."""
 
         if self.data is not None:
             for file in tqdm(self.data):
-                self.save_features(file, balance_board)
+                self.save_features(file, balance_board, save_cop)
         else:
             logger.critical("No files to process.")
             sys.exit()

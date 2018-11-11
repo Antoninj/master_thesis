@@ -4,6 +4,7 @@ import numpy as np
 import os
 import logging.config
 import sys
+from matplotlib import pyplot as plt
 
 logger = logging.getLogger("utils")
 
@@ -53,7 +54,7 @@ def build_filename(input_file, destination_folder, name_extension):
 
     base_name = os.path.splitext(input_file)[0]
     replacement_string = "results/{}".format(destination_folder)
-    filename = base_name.replace("BalanceBoard", replacement_string) + "_{}.json".format(name_extension)
+    filename = base_name.replace("BalanceBoard/Repro", replacement_string) + "_{}".format(name_extension)
     dir_name = os.path.dirname(filename)
     check_folder(dir_name)
 
@@ -103,7 +104,42 @@ def setup_logging(default_level=logging.INFO):
     """Setup the logging module configuration from configuration file."""
 
     config = load_config(filename="logging")
-    if config is not None:
+    if config:
         logging.config.dictConfig(config)
     else:
         logging.basicConfig(level=default_level)
+
+
+def compute_rd(cop_x, cop_y):
+    return np.array([np.sqrt(x**2 + y**2) for x, y in zip(cop_x, cop_y)])
+
+
+def plot_stabilograms(preprocessed_cop_data, device_name, acq_frequency, filepath=None):
+    cop_x = preprocessed_cop_data["COP_x"]
+    cop_y = preprocessed_cop_data["COP_y"]
+    cop_rd = compute_rd(cop_x, cop_y)
+
+    fig, axs = plt.subplots(2, 2, figsize=(15, 10))
+    index = [i / acq_frequency for i in range(len(cop_x))]
+    fig.suptitle("{} plots".format(device_name), fontsize=16)
+
+    axs[0][0].plot(index, cop_x)
+    axs[0][0].set_xlabel('Time (seconds)')
+    axs[0][0].set_ylabel('ML distance (mm)')
+    axs[0][1].plot(index, cop_y)
+    axs[0][1].set_xlabel('Time (seconds)')
+    axs[0][1].set_ylabel('AP distance (mm)')
+    axs[1][0].plot(index, cop_rd)
+    axs[1][0].set_xlabel('Time (seconds)')
+    axs[1][0].set_ylabel('Resultant distance (mm)')
+    axs[1][1].plot(cop_x, cop_y)
+    axs[1][1].set_xlabel('ML distance (mm)')
+    axs[1][1].set_ylabel('AP distance (mm)')
+
+    # Save the plots
+    if filepath:
+        config = load_config()
+        swarii_window = config["preprocessing_parameters"]["swarii_window_size"]
+        fig_name = build_filename(filepath, destination_folder="cop_plots", name_extension="SWARII_{}.png".format(swarii_window))
+        plt.savefig(fig_name, bbox_inches='tight')
+        plt.close(fig)

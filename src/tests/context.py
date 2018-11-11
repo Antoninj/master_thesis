@@ -7,6 +7,6 @@ from preprocess import DataPreprocessor
 from process import DataProcessor
 from time_features import TimeFeatures
 from frequency_features import FrequencyFeatures
-from utils import load_config, setup_logging
+from utils import load_config, setup_logging, plot_stabilograms
 from pipeline import DataPipeline
 

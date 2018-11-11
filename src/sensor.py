@@ -51,12 +51,6 @@ class SensorDataReader(btkAcquisitionFileReader):
     def get_analog_data(acquisition, labels):
         try:
             points = [acquisition.GetAnalog(label) for label in labels]
-            """
-            print("Gain: ", points[0].GetGain())
-            print("Scale: ", points[0].GetScale())
-            print("Offset: ", points[0].GetOffset())
-            print("Unit: ", points[0].GetUnit())
-            """
             values = [point.GetValues() for point in points]
         except RuntimeError:
             raise
