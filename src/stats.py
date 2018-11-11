@@ -54,7 +54,7 @@ def generate_profile_report(df, filename, bins=50):
     """
 
     # Create the profile report
-    df_profile = pandas_profiling.ProfileReport(df, bins=bins)
+    df_profile = pandas_profiling.ProfileReport(df, bins=bins, check_correlation=False)
 
     # Save the report
     df_profile.to_file(outputfile=filename)
@@ -277,6 +277,7 @@ def compute_ICC(df1, df2):
             iccs_r_df = icc_res[0]
             iccs_df = pandas2ri.ri2py(iccs_r_df)
 
+            # Select the ICC that corresponds to the 2 way mixed model (see links above)
             icc = iccs_df.iloc[5]["ICC"]
             icc_lower_bound = iccs_df.iloc[5]["lower bound"]
             icc_upper_bound = iccs_df.iloc[5]["upper bound"]

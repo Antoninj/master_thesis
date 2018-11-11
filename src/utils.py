@@ -4,7 +4,7 @@ import numpy as np
 import os
 import logging.config
 import sys
-from matplotlib import pyplot as plt
+#from matplotlib import pyplot as plt
 
 logger = logging.getLogger("utils")
 

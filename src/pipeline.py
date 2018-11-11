@@ -41,7 +41,6 @@ class DataPipeline(SensorDataReader, DataPreprocessor, DataProcessor):
                 # Save intermediate results of COP computations
                 save_as_json(preprocessed_cop_data, filepath, destination_folder="cop_data", name_extension="cop.json")
                 plot_stabilograms(preprocessed_cop_data, device_name, self.acq_frequency, filepath=filepath)
-                return
 
             # Compute time features from COP displacement
             time_features = self.compute_time_features(preprocessed_cop_data["COP_x"], preprocessed_cop_data["COP_y"])
