@@ -4,10 +4,11 @@ from matplotlib import pyplot as plt
 from argparse import ArgumentParser
 import numpy as np
 from context import *
+from gooey import Gooey, GooeyParser
 
 
-if __name__ == "__main__":
-
+# @Gooey(program_name="Data preprocessing test")
+def main():
     ##################
     # Boilerplate code
     ##################
@@ -26,10 +27,14 @@ if __name__ == "__main__":
     filepath_fp = config["test_files"]["fp_raw_data"]
 
     # Command line argument parser to choose between wbb or force plate data
-    parser = ArgumentParser(
-        description="")
-    parser.add_argument("-w", "--wbb", action='store_true', help="Process WBB data")
+    parser = GooeyParser(
+        description="Preprocessing tests")
+    group = parser.add_mutually_exclusive_group()
+    parser.add_argument('-file', '--filename', help="Name of the file to process", widget='FileChooser', default=filepath_wbb)
+    group.add_argument("-w", "--wbb", action='store_true', help="Process WBB data")
+    group.add_argument("-f", "--fp", action='store_true', help="Process Force plate data")
     parser.add_argument("-p", "--plot", action='store_true', help="Plot data")
+
     args = parser.parse_args()
     WBB = args.wbb
     plot = args.plot
@@ -92,3 +97,8 @@ if __name__ == "__main__":
         acq_frequency = config["preprocessing_parameters"]["acquisition_frequency"]
         plot_stabilograms(preprocessed_cop_data, device_name, acq_frequency)
         plt.show()
+
+
+if __name__ == "__main__":
+
+    main()
