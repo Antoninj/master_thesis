@@ -21,7 +21,7 @@ class DataPipeline(SensorDataReader, DataPreprocessor, DataProcessor):
         super(DataPipeline, self).__init__()
         self.data = files
 
-    def save_features(self, filepath, balance_board=False, save_cop=False):
+    def process_file(self, filepath, balance_board=False, save_cop=False):
         """
         Pipeline the preprocessing, COP computations and feature extraction steps and save the results to a json file."""
 
@@ -31,6 +31,8 @@ class DataPipeline(SensorDataReader, DataPreprocessor, DataProcessor):
 
             # Preprocess the raw data
             preprocessed_cop_data = self.preprocess_raw_data(raw_data, balance_board)
+
+            file_info = self.parse_filepath(filepath)
 
             if save_cop:
                 if balance_board:
@@ -48,10 +50,10 @@ class DataPipeline(SensorDataReader, DataPreprocessor, DataProcessor):
             # Compute frequency features from COP displacement
             frequency_features = self.compute_frequency_features(preprocessed_cop_data["COP_x"], preprocessed_cop_data["COP_y"])
 
-            merged_features = {"filepath": filepath, "time_features": time_features, "frequency_features": frequency_features}
+            processed_data = {**file_info, "time_features": time_features, "frequency_features": frequency_features}
 
             # Save features in json format
-            save_as_json(merged_features, filepath, destination_folder="feature_data", name_extension="features.json")
+            save_as_json(processed_data, filepath, destination_folder="feature_data", name_extension="features.json")
 
         except Exception as err:
             logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
@@ -61,7 +63,8 @@ class DataPipeline(SensorDataReader, DataPreprocessor, DataProcessor):
 
         if self.data is not None:
             for file in tqdm(self.data):
-                self.save_features(file, balance_board, save_cop)
+                logger.info("Processing file: {}".format(file))
+                self.process_file(file, balance_board, save_cop)
         else:
             logger.critical("No files to process.")
             sys.exit()
@@ -70,3 +73,25 @@ class DataPipeline(SensorDataReader, DataPreprocessor, DataProcessor):
         """Set the input data of the pipeline."""
 
         self.data = files
+
+    @staticmethod
+    def parse_filepath(file):
+        FP = "FP"
+        WBB = "BB"
+        keys = ["device", "subject", "trial", "balance board"]
+        trial_info = dict.fromkeys(keys)
+        trial_info["device"] = FP if FP in file else WBB
+
+        pre_subject_substring = "Repro/Repro"
+        pre_subject_substring_index = file.find(pre_subject_substring)
+        trial_info["subject"] = file[pre_subject_substring_index + len(pre_subject_substring)]
+
+        pre_balance_board_substring = trial_info["device"] + "/"
+        pre_balance_board_substring_index = file.find(pre_balance_board_substring)
+        trial_info["balance board"] = file[pre_balance_board_substring_index + len(pre_balance_board_substring)]
+
+        pre_trial_substring = trial_info["device"] + "/" + trial_info["balance board"] + "_"
+        pre_trial_substring_index = file.find(pre_trial_substring)
+        trial_info["trial"] = file[pre_trial_substring_index + len(pre_trial_substring)]
+
+        return trial_info
