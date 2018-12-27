@@ -44,13 +44,18 @@
             "handlers": ["error_file_handler"],
             "propagate": "no"
         },
-        "feature extraction": {
+        "feature extraction pipeline": {
+            "level": "INFO",
+            "handlers": ["info_file_handler","console"],
+            "propagate": "no"
+        },
+        "preprocessing pipeline": {
             "level": "INFO",
             "handlers": ["info_file_handler","console"],
             "propagate": "no"
         },
         "tests": {
-            "level": "DEBUG",
+            "level": "INFO",
             "handlers": ["console"],
             "propagate": "no"
         },

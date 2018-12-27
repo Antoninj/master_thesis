@@ -73,10 +73,10 @@ class DataPipeline(SensorDataReader, DataPreprocessor, DataProcessor):
 
         if self.acquisition_data is not None:
             for acquisition_file in tqdm(self.acquisition_data):
-                logger.info("Pre processing acquisition file: {}".format(acquisition_file))
+                logger.debug("Preprocessing acquisition file: {}".format(acquisition_file))
                 self.preprocess_acquisition_file(acquisition_file, balance_board)
         else:
-            logger.critical("No files to pre-process.")
+            logger.critical("No files to preprocess.")
             sys.exit()
 
     def process_all_files(self, logger, balance_board=False):
@@ -84,7 +84,7 @@ class DataPipeline(SensorDataReader, DataPreprocessor, DataProcessor):
 
         if self.cop_data is not None:
             for cop_data_file in tqdm(self.cop_data):
-                logger.info("Processing COP data file: {}".format(cop_data_file))
+                logger.debug("Processing COP data file: {}".format(cop_data_file))
                 self.process_cop_data_file(cop_data_file, balance_board)
         else:
             logger.critical("No files to process.")

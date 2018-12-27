@@ -7,7 +7,7 @@ from argparse import ArgumentParser
 import logging
 
 setup_logging()
-logger = logging.getLogger("feature extraction")
+logger = logging.getLogger("preprocessing pipeline")
 
 
 if __name__ == "__main__":
@@ -30,9 +30,14 @@ if __name__ == "__main__":
     parser = ArgumentParser(
         description="")
     parser.add_argument("-w", "--wbb", action='store_true', help="Process WBB data")
+    parser.add_argument("-d", "--debug", action='store_true', help="Enable debug mode")
 
     args = parser.parse_args()
     WBB = args.wbb
+    debug = args.debug
+
+    if debug:
+        logger.setLevel("DEBUG")
 
     ################
     # Files handling
@@ -50,14 +55,14 @@ if __name__ == "__main__":
     # Feature extraction
     ####################
 
-    logger.info("Executing feature extraction script.")
-    logger.info("Processing data located in: {}".format(data_folder))
+    logger.info("Executing preprocessing pipeline.")
+    logger.info("Preprocessing acquisition data located in: {}".format(data_folder))
 
     # Create the pipeline object
     data_pipeline = DataPipeline()
 
     if WBB:
-        logger.info("Beginning of Wii Balance Board data processing")
+        logger.info("Beginning of Wii Balance Board acquisition data preprocessing")
 
         # Assign WBB data to the pipeline object
         data_pipeline.set_pipeline_acquisition_data(wbb_files)
@@ -65,10 +70,10 @@ if __name__ == "__main__":
         # Process all the WBB data
         data_pipeline.preprocess_all_files(logger, balance_board=True)
 
-        logger.info("End of Wii Balance Board data processing")
+        logger.info("End of Wii Balance Board acquisition data preprocessing")
 
     else:
-        logger.info("Beginning of Force Plate data processing")
+        logger.info("Beginning of Force Plate acquisition data preprocessing")
 
         # Assign force plate data to the pipeline object
         data_pipeline.set_pipeline_acquisition_data(fp_files)
@@ -76,6 +81,6 @@ if __name__ == "__main__":
         # Process all the force plate data
         data_pipeline.preprocess_all_files(logger)
 
-        logger.info("End of Force Plate data processing")
+        logger.info("End of Force Plate acquisition data preprocessing")
 
     logger.info("Saving results to: {}".format(results_folder))

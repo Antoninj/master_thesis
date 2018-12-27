@@ -25,17 +25,21 @@ def main():
     filepath_fp = config["test_files"]["fp_raw_data"]
 
     # Command line argument parser to choose between wbb or force plate data
-    parser = GooeyParser(
+    parser = ArgumentParser(
         description="Preprocessing tests")
-    group = parser.add_mutually_exclusive_group()
-    parser.add_argument('-file', '--filename', help="Name of the file to process", widget='FileChooser', default=filepath_wbb)
-    group.add_argument("-w", "--wbb", action='store_true', help="Process WBB data")
-    group.add_argument("-f", "--fp", action='store_true', help="Process Force plate data")
+    parser.add_argument("-w", "--wbb", action='store_true', help="Process WBB data")
+    parser.add_argument("-f", "--fp", action='store_true', help="Process Force plate data")
     parser.add_argument("-p", "--plot", action='store_true', help="Plot data")
+    parser.add_argument("-d", "--debug", action='store_true', help="Enable debug mode")
+
 
     args = parser.parse_args()
     WBB = args.wbb
     plot = args.plot
+    debug = args.debug
+
+    if debug:
+        logger.setLevel("DEBUG")
 
     # Create a sensor data reader object
     data_reader = SensorDataReader()
