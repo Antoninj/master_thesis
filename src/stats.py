@@ -133,7 +133,7 @@ def perform_t_test(df1, df2):
         y = df2[column]
 
         try:
-            # Comoute the T-statistic and the corresponding p-value
+            # Compute the T-statistic and the corresponding p-value
             t_statistic, p_value = stats.ttest_ind(x, y, nan_policy="propagate")
 
             # Store the results

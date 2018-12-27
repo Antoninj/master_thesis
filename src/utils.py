@@ -87,8 +87,8 @@ def get_path_to_all_files(folder_name):
 def separate_files(files):
     """Separate WBB and force plate data."""
 
-    wbb_files = [file for file in files if "FP" not in file and "cop" not in file]
-    fp_files = [file for file in files if "FP" in file and "cop" not in file]
+    wbb_files = [file for file in files if "FP" not in file]
+    fp_files = [file for file in files if "FP" in file]
 
     wbb_files_modified = [filename.replace("BB", "FP") for filename in wbb_files]
     fp_files_modified = [filename.replace("FP", "BB") for filename in fp_files]
