@@ -33,6 +33,6 @@ class DataProcessor:
     def compute_frequency_features(cop_data):
         """Compute the time domain features."""
 
-        time_domain_features = FrequencyFeatures.from_file(cop_data)
+        frequency_domain_features = FrequencyFeatures.from_file(cop_data)
 
-        return time_domain_features.time_features
+        return frequency_domain_features.frequency_features

@@ -20,7 +20,7 @@ if __name__ == "__main__":
     config = load_config()
 
     # Data folder path
-    data_folder = config["data_folder"]
+    data_folder = config["acquisition_data_folder"]
 
     # Results folder path
     results_folder = config["feature_results_folder"]
@@ -30,11 +30,9 @@ if __name__ == "__main__":
     parser = ArgumentParser(
         description="")
     parser.add_argument("-w", "--wbb", action='store_true', help="Process WBB data")
-    parser.add_argument("-c", "--cop", action='store_true', help="Save cop data")
 
     args = parser.parse_args()
     WBB = args.wbb
-    COP = args.cop
 
     ################
     # Files handling
@@ -45,6 +43,7 @@ if __name__ == "__main__":
 
     # Separate WBB and force plate data
     wbb_files = [file for file in files if "FP" not in file]
+
     fp_files = [file for file in files if "FP" in file and "RSSCAN" not in file]
 
     ####################
@@ -61,10 +60,10 @@ if __name__ == "__main__":
         logger.info("Beginning of Wii Balance Board data processing")
 
         # Assign WBB data to the pipeline object
-        data_pipeline.set_pipeline_data(wbb_files)
+        data_pipeline.set_pipeline_acquisition_data(wbb_files)
 
         # Process all the WBB data
-        data_pipeline.process_all_files(logger, balance_board=True, save_cop=COP)
+        data_pipeline.preprocess_all_files(logger, balance_board=True)
 
         logger.info("End of Wii Balance Board data processing")
 
@@ -72,10 +71,10 @@ if __name__ == "__main__":
         logger.info("Beginning of Force Plate data processing")
 
         # Assign force plate data to the pipeline object
-        data_pipeline.set_pipeline_data(fp_files)
+        data_pipeline.set_pipeline_acquisition_data(fp_files)
 
         # Process all the force plate data
-        data_pipeline.process_all_files(logger, save_cop=COP)
+        data_pipeline.preprocess_all_files(logger)
 
         logger.info("End of Force Plate data processing")
 

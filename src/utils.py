@@ -41,20 +41,19 @@ def load_config(filename="config"):
         sys.exit()
 
 
-def save_as_json(data, filepath, destination_folder, name_extension):
+def save_as_json(data, filepath, folder_to_replace, destination_folder, name_extension):
     """Save results to json format."""
 
-    filename = build_filename(filepath, destination_folder, name_extension)
+    filename = build_filename(filepath, folder_to_replace, destination_folder, name_extension)
     with open(filename, 'w') as outfile:
         json.dump(data, outfile, cls=NumpyEncoder, sort_keys=False, indent=4, ensure_ascii=False)
 
 
-def build_filename(input_file, destination_folder, name_extension):
+def build_filename(input_file, folder_to_replace, destination_folder, name_extension):
     """Build a custom destination filepath from the input file."""
 
     base_name = os.path.splitext(input_file)[0]
-    replacement_string = "results/{}".format(destination_folder)
-    filename = base_name.replace("BalanceBoard/Repro", replacement_string) + "_{}".format(name_extension)
+    filename = base_name.replace(folder_to_replace, destination_folder) + "_{}".format(name_extension)
     dir_name = os.path.dirname(filename)
     check_folder(dir_name)
 
@@ -140,6 +139,6 @@ def plot_stabilograms(preprocessed_cop_data, device_name, acq_frequency, filepat
     if filepath:
         config = load_config()
         swarii_window = config["preprocessing_parameters"]["swarii_window_size"]
-        fig_name = build_filename(filepath, destination_folder="cop_plots", name_extension="SWARII_{}.png".format(swarii_window))
+        fig_name = build_filename(filepath, folder_to_replace="BalanceBoard/Repro", destination_folder="results/cop_plots", name_extension="SWARII_{}.png".format(swarii_window))
         plt.savefig(fig_name, bbox_inches='tight')
         plt.close(fig)

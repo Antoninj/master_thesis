@@ -18,10 +18,16 @@ if __name__ == "__main__":
     logger = logging.getLogger("tests")
 
     # WBB data test file
-    filepath_wbb = config["test_files"]["wbb_raw_data"]
+    wbb_raw_data = config["test_files"]["wbb_raw_data"]
 
     # Force plate data test file
-    filepath_fp = config["test_files"]["fp_raw_data"]
+    fp_raw_data = config["test_files"]["fp_raw_data"]
+
+    # WBB data test file
+    wbb_cop_data = config["test_files"]["wbb_cop_data"]
+
+    # FP data test file
+    fp_cop_data = config["test_files"]["fp_cop_data"]
 
     # Command line argument parser to choose between wbb or force plate data
     parser = ArgumentParser(
@@ -33,7 +39,7 @@ if __name__ == "__main__":
     COP = args.cop
 
     # Create a data pipeline object
-    cop_data_pipeline = DataPipeline()
+    data_pipeline = DataPipeline()
 
     ##################
     # Tests
@@ -42,12 +48,19 @@ if __name__ == "__main__":
     logger.info("Testing data pipeline module.")
 
     if WBB:
-        logger.info("Processing Wii Balance Board data.")
-        logger.info("Test file: {}".format(filepath_wbb))
+        logger.info("Test file: {}".format(wbb_raw_data))
 
-        cop_data_pipeline.process_file(filepath_wbb, balance_board=WBB, save_cop=COP)
+        logger.info("Pre-processing Wii Balance Board acquistion data.")
+        data_pipeline.preprocess_acquisition_file(wbb_raw_data, balance_board=WBB)
+
+        logger.info("Processing Wii Balance Board COP data.")
+        data_pipeline.process_cop_data_file(wbb_cop_data, balance_board=WBB)
+
     else:
-        logger.info("Processing Force Plate data.")
-        logger.info("Test file: {}".format(filepath_fp))
+        logger.info("Test file: {}".format(fp_raw_data))
 
-        cop_data_pipeline.process_file(filepath_fp, save_cop=COP)
+        logger.info("Pre-processing Force Plate acquisition data.")
+        data_pipeline.preprocess_acquisition_file(fp_raw_data)
+
+        logger.info("Processing Force Plate COP data.")
+        data_pipeline.process_cop_data_file(fp_cop_data)

@@ -4,10 +4,8 @@ from matplotlib import pyplot as plt
 from argparse import ArgumentParser
 import numpy as np
 from context import *
-from gooey import Gooey, GooeyParser
 
 
-# @Gooey(program_name="Data preprocessing test")
 def main():
     ##################
     # Boilerplate code
