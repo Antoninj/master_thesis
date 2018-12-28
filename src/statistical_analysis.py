@@ -11,6 +11,8 @@ logger = logging.getLogger("statistics")
 
 
 def compute_statistics(wbb_dfs, fp_dfs):
+    """Wrap all statistics computations."""
+
     logger.info("Computing general descriptive statistics.")
 
     #################################
@@ -145,12 +147,11 @@ if __name__ == "__main__":
 
     logger.info("Processing data located in: {}".format(feature_data_folder))
 
-    # Create the pandas dataframes for further analysis
+    # Create the pandas dataframes for the statistical analysis
     wbb_dfs = stats.construct_results_dfs(wbb_files_curated)
     fp_dfs = stats.construct_results_dfs(fp_files_curated)
 
     #########################
     # Statistics computations
     #########################
-
     compute_statistics(wbb_dfs, fp_dfs)

@@ -79,7 +79,7 @@ class DataPipeline(SensorDataReader, DataPreprocessor, DataProcessor):
             logger.critical("No files to preprocess.")
             sys.exit()
 
-    def process_all_files(self, logger, balance_board=False):
+    def process_all_files(self, logger):
         """Compute features from all preprocessed files."""
 
         if self.cop_data is not None:
@@ -102,6 +102,8 @@ class DataPipeline(SensorDataReader, DataPreprocessor, DataProcessor):
 
     @staticmethod
     def parse_filepath(file):
+        """Parse the filepath to retrieve information that allows to identify the acquisition"""
+
         FP = "FP"
         WBB = "BB"
         keys = ["device", "subject", "trial", "balance board"]

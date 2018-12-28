@@ -42,6 +42,6 @@ class CopFeatures:
 
     @staticmethod
     def compute_rd(cop_x, cop_y):
-        """ Function to compute the resultant distance vector from the x and y COP coordinates """
+        """Compute the resultant distance vector from the x and y COP coordinates."""
 
         return np.array([np.sqrt(x**2 + y**2) for x, y in zip(cop_x, cop_y)])
