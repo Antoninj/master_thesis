@@ -42,6 +42,7 @@ class DataPreprocessor(SWARII):
     detrending_type = config["preprocessing_parameters"]["detrending_type"]
     low_thresh = config["preprocessing_parameters"]["lower_threshold"]
     up_thresh = config["preprocessing_parameters"]["upper_threshold"]
+    time_shift = config["preprocessing_parameters"]["time_shift"]
     swarii_window = config["preprocessing_parameters"]["swarii_window_size"]
     acq_frequency = config["preprocessing_parameters"]["acquisition_frequency"]
     use_swarii = config["preprocessing_parameters"]["apply_swarii"]
@@ -97,10 +98,11 @@ class DataPreprocessor(SWARII):
 
         return scipy.signal.detrend(input_signal, type=self.detrending_type)
 
-    def resize_data(self, input_signal, threshold_1=low_thresh, threshold_2=up_thresh):
+    def resize_data(self, input_signal, balance_board, threshold_1=low_thresh, threshold_2=up_thresh):
         """Remove the beginning and the end of the input signal based on some arbitrary chosen thresholds."""
 
-        return input_signal[threshold_1:threshold_2]
+        return input_signal[threshold_1:threshold_2] if balance_board else\
+            input_signal[(threshold_1+self.time_shift):(threshold_2+self.time_shift)]
 
     def preprocess_signal(self, input_signal, balance_board=False, timestamps=None):
         """
@@ -119,7 +121,7 @@ class DataPreprocessor(SWARII):
             resampled_signal = self.apply_polyphase_resampling(input_signal)
 
         filtered_signal = self.apply_filtering(resampled_signal)
-        resized_signal = self.resize_data(filtered_signal)
+        resized_signal = self.resize_data(filtered_signal, balance_board)
         detrended_data = self.apply_detrending(resized_signal)
 
         return detrended_data

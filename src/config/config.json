@@ -13,6 +13,7 @@
         "acquisition_frequency": 100,
         "lower_threshold": 800,
         "upper_threshold": 2800,
+        "time_shift": 50,
         "apply_swarii": true,
         "swarii_window_size": 0.5
     },

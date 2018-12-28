@@ -47,9 +47,6 @@ def main():
     # Create a data preprocessor reader object
     data_preprocessor = DataPreprocessor()
 
-    # Create a data preprocessor reader object
-    data_processor = DataProcessor()
-
     ##################
     # Tests
     ##################

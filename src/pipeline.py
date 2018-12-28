@@ -47,7 +47,7 @@ class DataPipeline(SensorDataReader, DataPreprocessor, DataProcessor):
         except Exception as err:
             logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
 
-    def process_cop_data_file(self, filepath, balance_board=False):
+    def process_cop_data_file(self, filepath):
         """
         Pipeline the COP data processing, i.e the time and frequency feature extraction steps, and save the results to a json file."""
 
@@ -85,7 +85,7 @@ class DataPipeline(SensorDataReader, DataPreprocessor, DataProcessor):
         if self.cop_data is not None:
             for cop_data_file in tqdm(self.cop_data):
                 logger.debug("Processing COP data file: {}".format(cop_data_file))
-                self.process_cop_data_file(cop_data_file, balance_board)
+                self.process_cop_data_file(cop_data_file)
         else:
             logger.critical("No files to process.")
             sys.exit()
@@ -108,7 +108,7 @@ class DataPipeline(SensorDataReader, DataPreprocessor, DataProcessor):
         trial_info = dict.fromkeys(keys)
         trial_info["device"] = FP if FP in file else WBB
 
-        pre_subject_substring = "Repro/Repro"
+        pre_subject_substring = "Repro"
         pre_subject_substring_index = file.find(pre_subject_substring)
         trial_info["subject"] = file[pre_subject_substring_index + len(pre_subject_substring)]
 
@@ -116,7 +116,7 @@ class DataPipeline(SensorDataReader, DataPreprocessor, DataProcessor):
         pre_balance_board_substring_index = file.find(pre_balance_board_substring)
         trial_info["balance board"] = file[pre_balance_board_substring_index + len(pre_balance_board_substring)]
 
-        pre_trial_substring = trial_info["device"] + "/" + trial_info["balance board"] + "_"
+        pre_trial_substring = pre_balance_board_substring + trial_info["balance board"] + "_"
         pre_trial_substring_index = file.find(pre_trial_substring)
         trial_info["trial"] = file[pre_trial_substring_index + len(pre_trial_substring)]
 
