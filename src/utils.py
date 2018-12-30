@@ -96,7 +96,13 @@ def separate_files(files):
     fp_files_curated = [file for file in fp_files if file in wbb_files_modified]
     wbb_files_curated = [file for file in wbb_files if file in fp_files_modified]
 
+    identical_order_test = [i for i, j in zip(fp_files_curated, wbb_files_curated) if i == j.replace("BB", "FP")]
+    if len(identical_order_test) == len(fp_files_curated):
+        logger.error("The data to be analysed is not correctly ordered")
+
     return wbb_files_curated, fp_files_curated
+
+
 
 
 def setup_logging(default_level=logging.INFO):

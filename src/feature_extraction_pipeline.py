@@ -68,7 +68,7 @@ if __name__ == "__main__":
         data_pipeline.set_pipeline_cop_data(wbb_files)
 
         # Process all the WBB data
-        data_pipeline.process_all_files(logger, balance_board=True)
+        data_pipeline.process_all_files(logger)
 
         logger.info("End of Wii Balance Board COP data processing")
 
