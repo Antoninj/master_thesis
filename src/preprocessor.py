@@ -70,7 +70,8 @@ class DataPreprocessor(SWARII):
 
     def apply_filtering(self, input_signal):
         """
-        Create and apply a low pass butterworth filter. The order and the cutoff frequencies of the filter can be specified through the configuration file. Then it applies the butter digital filter forward and backward to the input signal.
+        Create and apply a low pass butterworth filter. The order and the cutoff frequencies of the filter can be specified through the configuration file.
+        The butter digital filter is applied forward and backward to the input signal.
 
         References
         ----------

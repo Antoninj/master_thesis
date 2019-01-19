@@ -14,15 +14,24 @@ config = load_config()
 class FrequencyFeatures(CopFeatures):
     """Class that implements the frequency domain features derived from the COP positions."""
 
-    fs = config["frequency_features_parameters"]["sampling_frequency"]
-    nperseg = config["frequency_features_parameters"]["nperseg"]
+    # Welch periodogram parameters
+    fs = config["frequency_features_parameters"]["welch"]["sampling_frequency"]
+    nperseg = config["frequency_features_parameters"]["welch"]["nperseg"]
+
+    # adaptive weighted multitaper spectrum parameters
+    delta = config["frequency_features_parameters"]["multitaper"]["delta"]
+    time_bandwidth = config["frequency_features_parameters"]["multitaper"]["time_bandwidth"]
+    number_of_tapers = config["frequency_features_parameters"]["multitaper"]["number_of_tapers"]
+
+    use_multitaper = config["frequency_features_parameters"]["apply_multitaper"]
+    frequency_range = config["frequency_features_parameters"]["frequency_range"]
+
 
     def __init__(self, cop_x, cop_y):
         super(FrequencyFeatures, self).__init__(cop_x, cop_y)
-        self.rd_multitaper_spectral_density = self.compute_multitaper_power_spectral_density(self.cop_rd)
-        self.rd_spectral_density = self.compute_power_spectral_density(self.cop_rd)
-        self.ap_spectral_density = self.compute_power_spectral_density(self.cop_x)
-        self.ml_spectral_density = self.compute_power_spectral_density(self.cop_y)
+        self.rd_spectral_density = self.compute_multitaper_power_spectral_density(self.cop_rd) if self.use_multitaper else self.compute_power_spectral_density(self.cop_rd)
+        self.ap_spectral_density = self.compute_multitaper_power_spectral_density(self.cop_x) if self.use_multitaper else self.compute_power_spectral_density(self.cop_x)
+        self.ml_spectral_density = self.compute_multitaper_power_spectral_density(self.cop_y) if self.use_multitaper else self.compute_power_spectral_density(self.cop_y)
         self.frequency_features = self.compute_frequency_features()
 
     def compute_multitaper_power_spectral_density(self, array):
@@ -34,7 +43,10 @@ class FrequencyFeatures(CopFeatures):
          ..[1] mtspec package documentation: http://krischer.github.io/mtspec/multitaper_mtspec.html
         """
         nfft = len(array) / 2
-        psd, f = mtspec(data=array, delta=1, time_bandwidth=4, number_of_tapers=7)
+        psd, f = mtspec(data=array, delta=self.delta, time_bandwidth=self.time_bandwidth, number_of_tapers=self.number_of_tapers)
+
+        psd = psd[self.frequency_range[0]: self.frequency_range[1]]
+        f = f[self.frequency_range[0]: self.frequency_range[1]]
 
         return (f, psd)
 
@@ -46,8 +58,11 @@ class FrequencyFeatures(CopFeatures):
         ----------
          ..[1] Scipy documentation: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.welch.html#scipy.signal.welch
         """
-        nfft = len(array) * 2
+        nfft = len(array) / 2
         (f, psd) = welch(array, fs=self.fs, nperseg=self.nperseg, nfft=nfft)
+
+        psd = psd[self.frequency_range[0]: self.frequency_range[1]]
+        f = f[self.frequency_range[0]: self.frequency_range[1]]
 
         return (f, psd)
 

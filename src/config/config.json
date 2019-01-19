@@ -1,61 +1,70 @@
 {
-    "wbb_parameters": {
-        "width": 433,
-        "length": 238,
-        "height": 55
+  "wbb_parameters": {
+    "width": 433,
+    "length": 238,
+    "height": 55
+  },
+  "preprocessing_parameters": {
+    "filter_order": 1,
+    "cutoff_frequency": 12,
+    "detrending_type": "constant",
+    "upsampling_factor": 1,
+    "downsampling_factor": 10,
+    "acquisition_frequency": 100,
+    "lower_threshold": 800,
+    "upper_threshold": 2800,
+    "time_shift": 50,
+    "apply_swarii": true,
+    "swarii_window_size": 0.5
+  },
+  "time_features_parameters": {
+    "z_05": 1.645,
+    "F_05": 3
+  },
+  "frequency_features_parameters": {
+    "frequency_range":[3,101],
+    "apply_multitaper":true,
+    "welch": {
+      "sampling_frequency": 10,
+      "nperseg": 100
     },
-    "preprocessing_parameters": {
-        "filter_order": 1,
-        "cutoff_frequency": 12,
-        "detrending_type": "constant",
-        "upsampling_factor": 1,
-        "downsampling_factor": 10,
-        "acquisition_frequency": 100,
-        "lower_threshold": 800,
-        "upper_threshold": 2800,
-        "time_shift": 50,
-        "apply_swarii": true,
-        "swarii_window_size": 0.5
-    },
-    "time_features_parameters": {
-        "z_05": 1.645,
-        "F_05": 3
-    },
-    "frequency_features_parameters": {
-        "sampling_frequency": 10,
-        "nperseg": 100
-    },
-    "force_plate_labels": {
-        "analog_labels": [
-            "Fx1",
-            "Fy1",
-            "Fz1",
-            "Mx1",
-            "My1"
-        ]
-    },
-    "wbb_labels": {
-        "analog_labels": [
-            "year",
-            "month",
-            "day",
-            "hour",
-            "minute",
-            "second",
-            "milisecond"
-        ],
-        "data_points_labels": [
-            "Accelerometer"
-        ]
-    },
-    "test_files": {
-        "wbb_raw_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard/Repro/Repro1/BB/1_1.c3d",
-        "fp_raw_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard/Repro/Repro1/FP/1_1.c3d",
-        "wbb_cop_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/cop_data/Repro1/BB/1_1_cop.json",
-        "fp_cop_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/cop_data/Repro1/FP/1_1_cop.json"
-    },
-    "acquisition_data_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard/Repro",
-    "cop_data_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/cop_data",
-    "feature_results_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/feature_data",
-    "statistics_results_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/statistics"
+    "multitaper": {
+      "delta": 0.01,
+      "time_bandwidth": 4,
+      "number_of_tapers": 7
+    }
+  },
+  "force_plate_labels": {
+    "analog_labels": [
+      "Fx1",
+      "Fy1",
+      "Fz1",
+      "Mx1",
+      "My1"
+    ]
+  },
+  "wbb_labels": {
+    "analog_labels": [
+      "year",
+      "month",
+      "day",
+      "hour",
+      "minute",
+      "second",
+      "milisecond"
+    ],
+    "data_points_labels": [
+      "Accelerometer"
+    ]
+  },
+  "test_files": {
+    "wbb_raw_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard/Repro/Repro1/BB/1_1.c3d",
+    "fp_raw_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard/Repro/Repro1/FP/1_1.c3d",
+    "wbb_cop_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/cop_data/Repro1/BB/1_1_cop.json",
+    "fp_cop_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/cop_data/Repro1/FP/1_1_cop.json"
+  },
+  "acquisition_data_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard/Repro",
+  "cop_data_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/cop_data",
+  "feature_results_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/feature_data",
+  "statistics_results_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/statistics"
 }
