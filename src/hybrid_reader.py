@@ -10,7 +10,7 @@ from utils import load_config
 config = load_config()
 
 
-class SensorDataReader(btkAcquisitionFileReader):
+class HybridAcquisitionReader(btkAcquisitionFileReader):
     """
     Class used to extract the raw sensor data values from the WBB and force plate acquisition files which are stored in the c3d file format.
 
@@ -29,7 +29,7 @@ class SensorDataReader(btkAcquisitionFileReader):
     force_plate_analog_labels = config["force_plate_labels"]["analog_labels"]
 
     def __init__(self):
-        super(SensorDataReader, self).__init__()
+        super(HybridAcquisitionReader, self).__init__()
 
     def set_reader_filename(self, filepath):
         """Change the acquisition file currently used by the file reader."""
@@ -61,7 +61,7 @@ class SensorDataReader(btkAcquisitionFileReader):
         """
         Extract and aggregate raw sensor data from the c3d acquisition file.
 
-        The data that is extracted can be modified through the configuration file.
+        The choice of data which is extracted can be modified through the configuration file.
         """
 
         self.set_reader_filename(filepath)

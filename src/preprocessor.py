@@ -50,7 +50,7 @@ class DataPreprocessor(SWARII):
     def __init__(self):
         super(DataPreprocessor, self).__init__(window_size=self.swarii_window, desired_frequency=self.acq_frequency)
 
-    def apply_swarii(self, input_signal, timestamps):
+    def apply_swarii_resampling(self, input_signal, timestamps):
         """Apply the SWARII to resample a given signal."""
 
         resampled_time, resampled_signal = self.resample(timestamps, input_signal)
@@ -98,8 +98,8 @@ class DataPreprocessor(SWARII):
 
         return scipy.signal.detrend(input_signal, type=self.detrending_type)
 
-    def resize_data(self, input_signal, balance_board, threshold_1=low_thresh, threshold_2=up_thresh):
-        """Remove the beginning and the end of the input signal based on some arbitrary chosen thresholds."""
+    def apply_reframing(self, input_signal, balance_board, threshold_1=low_thresh, threshold_2=up_thresh):
+        """Remove the beginning and the end of the input signal based on some arbitrary chosen thresholds and remove the acquisition time shift between the two devices."""
 
         return input_signal[threshold_1:threshold_2] if balance_board else\
             input_signal[(threshold_1+self.time_shift):(threshold_2+self.time_shift)]
@@ -108,21 +108,23 @@ class DataPreprocessor(SWARII):
         """
         Pipeline the preprocessing steps.
 
-        The resampling is only applied to the wii balance board data in order to match the force plate acquisition sampling frequency.
+        The SWARII resampling is applied to the wii balance board data in order to match the downsampled force plate sampling frequency (using polyphase resampling).
         """
 
         if balance_board:
             if timestamps is not None:
-                resampled_signal = self.apply_swarii(input_signal, timestamps)
+                # Resample the force plate sampling frequency using SWARII
+                resampled_signal = self.apply_swarii_resampling(input_signal, timestamps)
             else:
                 resampled_signal = self.apply_polyphase_resampling(input_signal)
 
         else:
+            # Resample the force plate sampling frequency using polyphase resampling
             resampled_signal = self.apply_polyphase_resampling(input_signal)
 
         filtered_signal = self.apply_filtering(resampled_signal)
-        resized_signal = self.resize_data(filtered_signal, balance_board)
-        detrended_data = self.apply_detrending(resized_signal)
+        reframed_data = self.apply_reframing(filtered_signal, balance_board)
+        detrended_data = self.apply_detrending(reframed_data)
 
         return detrended_data
 

@@ -1,5 +1,5 @@
 # Built-in modules imports
-from utils import load_config
+from src.utils import load_config
 
 # Third-party module imports
 import numpy as np

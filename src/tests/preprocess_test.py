@@ -42,7 +42,7 @@ def main():
         logger.setLevel("DEBUG")
 
     # Create a sensor data reader object
-    data_reader = SensorDataReader()
+    data_reader = HybridAcquisitionReader()
 
     # Create a data preprocessor reader object
     data_preprocessor = DataPreprocessor()

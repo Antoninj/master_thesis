@@ -1,7 +1,7 @@
 # Built-in modules imports
-from sensor import SensorDataReader
-from preprocess import DataPreprocessor
-from process import DataProcessor
+from hybrid_reader import HybridAcquisitionReader
+from preprocessor import DataPreprocessor
+from processor import DataProcessor
 from utils import save_as_json, plot_stabilograms
 from tqdm import tqdm
 import sys
@@ -12,7 +12,7 @@ import logging
 logger = logging.getLogger("pipeline")
 
 
-class DataPipeline(SensorDataReader, DataPreprocessor, DataProcessor):
+class DataPipeline(HybridAcquisitionReader, DataPreprocessor, DataProcessor):
     """
     Class that pipelines all the different data processing steps from acquisition file reading to feature extraction.
     """
