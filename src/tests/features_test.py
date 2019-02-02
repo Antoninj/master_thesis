@@ -46,7 +46,7 @@ if __name__ == "__main__":
     logger.info("Testing feature computation modules.")
     logger.info("Test file: {}".format(data_file))
 
-    # Time features computations
+    # Time features computations 
     logger.info("Computing time features.")
     time_features = TimeFeatures.from_file(data_file)
     time_features.summary()

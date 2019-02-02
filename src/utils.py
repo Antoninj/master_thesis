@@ -4,7 +4,7 @@ import numpy as np
 import os
 import logging.config
 import sys
-from matplotlib import pyplot as plt
+#from matplotlib import pyplot as plt
 
 logger = logging.getLogger("utils")
 
@@ -66,6 +66,10 @@ def check_folder(folder_name):
     if not os.path.exists(folder_name):
         os.makedirs(folder_name)
 
+def check_folders(folders):
+    for folder in folders:
+        check_folder(folder)
+
 
 def get_path_to_all_files(folder_name):
     """Recursively get all filepaths from a directory tree."""
@@ -101,8 +105,6 @@ def separate_files(files):
         logger.error("The data to be analysed is not correctly ordered")
 
     return wbb_files_curated, fp_files_curated
-
-
 
 
 def setup_logging(default_level=logging.INFO):

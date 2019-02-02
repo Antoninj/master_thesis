@@ -3,6 +3,9 @@ import pandas as pd
 import pandas_profiling
 import numpy as np
 from scipy import stats
+import statsmodels.api as smapi
+from statsmodels.formula.api import ols
+import statsmodels.graphics as smgraphics
 from matplotlib import pyplot as plt
 import json
 import logging
@@ -64,16 +67,16 @@ def generate_all_profile_reports(wbb_dataframes, fp_dataframes, statistics_resul
     """Create all the profile reports."""
 
     domain_names = ["time_domain_features", "frequency_domain_features"]
-    wbb_report_names = ["{}/wbb_{}_report.html".format(statistics_results_folder, name) for name in domain_names]
-    fp_report_names = ["{}/fp_{}_report.html".format(statistics_results_folder, name) for name in domain_names]
+    wbb_html_report_names = ["{}/wbb_{}_report.html".format(statistics_results_folder, name) for name in domain_names]
+    fp_html_report_names = ["{}/fp_{}_report.html".format(statistics_results_folder, name) for name in domain_names]
 
     dfs = wbb_dataframes + fp_dataframes
-    report_names = wbb_report_names + fp_report_names
+    report_names = wbb_html_report_names + fp_html_report_names
     for (data, name) in zip(dfs, report_names):
         generate_profile_report(data, name)
 
 
-def compute_mean_and_stds(df1, df2):
+def compute_mean_and_stds(df1, df2, statistics_results_folder, domain_name):
     """Compute the mean and standard deviation values for each feature."""
 
     wbb_mean_df = pd.DataFrame(df1.mean(), columns=["WBB mean"])
@@ -81,12 +84,15 @@ def compute_mean_and_stds(df1, df2):
     fp_mean_df = pd.DataFrame(df2.mean(), columns=["FP mean"])
     fp_std_df = pd.DataFrame(df2.std(), columns=["FP std"])
 
+    # Save the results
+    report_name = "{}/{}_mean_and_stds.csv".format(statistics_results_folder, domain_name)
     aggregated_results = pd.concat([wbb_mean_df, wbb_std_df, fp_mean_df, fp_std_df], axis=1)
+    aggregated_results.to_csv(report_name, sep=',', encoding='utf-8')
 
     return aggregated_results
 
 
-def compute_spearman_correlation(df1, df2):
+def compute_spearman_correlation(df1, df2, statistics_results_folder, domain_name):
     """
     Compute the spearman correlation coefficient between the WBB and Force plate data for each feature.
 
@@ -114,10 +120,15 @@ def compute_spearman_correlation(df1, df2):
             logger.error("Problem with feature: {}.\n{}".format(column, err), exc_info=True, stack_info=True)
             pass
 
-    return result_dict
+    # Save the results
+    result_dict_df = pd.DataFrame.from_dict(result_dict).transpose()
+    report_name = "{}/{}_spearman_correlation.csv".format(statistics_results_folder, domain_name)
+    result_dict_df.to_csv(report_name, sep=',', encoding='utf-8')
+
+    return result_dict_df
 
 
-def perform_t_test(df1, df2):
+def perform_t_test(df1, df2, statistics_results_folder, domain_name):
     """"
     Perfom a T-test using the WBB and Force plate data for each feature.
 
@@ -145,10 +156,15 @@ def perform_t_test(df1, df2):
             logger.error("Problem with feature: {}.\n{}".format(column, err), exc_info=True, stack_info=True)
             pass
 
+    # Save the results
+    result_dict_df = pd.DataFrame.from_dict(result_dict).transpose()
+    report_name = "{}/{}_t_test.csv".format(statistics_results_folder, domain_name)
+    result_dict_df.to_csv(report_name, sep=',', encoding='utf-8')
+
     return result_dict
 
 
-def make_pearson_correlation_plots(df1, df2, statistics_results_folder, name="time_domain_features"):
+def make_pearson_correlation_plots(df1, df2, statistics_results_folder, domain_name):
     """
     Perform a linear least-squares regression and plot the correlation line for each feature.
 
@@ -199,12 +215,12 @@ def make_pearson_correlation_plots(df1, df2, statistics_results_folder, name="ti
             pass
 
     # Save the plots
-    plt.savefig("{}/{}_correlation_plots.png".format(statistics_results_folder, name), bbox_inches='tight')
+    plt.savefig("{}/{}_correlation_plots.png".format(statistics_results_folder, domain_name), bbox_inches='tight')
 
     return result_dict
 
 
-def make_bland_altman_plots(df1, df2, statistics_results_folder, name="time_domain_features"):
+def make_bland_altman_plots(df1, df2, statistics_results_folder, domain_name):
     """Compute limit of agreement values and make bland and altman plot for each feature."""
 
     fig, axs = plt.subplots(8, 3, figsize=(20, 30), facecolor='w', edgecolor='k')
@@ -244,12 +260,12 @@ def make_bland_altman_plots(df1, df2, statistics_results_folder, name="time_doma
             pass
 
     # Save the plots
-    plt.savefig("{}/{}_bland_altman_plots.png".format(statistics_results_folder, name), bbox_inches='tight')
+    plt.savefig("{}/{}_bland_altman_plots.png".format(statistics_results_folder, domain_name), bbox_inches='tight')
 
     return result_dict
 
 
-def compute_ICC(df1, df2):
+def compute_ICC(df1, df2, statistics_results_folder, domain_name):
     """
     Compute the two-way mixed ICC.
 
@@ -290,5 +306,10 @@ def compute_ICC(df1, df2):
         except (RuntimeWarning, Exception) as err:
             logger.error("Problem with feature: {}.\n{}".format(column, err), exc_info=True, stack_info=True)
             pass
+
+    # Save the results
+    result_dict_df = pd.DataFrame.from_dict(result_dict).transpose()
+    report_name = "{}/{}_ICC.csv".format(statistics_results_folder, domain_name)
+    result_dict_df.to_csv(report_name, sep=',', encoding='utf-8')
 
     return result_dict
