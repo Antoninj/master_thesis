@@ -20,6 +20,13 @@ setup_logging()
 logger = logging.getLogger("stats")
 
 
+def create_index(df):
+    arrays = [df["device"].values, df["subject"].values,
+              df["trial"].values, df["balance board"].values]
+    tuples = list(zip(*arrays))
+    return pd.MultiIndex.from_tuples(tuples, names=['device', 'subject', 'trial', 'balance board'])
+
+
 def construct_results_dfs(files):
     """Aggregate all time and frequency feature computations results in two dataframes."""
 
@@ -32,6 +39,11 @@ def construct_results_dfs(files):
             features = json.load(json_data)
             time_features = features["time_features"]
             frequency_features = features["frequency_features"]
+            for dic in (time_features, frequency_features):
+                dic["device"] = features["device"]
+                dic["subject"] = features["subject"]
+                dic["trial"] = features["trial"]
+                dic["balance board"] = features["balance board"]
 
         time_frames.append(pd.DataFrame(time_features, index=[0]))
         frequency_frames.append(pd.DataFrame(frequency_features, index=[0]))
@@ -41,8 +53,15 @@ def construct_results_dfs(files):
     frequency_features_df = pd.concat(frequency_frames, axis=0)
 
     # Reshape the dataframes
-    df1 = time_features_df.reset_index().drop('index', 1)
-    df2 = frequency_features_df.reset_index().drop('index', 1)
+    df1 = time_features_df.reset_index().drop(['device', 'subject', 'trial', 'balance board'], 1)
+    df1.index = create_index(time_features_df)
+    df1.drop('index', 1, inplace=True)
+    df1.sort_index(inplace=True)
+
+    df2 = frequency_features_df.reset_index().drop(['device', 'subject', 'trial', 'balance board'], 1)
+    df2.index = create_index(frequency_features_df)
+    df2.drop('index', 1, inplace=True)
+    df2.sort_index(inplace=True)
 
     return [df1, df2]
 
@@ -230,8 +249,8 @@ def make_bland_altman_plots(df1, df2, statistics_results_folder, domain_name):
     result_dict = {}
     # Loop over each feature
     for ax, column in zip(axs.ravel(), df1.columns):
-        x = df1[column]
-        y = df2[column]
+        x = df1[column].values
+        y = df2[column].values
 
         try:
             # Compute the LOA and arrange the data for the plots
