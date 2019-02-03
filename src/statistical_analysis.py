@@ -24,7 +24,10 @@ def compute_statistics(wbb_dfs, fp_dfs):
 
     logger.info("Generating profile reports.")
 
-    stats.generate_all_profile_reports(wbb_dfs, fp_dfs, html_report_results_folder)
+    stats.generate_all_profile_reports(wbb_dfs[0], html_report_results_folders[0])
+    stats.generate_all_profile_reports(fp_dfs[0], html_report_results_folders[1])
+    stats.generate_all_profile_reports(wbb_dfs[1], html_report_results_folders[2])
+    stats.generate_all_profile_reports(fp_dfs[1], html_report_results_folders[3])
 
     ###########################################################
     # Features mean and standard deviations values computations
@@ -133,8 +136,8 @@ if __name__ == "__main__":
 
 
     # Statistics results folder path
-    html_report_results_folder = config["html_report_results_folder"]
-    check_folder(html_report_results_folder)
+    html_report_results_folders = config["html_report_results_folders"]
+    check_folders(html_report_results_folders)
     statistics_results_folders = [config["time_features_results_folder"], config["frequency_features_results_folder"]]
     check_folders(statistics_results_folders)
 

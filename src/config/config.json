@@ -66,8 +66,10 @@
   "acquisition_data_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard/Repro",
   "cop_data_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/cop_data",
   "feature_results_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/feature_data",
-  "html_report_results_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/statistics/html_reports",
   "time_features_results_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/statistics/time_features",
-  "frequency_features_results_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/statistics/frequency_features"
-
+  "frequency_features_results_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/statistics/frequency_features",
+  "html_report_results_folders": ["/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/statistics/time_features/html_reports/WBB",
+    "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/statistics/time_features/html_reports/FP",
+  "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/statistics/frequency_features/html_reports/WBB",
+    "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/statistics/frequency_features/html_reports/FP"]
 }

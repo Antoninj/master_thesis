@@ -80,16 +80,14 @@ def generate_profile_report(df, filename, bins=50):
     df_profile.to_file(outputfile=filename)
 
 
-def generate_all_profile_reports(wbb_dataframes, fp_dataframes, statistics_results_folder):
+def generate_all_profile_reports(dataframes, statistics_results_folder):
     """Create all the profile reports."""
 
-    domain_names = ["time_domain_features", "frequency_domain_features"]
-    wbb_html_report_names = ["{}/wbb_{}_report.html".format(statistics_results_folder, name) for name in domain_names]
-    fp_html_report_names = ["{}/fp_{}_report.html".format(statistics_results_folder, name) for name in domain_names]
+    wbb_numbers = ["1", "2", "3", "4"]
+    html_report_names = ["{}/{}_report.html".format(statistics_results_folder, number) for number in wbb_numbers]
 
-    dfs = wbb_dataframes + fp_dataframes
-    report_names = wbb_html_report_names + fp_html_report_names
-    for (data, name) in zip(dfs, report_names):
+    dfs = [dataframes.loc[(dataframes.index.get_level_values(3) == number)] for number in wbb_numbers]
+    for (data, name) in zip(dfs, html_report_names):
         generate_profile_report(data, name)
 
 
