@@ -15,9 +15,6 @@ def compute_statistics(wbb_dfs, fp_dfs):
 
     logger.info("Computing general descriptive statistics.")
 
-
-    domain_names = ["time_domain_features", "frequency_domain_features"]
-
     #################################
     # Dataframes HTML profile reports
     #################################
@@ -36,11 +33,11 @@ def compute_statistics(wbb_dfs, fp_dfs):
     logger.info("Computing mean and standard deviations values for each feature.")
 
     # Time features
-    time_mean_and_std_results = stats.compute_mean_and_stds(wbb_dfs[0], fp_dfs[0], statistics_results_folders[0], domain_names[0])
+    time_mean_and_std_results = stats.compute_mean_and_stds(wbb_dfs[0], fp_dfs[0], statistics_results_folders[0])
     logger.debug(time_mean_and_std_results)
 
     # Frequency features
-    freq_mean_and_std_results = stats.compute_mean_and_stds(wbb_dfs[1], fp_dfs[1], statistics_results_folders[1], domain_names[1])
+    freq_mean_and_std_results = stats.compute_mean_and_stds(wbb_dfs[1], fp_dfs[1], statistics_results_folders[1])
     logger.debug(freq_mean_and_std_results)
 
     ################
@@ -50,11 +47,11 @@ def compute_statistics(wbb_dfs, fp_dfs):
     logger.info("Computing t-statistics and p-values for each feature.")
 
     # Time features
-    time_t_test_results = stats.perform_t_test(wbb_dfs[0], fp_dfs[0], statistics_results_folders[0], domain_names[0])
+    time_t_test_results = stats.perform_t_test(wbb_dfs[0], fp_dfs[0], statistics_results_folders[0])
     logger.debug(time_t_test_results)
 
     # Frequency features
-    freq_t_test_results = stats.perform_t_test(wbb_dfs[1], fp_dfs[1], statistics_results_folders[1], domain_names[1])
+    freq_t_test_results = stats.perform_t_test(wbb_dfs[1], fp_dfs[1], statistics_results_folders[1])
     logger.debug(freq_t_test_results)
 
     ######################
@@ -64,11 +61,11 @@ def compute_statistics(wbb_dfs, fp_dfs):
     logger.info("Computing spearman correlation coefficients and p-values for each feature.")
 
     # Time features
-    time_spearman_results = stats.compute_spearman_correlation(wbb_dfs[0], fp_dfs[0], statistics_results_folders[0], domain_names[0])
+    time_spearman_results = stats.compute_spearman_correlation(wbb_dfs[0], fp_dfs[0], statistics_results_folders[0])
     logger.debug(time_spearman_results)
 
     # Frequency features
-    freq_spearman_results = stats.compute_spearman_correlation(wbb_dfs[1], fp_dfs[1], statistics_results_folders[1], domain_names[1])
+    freq_spearman_results = stats.compute_spearman_correlation(wbb_dfs[1], fp_dfs[1], statistics_results_folders[1])
     logger.debug(freq_spearman_results)
 
     ###########################################
@@ -78,11 +75,11 @@ def compute_statistics(wbb_dfs, fp_dfs):
     logger.info("Generating pearson correlation plots.")
 
     # Time features correlation plots
-    time_correlation_results = stats.make_pearson_correlation_plots(wbb_dfs[0], fp_dfs[0], statistics_results_folders[0], domain_names[0])
+    time_correlation_results = stats.make_pearson_correlation_plots(wbb_dfs[0], fp_dfs[0], statistics_results_folders[0])
     logger.debug(time_correlation_results)
 
     # Frequency feature correlation plots
-    freq_correlation_results = stats.make_pearson_correlation_plots(wbb_dfs[1], fp_dfs[1], statistics_results_folders[1], domain_names[1])
+    freq_correlation_results = stats.make_pearson_correlation_plots(wbb_dfs[1], fp_dfs[1], statistics_results_folders[1])
     logger.debug(freq_correlation_results)
 
     ##################################################################
@@ -92,11 +89,11 @@ def compute_statistics(wbb_dfs, fp_dfs):
     logger.info("Generating Bland and Altman agreement plots.")
 
     # Time features Bland and Altman plots
-    time_loa = stats.make_bland_altman_plots(wbb_dfs[0], fp_dfs[0], statistics_results_folders[0], domain_names[0])
+    time_loa = stats.make_bland_altman_plots(wbb_dfs[0], fp_dfs[0], statistics_results_folders[0])
     logger.debug(time_loa)
 
     # Frequency feature Bland and Altman plots
-    freq_loa = stats.make_bland_altman_plots(wbb_dfs[1], fp_dfs[1], statistics_results_folders[1], domain_names[1])
+    freq_loa = stats.make_bland_altman_plots(wbb_dfs[1], fp_dfs[1], statistics_results_folders[1])
     logger.debug(freq_loa)
 
     ########################################################
@@ -106,11 +103,11 @@ def compute_statistics(wbb_dfs, fp_dfs):
     logger.info("Computing two-way mixed ICCs.")
 
     # Time features
-    time_icc = stats.compute_ICC(wbb_dfs[0], fp_dfs[0], statistics_results_folders[0], domain_names[0])
+    time_icc = stats.compute_ICC(wbb_dfs[0], fp_dfs[0], statistics_results_folders[0])
     logger.debug(time_icc)
 
     # Frequency feature Bland and Altman plots
-    freq_icc = stats.compute_ICC(wbb_dfs[1], fp_dfs[1], statistics_results_folders[1], domain_names[1])
+    freq_icc = stats.compute_ICC(wbb_dfs[1], fp_dfs[1], statistics_results_folders[1])
     logger.debug(freq_icc)
 
     #########################
@@ -118,9 +115,6 @@ def compute_statistics(wbb_dfs, fp_dfs):
     #########################
 
     logger.info("Statistical computations finished")
-
-    ### TO DO
-
 
 if __name__ == "__main__":
 

@@ -18,7 +18,7 @@ class FrequencyFeatures(CopFeatures):
     fs = config["frequency_features_parameters"]["welch"]["sampling_frequency"]
     nperseg = config["frequency_features_parameters"]["welch"]["nperseg"]
 
-    # adaptive weighted multitaper spectrum parameters
+    # Adaptive weighted multitaper spectrum parameters
     delta = config["frequency_features_parameters"]["multitaper"]["delta"]
     time_bandwidth = config["frequency_features_parameters"]["multitaper"]["time_bandwidth"]
     number_of_tapers = config["frequency_features_parameters"]["multitaper"]["number_of_tapers"]
