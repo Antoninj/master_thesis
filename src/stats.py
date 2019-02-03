@@ -1,19 +1,17 @@
 # Third-party module imports
-import pandas as pd
-import pandas_profiling
-import numpy as np
-from scipy import stats
-import statsmodels.api as smapi
-from statsmodels.formula.api import ols
-import statsmodels.graphics as smgraphics
-from matplotlib import pyplot as plt
 import json
 import logging
+
+import numpy as np
+import pandas as pd
+import pandas_profiling
+from matplotlib import pyplot as plt
 from rpy2.robjects import DataFrame, FloatVector, pandas2ri
 from rpy2.robjects.packages import importr
-
+from scipy import stats
 # Built-in modules imports
 from utils import load_config, setup_logging
+
 config = load_config()
 
 setup_logging()
@@ -98,15 +96,18 @@ def generate_all_profile_reports(wbb_dataframes, fp_dataframes, statistics_resul
 def compute_mean_and_stds(df1, df2, statistics_results_folder, domain_name):
     """Compute the mean and standard deviation values for each feature."""
 
-    wbb_mean_df = pd.DataFrame(df1.mean(), columns=["WBB mean"])
-    wbb_std_df = pd.DataFrame(df1.std(), columns=["WBB std"])
-    fp_mean_df = pd.DataFrame(df2.mean(), columns=["FP mean"])
-    fp_std_df = pd.DataFrame(df2.std(), columns=["FP std"])
+    wbb_and_fp_results = pd.concat([df1, df2], axis=0)
+    feature_mean_results = wbb_and_fp_results.groupby(
+        [wbb_and_fp_results.index.get_level_values(0), wbb_and_fp_results.index.get_level_values(3)]).mean().transpose()
+    feature_std_results = wbb_and_fp_results.groupby(
+        [wbb_and_fp_results.index.get_level_values(0), wbb_and_fp_results.index.get_level_values(3)]).std().transpose()
+    aggregated_results = (feature_mean_results, feature_std_results)
 
     # Save the results
-    report_name = "{}/{}_mean_and_stds.csv".format(statistics_results_folder, domain_name)
-    aggregated_results = pd.concat([wbb_mean_df, wbb_std_df, fp_mean_df, fp_std_df], axis=1)
-    aggregated_results.to_csv(report_name, sep=',', encoding='utf-8')
+    mean_report_name = "{}/{}_mean_results.csv".format(statistics_results_folder, domain_name)
+    std_report_name = "{}/{}_stds_results.csv".format(statistics_results_folder, domain_name)
+    aggregated_results[0].to_csv(mean_report_name, sep=',', encoding='utf-8')
+    aggregated_results[1].to_csv(std_report_name, sep=',', encoding='utf-8')
 
     return aggregated_results
 
