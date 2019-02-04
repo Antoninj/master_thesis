@@ -2,7 +2,7 @@
 from hybrid_reader import HybridAcquisitionReader
 from preprocessor import DataPreprocessor
 from processor import DataProcessor
-from utils import save_as_json, plot_stabilograms
+from utils import save_as_json, plot_stabilograms, plot_spectral_densities
 from tqdm import tqdm
 import sys
 
@@ -39,7 +39,7 @@ class DataPipeline(HybridAcquisitionReader, DataPreprocessor, DataProcessor):
                 device_name = "Force plate"
 
             # Save results of COP signal computations and preprocessing
-            save_as_json(preprocessed_cop_data, filepath, folder_to_replace="BalanceBoard/Repro", destination_folder="results/cop_data", name_extension="cop.json")
+            save_as_json(preprocessed_cop_data, filepath, folder_to_replace="BalanceBoard/Repro", destination_folder="results/cop_data", name_extension="_cop.json")
 
             # Plot and save the stabilograms
             plot_stabilograms(preprocessed_cop_data, device_name, self.acq_frequency, filepath=filepath)
@@ -56,14 +56,25 @@ class DataPipeline(HybridAcquisitionReader, DataPreprocessor, DataProcessor):
             time_features = self.compute_time_features(filepath)
 
             # Compute frequency features from COP displacement
-            frequency_features = self.compute_frequency_features(filepath)
+            frequency_domain_features = self.compute_frequency_features(filepath)
+            frequency_features = frequency_domain_features.frequency_features
 
             file_info = self.parse_filepath(filepath)
 
             processed_data = {**file_info, "time_features": time_features, "frequency_features": frequency_features}
 
             # Save features computations in json format
-            save_as_json(processed_data, filepath, folder_to_replace="cop_data", destination_folder="feature_data", name_extension="features.json")
+            save_as_json(processed_data, filepath, folder_to_replace="cop_data", destination_folder="feature_data", name_extension="_features.json")
+
+            # Plot and save the spectral densities
+            spectral_densities = ["ap_spectral_density", "ml_spectral_density", "rd_spectral_density"]
+            spectrums_and_frequencies = [getattr(frequency_domain_features, spectral_density) for spectral_density in
+                                         spectral_densities]
+            frequencies = [sd[0] for sd in spectrums_and_frequencies]
+            spectrums = [sd[1] for sd in spectrums_and_frequencies]
+            plot_spectral_densities(frequencies, spectrums, filepath=filepath)
+
+
 
         except Exception as err:
             logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)

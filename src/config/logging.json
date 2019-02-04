@@ -41,7 +41,7 @@
     "loggers": {
         "pipeline": {
             "level": "ERROR",
-            "handlers": ["error_file_handler"],
+            "handlers": ["error_file_handler", "console"],
             "propagate": "no"
         },
         "feature extraction pipeline": {

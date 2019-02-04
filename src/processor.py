@@ -19,4 +19,4 @@ class DataProcessor:
 
         frequency_domain_features = FrequencyFeatures.from_file(cop_data)
 
-        return frequency_domain_features.frequency_features
+        return frequency_domain_features

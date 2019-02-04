@@ -55,13 +55,13 @@ if __name__ == "__main__":
     logger.info("Computing frequency features.")
     freq_features = FrequencyFeatures.from_file(data_file)
 
-    (f, pxx) = freq_features.rd_spectral_density
+    spectral_densities = ["ap_spectral_density", "ml_spectral_density", "rd_spectral_density"]
+    spectrums_and_frequencies = [getattr(freq_features, spectral_density) for spectral_density in spectral_densities]
+    frequencies = [sd[0] for sd in spectrums_and_frequencies]
+    spectrums = [sd[1] for sd in spectrums_and_frequencies]
+
     freq_features.summary()
 
-    print(f)
-
     if plot:
-        plt.plot(f, pxx)
-        plt.xlabel('frequency [Hz]')
-        plt.ylabel('PSD [mm**2/Hz]')
+        plot_spectral_densities(frequencies, spectrums)
         plt.show()

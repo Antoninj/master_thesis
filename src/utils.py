@@ -4,7 +4,8 @@ import numpy as np
 import os
 import logging.config
 import sys
-#from matplotlib import pyplot as plt
+#from matplotlib import pyplot as plt, gridspec
+
 
 logger = logging.getLogger("utils")
 
@@ -53,7 +54,7 @@ def build_filename(input_file, folder_to_replace, destination_folder, name_exten
     """Build a custom destination filepath from the input file."""
 
     base_name = os.path.splitext(input_file)[0]
-    filename = base_name.replace(folder_to_replace, destination_folder) + "_{}".format(name_extension)
+    filename = base_name.replace(folder_to_replace, destination_folder) + "{}".format(name_extension)
     dir_name = os.path.dirname(filename)
     check_folder(dir_name)
 
@@ -99,7 +100,6 @@ def separate_files(files):
 
     fp_files_curated = [file for file in fp_files if file in wbb_files_modified]
     wbb_files_curated = [file for file in wbb_files if file in fp_files_modified]
-
     identical_order_test = [i for i, j in zip(fp_files_curated, wbb_files_curated) if i == j.replace("BB", "FP")]
     if len(identical_order_test) == len(fp_files_curated):
         logger.error("The data to be analysed is not correctly ordered")
@@ -151,6 +151,32 @@ def plot_stabilograms(preprocessed_cop_data, device_name, acq_frequency, filepat
     if filepath:
         config = load_config()
         swarii_window = config["preprocessing_parameters"]["swarii_window_size"]
-        fig_name = build_filename(filepath, folder_to_replace="BalanceBoard/Repro", destination_folder="results/cop_plots", name_extension="SWARII_{}.png".format(swarii_window))
+        fig_name = build_filename(filepath, folder_to_replace="BalanceBoard/Repro", destination_folder="results/cop_plots", name_extension="_SWARII_{}.png".format(swarii_window))
         plt.savefig(fig_name, bbox_inches='tight')
         plt.close(fig)
+
+def plot_spectral_densities(frequencies, spectrums, filepath=None):
+    gs = gridspec.GridSpec(2, 2)
+    fig = plt.figure(figsize=(15, 10))
+
+    ax = plt.subplot(gs[0, 0])
+    plt.plot(frequencies[0], spectrums[0])
+    plt.xlabel('Frequency [Hz]')
+    plt.ylabel('Power spectrum density in AP direction [mm**2/Hz]')
+
+    ax = plt.subplot(gs[0, 1])
+    plt.plot(frequencies[1], spectrums[1])
+    plt.xlabel('Frequency [Hz]')
+    plt.ylabel('Power spectrum density in ML direction [mm**2/Hz]')
+
+    ax = plt.subplot(gs[1, :])
+    plt.plot(frequencies[2], spectrums[2])
+    plt.xlabel('Frequency [Hz]')
+    plt.ylabel('Resultant distance Power spectrum density[mm**2/Hz]')
+
+    # Save the plots
+    if filepath:
+        fig_name = build_filename(filepath, folder_to_replace="cop_data", destination_folder="spectrum_plots", name_extension="_spectrum.png")
+        plt.savefig(fig_name, bbox_inches='tight')
+        plt.close(fig)
+
