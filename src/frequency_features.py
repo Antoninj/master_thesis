@@ -42,6 +42,7 @@ class FrequencyFeatures(CopFeatures):
         ----------
          ..[1] mtspec package documentation: http://krischer.github.io/mtspec/multitaper_mtspec.html
         """
+
         nfft = len(array) / 2
         psd, f = mtspec(data=array, delta=self.delta, time_bandwidth=self.time_bandwidth, number_of_tapers=self.number_of_tapers)
 
@@ -58,6 +59,7 @@ class FrequencyFeatures(CopFeatures):
         ----------
          ..[1] Scipy documentation: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.welch.html#scipy.signal.welch
         """
+
         nfft = len(array) / 2
         (f, psd) = welch(array, fs=self.fs, nperseg=self.nperseg, nfft=nfft)
 

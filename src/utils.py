@@ -156,6 +156,8 @@ def plot_stabilograms(preprocessed_cop_data, device_name, acq_frequency, filepat
         plt.close(fig)
 
 def plot_spectral_densities(frequencies, spectrums, filepath=None):
+    """"Plot and save spectral densities."""
+
     gs = gridspec.GridSpec(2, 2)
     fig = plt.figure(figsize=(15, 10))
 

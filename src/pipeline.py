@@ -74,8 +74,6 @@ class DataPipeline(HybridAcquisitionReader, DataPreprocessor, DataProcessor):
             spectrums = [sd[1] for sd in spectrums_and_frequencies]
             plot_spectral_densities(frequencies, spectrums, filepath=filepath)
 
-
-
         except Exception as err:
             logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
 

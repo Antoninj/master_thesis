@@ -19,6 +19,8 @@ logger = logging.getLogger("stats")
 
 
 def create_index(df, file_info_items):
+    """Create a new multi level index."""
+
     arrays = [df["device"].values, df["subject"].values,
               df["trial"].values, df["balance board"].values]
     tuples = list(zip(*arrays))
@@ -309,6 +311,8 @@ def compute_ICC(df1, df2, statistics_results_folder):
     References
     ----------
     .. [1] R library used for the ICC implementation: http://www.personality-project.org/r/html/ICC.html
+
+    .. [2] R to python: https://rpy2.github.io/doc/latest/html/index.html#
 
     Notes
     -----
