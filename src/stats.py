@@ -203,7 +203,7 @@ def perform_t_test(df1, df2, statistics_results_folder):
     return result_dict
 
 
-def make_pearson_correlation_plots(df1, df2, statistics_results_folder):
+def make_pearson_correlation_plots(df1, df2, statistics_results_folder, plot_size):
     """
     Perform a linear least-squares regression and plot the correlation line for each feature.
 
@@ -212,49 +212,58 @@ def make_pearson_correlation_plots(df1, df2, statistics_results_folder):
     .. [1] Scipy documentation: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.linregress.html
     """
 
-    fig, axs = plt.subplots(8, 3, figsize=(20, 30), facecolor='w', edgecolor='k')
-    fig.subplots_adjust(hspace=.5)
-    axs[-1, -1].axis('off')
+    wbb_numbers = ["1", "2", "3", "4"]
+    dfs_1 = [df1.loc[(df1.index.get_level_values(3) == number)] for number in wbb_numbers]
+    dfs_2 = [df2.loc[(df2.index.get_level_values(3) == number)] for number in wbb_numbers]
 
-    result_dict = {}
-    # Loop over each feature
-    for ax, column in zip(axs.ravel(), df1.columns):
-        x = df1[column]
-        y = df2[column]
 
-        try:
-            # Perform the linear regression
-            slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
+    result_dict = {key:{} for key in df1.columns}
 
-            # Store the linear regression results
-            result_dict[column] = {}
-            result_dict[column]["slope"] = round(slope, 4)
-            result_dict[column]["intercept"] = round(intercept, 4)
-            result_dict[column]["R"] = round(r_value, 4)
-            result_dict[column]["p-value"] = round(p_value, 4)
+    # Loop over each WBB data
+    for (df1, df2, number) in zip(dfs_1, dfs_2, wbb_numbers):
 
-            # Make the plot
-            ax.plot(x, y, '.', label='original data')
-            ax.plot(x, intercept + slope * x, 'black', label='fitted line', linewidth=0.3)
-            ax.set_xlabel('Balance Board')
-            ax.set_ylabel('Force plate')
-            ax.set_title(column, weight=600)
-            ax.text(0.8, 0.9, "p-value = {}".format(round(p_value, 4)), fontsize=9, horizontalalignment='center',
-                    verticalalignment='center', transform=ax.transAxes)
-            ax.text(0.8, 0.8, "R\u00b2={}".format(round(r_value**2, 4)), fontsize=9, horizontalalignment='center',
-                    verticalalignment='center', transform=ax.transAxes)
-            ax.text(0.8, 0.7, "Slope = {}".format(round(slope, 4)), fontsize=9, horizontalalignment='center',
-                    verticalalignment='center', transform=ax.transAxes)
-            ax.text(0.8, 0.6, "Intercept = {}".format(round(intercept, 4)), fontsize=9, horizontalalignment='center',
-                    verticalalignment='center', transform=ax.transAxes)
-            # ax.legend()
+        fig, axs = plt.subplots(plot_size, 3, figsize=(20, 30), facecolor='w', edgecolor='k')
+        fig.subplots_adjust(hspace=.5)
+        #axs[-1, -1].axis('off')
 
-        except (RuntimeWarning, Exception) as err:
-            logger.error("Problem with feature: {}.\n{}".format(column, err), exc_info=True, stack_info=True)
-            pass
+        # Loop over each feature
+        for ax, column in zip(axs.ravel(), df1.columns):
+            x = df1[column]
+            y = df2[column]
 
-    # Save the plots
-    plt.savefig("{}/correlation_plots.png".format(statistics_results_folder), bbox_inches='tight')
+            try:
+                # Perform the linear regression
+                slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
+
+                # Store the linear regression results
+                result_dict[column] = {}
+                result_dict[column]["slope"] = round(slope, 4)
+                result_dict[column]["intercept"] = round(intercept, 4)
+                result_dict[column]["R"] = round(r_value, 4)
+                result_dict[column]["p-value"] = round(p_value, 4)
+
+                # Make the plot
+                ax.plot(x, y, '.', label='original data')
+                ax.plot(x, intercept + slope * x, 'black', label='fitted line', linewidth=0.3)
+                ax.set_xlabel('Balance Board')
+                ax.set_ylabel('Force plate')
+                ax.set_title(column, weight=600)
+                ax.text(0.8, 0.4, "p-value = {}".format(round(p_value, 4)), fontsize=9, horizontalalignment='center',
+                        verticalalignment='center', transform=ax.transAxes)
+                ax.text(0.8, 0.3, "R\u00b2={}".format(round(r_value**2, 4)), fontsize=9, horizontalalignment='center',
+                        verticalalignment='center', transform=ax.transAxes)
+                ax.text(0.8, 0.2, "Slope = {}".format(round(slope, 4)), fontsize=9, horizontalalignment='center',
+                        verticalalignment='center', transform=ax.transAxes)
+                ax.text(0.8, 0.1, "Intercept = {}".format(round(intercept, 4)), fontsize=9, horizontalalignment='center',
+                        verticalalignment='center', transform=ax.transAxes)
+                # ax.legend()
+
+            except (RuntimeWarning, Exception) as err:
+                logger.error("Problem with feature: {}.\n{}".format(column, err), exc_info=True, stack_info=True)
+                pass
+
+        # Save the plots
+        plt.savefig("{}/balance_board_{}_correlation_plots.png".format(statistics_results_folder, number), bbox_inches='tight')
 
     return result_dict
 
@@ -299,7 +308,7 @@ def make_bland_altman_plots(df1, df2, statistics_results_folder):
             pass
 
     # Save the plots
-    plt.savefig("{}/bland_altman_plots.png".format(statistics_results_folder), bbox_inches='tight')
+    plt.savefig("{}/bland_altman_plots.png".format(statistics_results_folder),  bbox_inches='tight')
 
     return result_dict
 

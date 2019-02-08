@@ -10,7 +10,7 @@ setup_logging()
 logger = logging.getLogger("statistics")
 
 
-def compute_statistics(wbb_dfs, fp_dfs):
+def compute_statistics(wbb_df, fp_df, statistics_results_folder, html_report_results_folder_1, html_report_results_folder_2, plot_size=6):
     """Wrap all statistics computations."""
 
     logger.info("Computing general descriptive statistics.")
@@ -21,10 +21,8 @@ def compute_statistics(wbb_dfs, fp_dfs):
 
     logger.info("Generating profile reports.")
 
-    stats.generate_all_profile_reports(wbb_dfs[0], html_report_results_folders[0])
-    stats.generate_all_profile_reports(fp_dfs[0], html_report_results_folders[1])
-    stats.generate_all_profile_reports(wbb_dfs[1], html_report_results_folders[2])
-    stats.generate_all_profile_reports(fp_dfs[1], html_report_results_folders[3])
+    stats.generate_all_profile_reports(wbb_df, html_report_results_folder_1)
+    stats.generate_all_profile_reports(fp_df, html_report_results_folder_2)
 
     ###########################################################
     # Features mean and standard deviations values computations
@@ -32,41 +30,26 @@ def compute_statistics(wbb_dfs, fp_dfs):
 
     logger.info("Computing mean and standard deviations values for each feature.")
 
-    # Time features
-    time_mean_and_std_results = stats.compute_mean_and_stds(wbb_dfs[0], fp_dfs[0], statistics_results_folders[0])
-    logger.debug(time_mean_and_std_results)
-
-    # Frequency features
-    freq_mean_and_std_results = stats.compute_mean_and_stds(wbb_dfs[1], fp_dfs[1], statistics_results_folders[1])
-    logger.debug(freq_mean_and_std_results)
+    mean_and_std_results = stats.compute_mean_and_stds(wbb_df, fp_df, statistics_results_folder)
+    logger.debug(mean_and_std_results)
 
     ################
     # Paired T-test
     ################
 
-    logger.info("Computing t-statistics and p-values for each feature.")
+    logger.info("Computing t-statistics and p-values.")
 
-    # Time features
-    time_t_test_results = stats.perform_t_test(wbb_dfs[0], fp_dfs[0], statistics_results_folders[0])
-    logger.debug(time_t_test_results)
-
-    # Frequency features
-    freq_t_test_results = stats.perform_t_test(wbb_dfs[1], fp_dfs[1], statistics_results_folders[1])
-    logger.debug(freq_t_test_results)
+    t_test_results = stats.perform_t_test(wbb_df, fp_df, statistics_results_folder)
+    logger.debug(t_test_results)
 
     ######################
     # Spearman correlation
     ######################
 
-    logger.info("Computing spearman correlation coefficients and p-values for each feature.")
+    logger.info("Computing spearman correlation coefficients and p-values.")
 
-    # Time features
-    time_spearman_results = stats.compute_spearman_correlation(wbb_dfs[0], fp_dfs[0], statistics_results_folders[0])
-    logger.debug(time_spearman_results)
-
-    # Frequency features
-    freq_spearman_results = stats.compute_spearman_correlation(wbb_dfs[1], fp_dfs[1], statistics_results_folders[1])
-    logger.debug(freq_spearman_results)
+    spearman_results = stats.compute_spearman_correlation(wbb_df, fp_df, statistics_results_folder)
+    logger.debug(spearman_results)
 
     ###########################################
     # Pearson correlation and linear regression
@@ -74,13 +57,9 @@ def compute_statistics(wbb_dfs, fp_dfs):
 
     logger.info("Generating pearson correlation plots.")
 
-    # Time features correlation plots
-    time_correlation_results = stats.make_pearson_correlation_plots(wbb_dfs[0], fp_dfs[0], statistics_results_folders[0])
-    logger.debug(time_correlation_results)
+    correlation_results = stats.make_pearson_correlation_plots(wbb_df, fp_df, statistics_results_folder, plot_size)
+    logger.debug(correlation_results)
 
-    # Frequency feature correlation plots
-    freq_correlation_results = stats.make_pearson_correlation_plots(wbb_dfs[1], fp_dfs[1], statistics_results_folders[1])
-    logger.debug(freq_correlation_results)
 
     ##################################################################
     # Bland and Altman plots and Limits of Agreement(LOA) computations
@@ -88,13 +67,8 @@ def compute_statistics(wbb_dfs, fp_dfs):
 
     logger.info("Generating Bland and Altman agreement plots.")
 
-    # Time features Bland and Altman plots
-    time_loa = stats.make_bland_altman_plots(wbb_dfs[0], fp_dfs[0], statistics_results_folders[0])
+    time_loa = stats.make_bland_altman_plots(wbb_df, fp_df, statistics_results_folder)
     logger.debug(time_loa)
-
-    # Frequency feature Bland and Altman plots
-    freq_loa = stats.make_bland_altman_plots(wbb_dfs[1], fp_dfs[1], statistics_results_folders[1])
-    logger.debug(freq_loa)
 
     ########################################################
     # Intraclass Correlation Coefficients (ICC) computations
@@ -102,19 +76,15 @@ def compute_statistics(wbb_dfs, fp_dfs):
 
     logger.info("Computing two-way mixed ICCs.")
 
-    # Time features
-    time_icc = stats.compute_ICC(wbb_dfs[0], fp_dfs[0], statistics_results_folders[0])
+    time_icc = stats.compute_ICC(wbb_df, fp_df, statistics_results_folder)
     logger.debug(time_icc)
-
-    # Frequency feature Bland and Altman plots
-    freq_icc = stats.compute_ICC(wbb_dfs[1], fp_dfs[1], statistics_results_folders[1])
-    logger.debug(freq_icc)
 
     #########################
     # PUTTING IT ALL TOGETHER
     #########################
 
     logger.info("Statistical computations finished")
+
 
 if __name__ == "__main__":
 
@@ -157,9 +127,20 @@ if __name__ == "__main__":
 
     # Create the pandas dataframes for the statistical analysis
     wbb_dfs = stats.construct_results_dfs(wbb_files_curated)
-    fp_dfs = stats.construct_results_dfs(fp_files_curated)
+    wbb_time_feature_df = wbb_dfs[0]
+    wbb_frequency_feature_df = wbb_dfs[1]
 
-    #########################
-    # Statistics computations
-    #########################
-    compute_statistics(wbb_dfs, fp_dfs)
+    fp_dfs = stats.construct_results_dfs(fp_files_curated)
+    fp_time_feature_df = fp_dfs[0]
+    fp_frequency_feature_df = fp_dfs[1]
+
+    ######################################
+    # Time feature statistics computations
+    ######################################
+    compute_statistics(wbb_time_feature_df, fp_time_feature_df, statistics_results_folders[0], html_report_results_folders[0], html_report_results_folders[1])
+
+    ###########################################
+    # Frequency feature statistics computations
+    ###########################################
+    compute_statistics(wbb_frequency_feature_df, fp_frequency_feature_df, statistics_results_folders[1], html_report_results_folders[2], html_report_results_folders[3], plot_size=4)
+
