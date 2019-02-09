@@ -10,7 +10,27 @@ setup_logging()
 logger = logging.getLogger("statistics")
 
 
-def compute_statistics(wbb_df, fp_df, statistics_results_folder, html_report_results_folder_1, html_report_results_folder_2, plot_size=6):
+def compute_all_statistics():
+    ######################################
+    # Time feature statistics computations
+    ######################################
+    logger.info("Computing time features statistics.")
+
+    compute_statistics(wbb_time_feature_df, fp_time_feature_df, statistics_results_folders[0],
+                       html_report_results_folders[0], html_report_results_folders[1])
+
+    ###########################################
+    # Frequency feature statistics computations
+    ###########################################
+    logger.info("Computing frequency features statistics.")
+
+    compute_statistics(wbb_frequency_feature_df, fp_frequency_feature_df, statistics_results_folders[1],
+                       html_report_results_folders[2], html_report_results_folders[3], plot_size=4)
+
+    logger.info("Statistical computations finished!")
+
+
+def compute_statistics(wbb_df, fp_df, statistics_results_folder, html_report_results_folder_1, html_report_results_folder_2, plot_size=7):
     """Wrap all statistics computations."""
 
     logger.info("Computing general descriptive statistics.")
@@ -39,8 +59,8 @@ def compute_statistics(wbb_df, fp_df, statistics_results_folder, html_report_res
 
     logger.info("Computing t-statistics and p-values.")
 
-    t_test_results = stats.perform_t_test(wbb_df, fp_df, statistics_results_folder)
-    logger.debug(t_test_results)
+    # t_test_results = stats.perform_t_test(wbb_df, fp_df, statistics_results_folder)
+    # logger.debug(t_test_results)
 
     ######################
     # Spearman correlation
@@ -57,9 +77,8 @@ def compute_statistics(wbb_df, fp_df, statistics_results_folder, html_report_res
 
     logger.info("Generating pearson correlation plots.")
 
-    correlation_results = stats.make_pearson_correlation_plots(wbb_df, fp_df, statistics_results_folder, plot_size)
-    logger.debug(correlation_results)
-
+    linear_regression_results = stats.make_pearson_correlation_plots(wbb_df, fp_df, statistics_results_folder, plot_size)
+    logger.debug(linear_regression_results)
 
     ##################################################################
     # Bland and Altman plots and Limits of Agreement(LOA) computations
@@ -67,8 +86,8 @@ def compute_statistics(wbb_df, fp_df, statistics_results_folder, html_report_res
 
     logger.info("Generating Bland and Altman agreement plots.")
 
-    time_loa = stats.make_bland_altman_plots(wbb_df, fp_df, statistics_results_folder)
-    logger.debug(time_loa)
+    bland_altman = stats.make_bland_altman_plots(wbb_df, fp_df, statistics_results_folder, plot_size)
+    logger.debug(bland_altman)
 
     ########################################################
     # Intraclass Correlation Coefficients (ICC) computations
@@ -79,11 +98,6 @@ def compute_statistics(wbb_df, fp_df, statistics_results_folder, html_report_res
     time_icc = stats.compute_ICC(wbb_df, fp_df, statistics_results_folder)
     logger.debug(time_icc)
 
-    #########################
-    # PUTTING IT ALL TOGETHER
-    #########################
-
-    logger.info("Statistical computations finished")
 
 
 if __name__ == "__main__":
@@ -134,13 +148,8 @@ if __name__ == "__main__":
     fp_time_feature_df = fp_dfs[0]
     fp_frequency_feature_df = fp_dfs[1]
 
-    ######################################
-    # Time feature statistics computations
-    ######################################
-    compute_statistics(wbb_time_feature_df, fp_time_feature_df, statistics_results_folders[0], html_report_results_folders[0], html_report_results_folders[1])
+    #########################
+    # PUTTING IT ALL TOGETHER
+    #########################
 
-    ###########################################
-    # Frequency feature statistics computations
-    ###########################################
-    compute_statistics(wbb_frequency_feature_df, fp_frequency_feature_df, statistics_results_folders[1], html_report_results_folders[2], html_report_results_folders[3], plot_size=4)
-
+    compute_all_statistics()

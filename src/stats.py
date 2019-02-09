@@ -153,7 +153,7 @@ def compute_spearman_correlation(df1, df2, statistics_results_folder):
                 logger.error("Problem with feature: {}.\n{}".format(column, err), exc_info=True, stack_info=True)
                 pass
 
-    # Reshape the data
+    # Reshape the raw results
     result_dict_collapsed = {(outer_k, inner_k): inner_v for outer_k in result_dict
                              for inner_k, inner_v in result_dict[outer_k].items()}
 
@@ -161,7 +161,7 @@ def compute_spearman_correlation(df1, df2, statistics_results_folder):
     aggregated_results = aggregated_results.unstack().stack(0).unstack()
 
     # Save the results
-    report_name = "{}/spearman_correlation.csv".format(statistics_results_folder)
+    report_name = "{}/spearman_correlation_results.csv".format(statistics_results_folder)
     aggregated_results.to_csv(report_name, sep=',', encoding='utf-8')
 
     return aggregated_results
@@ -216,7 +216,6 @@ def make_pearson_correlation_plots(df1, df2, statistics_results_folder, plot_siz
     dfs_1 = [df1.loc[(df1.index.get_level_values(3) == number)] for number in wbb_numbers]
     dfs_2 = [df2.loc[(df2.index.get_level_values(3) == number)] for number in wbb_numbers]
 
-
     result_dict = {key:{} for key in df1.columns}
 
     # Loop over each WBB data
@@ -236,11 +235,11 @@ def make_pearson_correlation_plots(df1, df2, statistics_results_folder, plot_siz
                 slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
 
                 # Store the linear regression results
-                result_dict[column] = {}
-                result_dict[column]["slope"] = round(slope, 4)
-                result_dict[column]["intercept"] = round(intercept, 4)
-                result_dict[column]["R"] = round(r_value, 4)
-                result_dict[column]["p-value"] = round(p_value, 4)
+                result_dict[column][number] = {}
+                result_dict[column][number]["slope"] = round(slope, 4)
+                result_dict[column][number]["intercept"] = round(intercept, 4)
+                result_dict[column][number]["R"] = round(r_value, 4)
+                result_dict[column][number]["p-value"] = round(p_value, 4)
 
                 # Make the plot
                 ax.plot(x, y, '.', label='original data')
@@ -263,17 +262,28 @@ def make_pearson_correlation_plots(df1, df2, statistics_results_folder, plot_siz
                 pass
 
         # Save the plots
-        plt.savefig("{}/balance_board_{}_correlation_plots.png".format(statistics_results_folder, number), bbox_inches='tight')
+        plt.savefig("{}/balance_board_{}_linear_regression_plots.png".format(statistics_results_folder, number), bbox_inches='tight')
+
+    # Reshape the raw results
+    result_dict_collapsed = {(outer_k, inner_k): inner_v for outer_k in result_dict
+                                 for inner_k, inner_v in result_dict[outer_k].items()}
+    aggregated_results = pd.DataFrame.from_dict(result_dict_collapsed).transpose()
+    aggregated_results = aggregated_results.unstack().stack(0).unstack()
+
+    # Save the results
+    report_name = "{}/linear_regression_results.csv".format(statistics_results_folder)
+    aggregated_results.to_csv(report_name, sep=',', encoding='utf-8')
 
     return result_dict
 
 
-def make_bland_altman_plots(df1, df2, statistics_results_folder):
+def make_bland_altman_plots(df1, df2, statistics_results_folder, plot_size):
     """Compute limit of agreement values and make bland and altman plot for each feature."""
 
-    fig, axs = plt.subplots(8, 3, figsize=(20, 30), facecolor='w', edgecolor='k')
+    fig, axs = plt.subplots(plot_size, 3, figsize=(20, 30), facecolor='w', edgecolor='k')
     fig.subplots_adjust(hspace=.5)
-    axs[-1, -1].axis('off')
+    df1 = df1.reorder_levels(['balance board', 'device', 'subject', 'trial']).sort_index()
+    df2 = df2.reorder_levels(['balance board', 'device', 'subject', 'trial']).sort_index()
 
     result_dict = {}
     # Loop over each feature
@@ -283,7 +293,8 @@ def make_bland_altman_plots(df1, df2, statistics_results_folder):
 
         try:
             # Compute the LOA and arrange the data for the plots
-            mean = np.mean([x, y], axis=0)
+            #mean = np.mean([x, y], axis=0)
+            trials = [trial for trial in range(len(x))]
             diff = x - y
             md = np.mean(diff)
             sd = np.std(diff, axis=0)
@@ -293,12 +304,15 @@ def make_bland_altman_plots(df1, df2, statistics_results_folder):
             result_dict[column]["LOA"] = "{},{}".format(md - 2 * sd, md + 2 * sd)
 
             # Make the plot
-            ax.scatter(mean, diff, marker='.', s=100, color="gray")
+            ax.scatter(trials, diff, marker='.', s=60, color="gray", linewidth=0.5)
+            trials_limits = [x * 18 + 0.5 for x in range(1, 4)]
+            for limit in trials_limits:
+                ax.axvline(limit, color='black', linestyle='--', linewidth=0.5)
             ax.axhline(md, color='tomato', linestyle='--')
-            ax.axhline(md + 2 * sd, color='teal', linestyle='--')
-            ax.axhline(md - 2 * sd, color='teal', linestyle='--')
-            ax.set_xlabel('Mean of the two systems')
-            ax.set_ylabel('Mean of the difference')
+            ax.axhline(md + 2 * sd, color='teal', linestyle='--', linewidth=0.5)
+            ax.axhline(md - 2 * sd, color='teal', linestyle='--', linewidth=0.5)
+            ax.set_xlabel('Trials')
+            ax.set_ylabel('Difference')
             ax.set_title(column, weight=600)
 
             # ax.legend()
@@ -309,6 +323,11 @@ def make_bland_altman_plots(df1, df2, statistics_results_folder):
 
     # Save the plots
     plt.savefig("{}/bland_altman_plots.png".format(statistics_results_folder),  bbox_inches='tight')
+
+    # Save the results
+    result_dict_df = pd.DataFrame.from_dict(result_dict).transpose()
+    report_name = "{}/limit_of_agreement.csv".format(statistics_results_folder)
+    result_dict_df.to_csv(report_name, sep=',', encoding='utf-8')
 
     return result_dict
 
