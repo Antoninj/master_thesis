@@ -139,7 +139,7 @@ if __name__ == "__main__":
 
     logger.info("Processing data located in: {}".format(feature_data_folder))
 
-    # Create the pandas dataframes for the statistical analysis
+    # Create the pandas dataframes which contains all the aggregated data for the statistical analysis
     wbb_dfs = stats.construct_results_dfs(wbb_files_curated)
     wbb_time_feature_df = wbb_dfs[0]
     wbb_frequency_feature_df = wbb_dfs[1]

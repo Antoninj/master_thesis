@@ -332,7 +332,7 @@ def make_bland_altman_plots(df1, df2, statistics_results_folder, plot_size):
     return result_dict
 
 
-def compute_ICC(df1, df2, statistics_results_folder):
+def compute_ICC(df1, statistics_results_folder):
     """
     Compute the two-way mixed ICC.
 
@@ -348,15 +348,19 @@ def compute_ICC(df1, df2, statistics_results_folder):
     """
 
     psych = importr("psych")
+
+    wbb_numbers = ["1", "2", "3", "4"]
+    dfs_1 = [df1.loc[(df1.index.get_level_values(3) == number)] for number in wbb_numbers]
+
     result_dict = {}
     # Loop over each feature
     for column in df1.columns:
-        x = df1[column]
-        y = df2[column]
 
         try:
-            r_df = DataFrame({"WBB feature": FloatVector(x),
-                              "FP feature": FloatVector(y)})
+            r_df = DataFrame({"WBB 1 feature": FloatVector(dfs_1[0]),
+                              "WBB 2 feature": FloatVector(dfs_1[1]),
+                              "WBB 3 feature": FloatVector(dfs_1[2]),
+                              "WBB 4 feature": FloatVector(dfs_1[3])})
             # Compute the two way mixed ICC
             icc_res = psych.ICC(r_df)
             iccs_r_df = icc_res[0]
