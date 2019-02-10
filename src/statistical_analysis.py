@@ -95,8 +95,10 @@ def compute_statistics(wbb_df, fp_df, statistics_results_folder, html_report_res
 
     logger.info("Computing two-way mixed ICCs.")
 
-    time_icc = stats.compute_ICC(wbb_df, fp_df, statistics_results_folder)
-    logger.debug(time_icc)
+    icc_results_1 = stats.compute_ICC(wbb_df, statistics_results_folder)
+    icc_results_2 = stats.compute_ICC_2(wbb_df, statistics_results_folder)
+
+    logger.debug(icc_results_2)
 
 
 

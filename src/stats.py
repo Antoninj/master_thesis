@@ -338,13 +338,18 @@ def compute_ICC(df1, statistics_results_folder):
 
     References
     ----------
-    .. [1] R library used for the ICC implementation: http://www.personality-project.org/r/html/ICC.html
+    .. [1] R library used for the ICC implementation:
+    - https://personality-project.org/r/psych/
+    - http://www.personality-project.org/r/html/ICC.html
+    - https://www.rdocumentation.org/packages/psych/versions/1.8.12/topics/ICC
 
     .. [2] R to python: https://rpy2.github.io/doc/latest/html/index.html#
 
     Notes
     -----
-    More info on what is the two-way mixed ICC: https://www.uvm.edu/~dhowell/methods8/Supplements/icc/More%20on%20ICCs.pdf
+    More info on what is the two-way mixed ICC:
+    - https://www.uvm.edu/~dhowell/methods8/Supplements/icc/More%20on%20ICCs.pdf
+    - https://en.wikipedia.org/wiki/Intraclass_correlation
     """
 
     psych = importr("psych")
@@ -357,17 +362,18 @@ def compute_ICC(df1, statistics_results_folder):
     for column in df1.columns:
 
         try:
-            r_df = DataFrame({"WBB 1 feature": FloatVector(dfs_1[0]),
-                              "WBB 2 feature": FloatVector(dfs_1[1]),
-                              "WBB 3 feature": FloatVector(dfs_1[2]),
-                              "WBB 4 feature": FloatVector(dfs_1[3])})
-            # Compute the two way mixed ICC
+            r_df = DataFrame({"WBB 1 feature": FloatVector(dfs_1[0][column]),
+                              "WBB 2 feature": FloatVector(dfs_1[1][column]),
+                              "WBB 3 feature": FloatVector(dfs_1[2][column]),
+                              "WBB 4 feature": FloatVector(dfs_1[3][column])})
+
+            # Compute the two way random ICC
             icc_res = psych.ICC(r_df)
             iccs_r_df = icc_res[0]
             iccs_df = pandas2ri.ri2py(iccs_r_df)
 
-            # Select the ICC that corresponds to the 2 way mixed model (see links above)
-            icc = iccs_df.iloc[5]["ICC"]
+            # Select the ICC that corresponds to the 2 way random model (see links above)
+            icc = iccs_df.iloc[4]["ICC"]
             icc_lower_bound = iccs_df.iloc[5]["lower bound"]
             icc_upper_bound = iccs_df.iloc[5]["upper bound"]
             icc_result = "{}({}, {})".format(round(icc, 4), round(icc_lower_bound, 4), round(icc_upper_bound, 4))
@@ -382,7 +388,54 @@ def compute_ICC(df1, statistics_results_folder):
 
     # Save the results
     result_dict_df = pd.DataFrame.from_dict(result_dict).transpose()
-    report_name = "{}/ICC.csv".format(statistics_results_folder)
+    report_name = "{}/ICC_results_1.csv".format(statistics_results_folder)
+    result_dict_df.to_csv(report_name, sep=',', encoding='utf-8')
+
+    return result_dict
+
+
+def compute_ICC_2(df1, statistics_results_folder):
+    """
+    Compute the two-way mixed ICC.
+
+    References
+    ----------
+    .. [1] R library used for the ICC implementation: https://cran.r-project.org/web/packages/irr/irr.pdf
+
+     Notes
+    -----
+    More info on what is the two-way mixed ICC:
+    - https://www.uvm.edu/~dhowell/methods8/Supplements/icc/More%20on%20ICCs.pdf
+    - https://en.wikipedia.org/wiki/Intraclass_correlation
+    """
+
+    irr = importr("irr")
+
+    wbb_numbers = ["1", "2", "3", "4"]
+    dfs_1 = [df1.loc[(df1.index.get_level_values(3) == number)] for number in wbb_numbers]
+
+    result_dict = {}
+    # Loop over each feature
+    for column in df1.columns:
+
+        try:
+            r_df = DataFrame({"WBB 1 feature": FloatVector(dfs_1[0][column]),
+                              "WBB 2 feature": FloatVector(dfs_1[1][column]),
+                              "WBB 3 feature": FloatVector(dfs_1[2][column]),
+                              "WBB 4 feature": FloatVector(dfs_1[3][column])})
+
+            # Compute the two way random ICC
+            icc_res = irr.icc(r_df, "twoway", "consistency", "average")
+
+            result_dict[column] = dict(zip(icc_res.names, list(icc_res)))
+
+        except (RuntimeWarning, Exception) as err:
+            logger.error("Problem with feature: {}.\n{}".format(column, err), exc_info=True, stack_info=True)
+            pass
+
+    # Save the results
+    result_dict_df = pd.DataFrame.from_dict(result_dict).transpose()
+    report_name = "{}/ICC_results_2.csv".format(statistics_results_folder)
     result_dict_df.to_csv(report_name, sep=',', encoding='utf-8')
 
     return result_dict
