@@ -280,6 +280,8 @@ def make_pearson_correlation_plots(df1, df2, statistics_results_folder, plot_siz
 def make_bland_altman_plots(df1, df2, statistics_results_folder, plot_size):
     """Compute limit of agreement values and make bland and altman plot for each feature."""
 
+    # TODO : ENHANCE PLOTS
+
     fig, axs = plt.subplots(plot_size, 3, figsize=(20, 30), facecolor='w', edgecolor='k')
     fig.subplots_adjust(hspace=.5)
     df1 = df1.reorder_levels(['balance board', 'device', 'subject', 'trial']).sort_index()

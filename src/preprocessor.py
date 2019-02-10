@@ -1,14 +1,14 @@
 # Third-party module imports
-import scipy.signal
+import logging
+import warnings
 from datetime import datetime
 
+import numpy as np
+import pandas as pd
+import scipy.signal
+from resampling import SWARII
 # Built-in modules imports
 from utils import load_config
-from resampling import SWARII
-import pandas as pd
-import numpy as np
-import warnings
-import logging
 
 config = load_config()
 
@@ -205,6 +205,7 @@ class DataPreprocessor(SWARII):
         Mx1 = data["Mx1"].flatten()
         Fz1 = data["Fz1"].flatten()
 
+        # TODO : FIX THIS DIRTY HACK ASAP!
         Fy1 = pd.DataFrame(Fy1)[0].replace(to_replace=0, value=1).values
         Mx1 = pd.DataFrame(Mx1)[0].replace(to_replace=0, value=1).values
         Fz1 = pd.DataFrame(Fz1)[0].replace(to_replace=0, value=1).values
@@ -225,6 +226,7 @@ class DataPreprocessor(SWARII):
         My1 = data["My1"].flatten()
         Fz1 = data["Fz1"].flatten()
 
+        # TODO : FIX THIS DIRTY HACK ASAP!
         Fx1 = pd.DataFrame(Fx1)[0].replace(to_replace=0, value=1).values
         My1 = pd.DataFrame(My1)[0].replace(to_replace=0, value=1).values
         Fz1 = pd.DataFrame(Fz1)[0].replace(to_replace=0, value=1).values
