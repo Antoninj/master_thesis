@@ -182,8 +182,8 @@ class DataPreprocessor(SWARII):
         cop_data = {}
         try:
             if balance_board:
-                cop_data["COP_x"] = raw_data["Accelerometer"][:, 0]
-                cop_data["COP_y"] = raw_data["Accelerometer"][:, 1]
+                cop_data["COP_x"] = self.replace_missing_data(raw_data["Accelerometer"][:, 0])
+                cop_data["COP_y"] = self.replace_missing_data(raw_data["Accelerometer"][:, 1])
             else:
                 cop_data["COP_x"] = self.compute_cop_fp_x(raw_data)
                 cop_data["COP_y"] = self.compute_cop_fp_y(raw_data)
@@ -193,8 +193,7 @@ class DataPreprocessor(SWARII):
         except Exception:
             raise
 
-    @staticmethod
-    def compute_cop_fp_x(data):
+    def compute_cop_fp_x(self, data):
         """Compute the y coordinate of the force plate center of pressure (ML direction)."""
 
         # Force plate height (in mm)
@@ -205,17 +204,16 @@ class DataPreprocessor(SWARII):
         Mx1 = data["Mx1"].flatten()
         Fz1 = data["Fz1"].flatten()
 
-        # TODO : FIX THIS DIRTY HACK ASAP!
-        Fy1 = pd.DataFrame(Fy1)[0].replace(to_replace=0, value=1).values
-        Mx1 = pd.DataFrame(Mx1)[0].replace(to_replace=0, value=1).values
-        Fz1 = pd.DataFrame(Fz1)[0].replace(to_replace=0, value=1).values
+        # Replace null data with previous/following non null values
+        Fy1 = self.replace_missing_data(Fy1)
+        Mx1 = self.replace_missing_data(Mx1)
+        Fz1 = self.replace_missing_data(Fz1)
 
         cop_fp_x = -(Mx1 - dz * Fy1) / (Fz1)
 
         return cop_fp_x
 
-    @staticmethod
-    def compute_cop_fp_y(data):
+    def compute_cop_fp_y(self, data):
         """Compute the x coordinate of the force plate center of pressure (AP direction)."""
 
         # Force plate height (in mm)
@@ -226,12 +224,25 @@ class DataPreprocessor(SWARII):
         My1 = data["My1"].flatten()
         Fz1 = data["Fz1"].flatten()
 
-        # TODO : FIX THIS DIRTY HACK ASAP!
-        Fx1 = pd.DataFrame(Fx1)[0].replace(to_replace=0, value=1).values
-        My1 = pd.DataFrame(My1)[0].replace(to_replace=0, value=1).values
-        Fz1 = pd.DataFrame(Fz1)[0].replace(to_replace=0, value=1).values
+        # Replace null data with previous/following non null values
+        Fx1 = self.replace_missing_data(Fx1)
+        My1 = self.replace_missing_data(My1)
+        Fz1 = self.replace_missing_data(Fz1)
 
         cop_fp_y = -(My1 + dz * Fx1) / (Fz1)
 
         return cop_fp_y
 
+    @staticmethod
+    def replace_missing_data(data):
+        # TODO : refine this process!
+        forward_fill_missing_data = pd.DataFrame(data)[0].replace(to_replace=0, method='ffill').values
+        backward_fill_missing_data = pd.DataFrame(forward_fill_missing_data)[0].replace(to_replace=0,
+                                                                                        method='bfill').values
+
+        return backward_fill_missing_data
+
+    @staticmethod
+    def replace_outliers(data):
+        # TODO : refine this process to use mean value instead of harcoded values!
+        return pd.DataFrame(data)[0].apply(lambda x: [y if y <= -3 else -2 for y in x]).values

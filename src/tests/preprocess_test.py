@@ -1,12 +1,14 @@
 # Third-party module imports
 import logging
-from matplotlib import pyplot as plt
+import timeit
 from argparse import ArgumentParser
-import numpy as np
+
 from context import *
+from matplotlib import pyplot as plt
 
 
 def main():
+
     ##################
     # Boilerplate code
     ##################
@@ -90,14 +92,18 @@ def main():
         cop_x = preprocessed_cop_data["COP_x"]
         cop_y = preprocessed_cop_data["COP_y"]
 
-        logger.debug("FP COP x: {} \n FP COP y: {}".format(cop_x, cop_y))
+        logger.debug("FP COP x: {} \n FP COP y: {} \n".format(cop_x, cop_y))
 
     if plot:
         acq_frequency = config["preprocessing_parameters"]["acquisition_frequency"]
-        plot_stabilograms(preprocessed_cop_data, device_name, acq_frequency)
+        plot_stabilograms(preprocessed_cop_data, device
+        _name, acq_frequency)
         plt.show()
 
 
 if __name__ == "__main__":
-
+    start = timeit.default_timer()
     main()
+    stop = timeit.default_timer()
+
+    print('Execution time: {} seconds'.format(stop - start))
