@@ -31,7 +31,7 @@
     "multitaper": {
       "delta": 0.01,
       "time_bandwidth": 4,
-      "number_of_tapers": 7
+      "number_of_tapers": 8
     }
   },
   "force_plate_labels": {

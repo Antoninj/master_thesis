@@ -1,5 +1,5 @@
 # Built-in modules imports
-from src.utils import load_config
+from utils import load_config
 
 # Third-party module imports
 import numpy as np
@@ -12,7 +12,8 @@ class CopFeatures:
     """
     Base class for COP based features computations.
 
-    This class doesn't implement any feature computations and is simply responsible for parsing the COP data that will be used in COP based features computations in both the time and frequency domains.
+    This class doesn't implement any feature computations and is simply responsible for parsing the COP data that will
+    be used in COP based features computations in both the time and frequency domains.
     """
 
     acquisition_frequency = config["preprocessing_parameters"]["acquisition_frequency"]

@@ -172,7 +172,8 @@ class DataPreprocessor(SWARII):
 
         cop_data = self.compute_cop_positions(data, balance_board)
         for key, value in cop_data.items():
-            cop_data[key] = self.preprocess_signal(input_signal=value, balance_board=balance_board, timestamps=relative_timestamps)
+            cop_data[key] = self.preprocess_signal(input_signal=value,
+                                                   balance_board=balance_board, timestamps=relative_timestamps)
 
         return cop_data
 
@@ -224,7 +225,7 @@ class DataPreprocessor(SWARII):
         My1 = data["My1"].flatten()
         Fz1 = data["Fz1"].flatten()
 
-        # Replace null data with previous/following non null values
+        # Replace null data with previous or next non null values
         Fx1 = self.replace_missing_data(Fx1)
         My1 = self.replace_missing_data(My1)
         Fz1 = self.replace_missing_data(Fz1)
@@ -239,7 +240,6 @@ class DataPreprocessor(SWARII):
         forward_fill_missing_data = pd.DataFrame(data)[0].replace(to_replace=0, method='ffill').values
         backward_fill_missing_data = pd.DataFrame(forward_fill_missing_data)[0].replace(to_replace=0,
                                                                                         method='bfill').values
-
         return backward_fill_missing_data
 
     @staticmethod

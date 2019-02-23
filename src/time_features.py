@@ -332,8 +332,7 @@ class HybridFeatures(AreaFeatures):
         """
 
         std_rd = self.compute_std_rd()
-        d_fd_cc = 2 * \
-            (self.distance_features["Mean distance"] + self.z_05 * std_rd)
+        d_fd_cc = 2 * (self.distance_features["Mean distance"] + self.z_05 * std_rd)
 
         return self.compute_fractal_dimension(d_fd_cc)
 
@@ -346,7 +345,11 @@ class HybridFeatures(AreaFeatures):
 
         std_ml = self.compute_std_ml()
         std_ap = self.compute_std_ap()
-        d_fd_ce = np.sqrt(4 * self.F_05 * np.sqrt(np.square(np.square(std_ml)) + np.square(np.square(std_ap)) + 6 * np.square(std_ml) * np.square(std_ap) - 4 * np.square(np.cov(self.cop_x, self.cop_y)[0][1]) - (np.square(std_ml) + np.square(std_ap))))
+        d_fd_ce = np.sqrt(4 * self.F_05 * np.sqrt(np.square(np.square(std_ml))
+                                                  + np.square(np.square(std_ap))
+                                                  + 6 * np.square(std_ml) * np.square(std_ap)
+                                                  - 4 * np.square(np.cov(self.cop_x, self.cop_y)[0][1])
+                                                  - (np.square(std_ml) + np.square(std_ap))))
 
         return self.compute_fractal_dimension(d_fd_ce)
 

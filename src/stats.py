@@ -15,7 +15,7 @@ from utils import load_config, setup_logging
 config = load_config()
 
 setup_logging()
-logger = logging.getLogger("stats")
+logger = logging.getLogger("statistics")
 
 
 def create_index(df, file_info_items):
@@ -134,7 +134,7 @@ def compute_spearman_correlation(df1, df2, statistics_results_folder):
     result_dict = {key:{} for key in df1.columns}
 
     # Loop over each WBB data
-    for (df1, df2, number) in zip(dfs_1, dfs_2, wbb_numbers ):
+    for (df1, df2, number) in zip(dfs_1, dfs_2, wbb_numbers):
         # Loop over each feature
         for column in df1.columns:
             x = df1[column]
@@ -247,15 +247,9 @@ def make_pearson_correlation_plots(df1, df2, statistics_results_folder, plot_siz
                 ax.set_xlabel('Balance Board')
                 ax.set_ylabel('Force plate')
                 ax.set_title(column, weight=600)
-                ax.text(0.8, 0.4, "p-value = {}".format(round(p_value, 4)), fontsize=9, horizontalalignment='center',
-                        verticalalignment='center', transform=ax.transAxes)
                 ax.text(0.8, 0.3, "R\u00b2={}".format(round(r_value**2, 4)), fontsize=9, horizontalalignment='center',
                         verticalalignment='center', transform=ax.transAxes)
-                ax.text(0.8, 0.2, "Slope = {}".format(round(slope, 4)), fontsize=9, horizontalalignment='center',
-                        verticalalignment='center', transform=ax.transAxes)
-                ax.text(0.8, 0.1, "Intercept = {}".format(round(intercept, 4)), fontsize=9, horizontalalignment='center',
-                        verticalalignment='center', transform=ax.transAxes)
-                # ax.legend()
+
 
             except (RuntimeWarning, Exception) as err:
                 logger.error("Problem with feature: {}.\n{}".format(column, err), exc_info=True, stack_info=True)

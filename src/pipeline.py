@@ -39,9 +39,12 @@ class DataPipeline(HybridAcquisitionReader, DataPreprocessor, DataProcessor):
                 device_name = "Force plate"
 
             # Save results of COP signal computations and preprocessing
-            save_as_json(preprocessed_cop_data, filepath, folder_to_replace="BalanceBoard/Repro", destination_folder="results/cop_data", name_extension="_cop.json")
+            logger.info("Saving COP preprocessed data to file: {}".format(filepath))
+            save_as_json(preprocessed_cop_data, filepath, folder_to_replace="BalanceBoard/Repro",
+                         destination_folder="results/cop_data", name_extension="_cop.json")
 
             # Plot and save the stabilograms
+            logger.info("Saving stabilograms plot to file: {}".format(filepath))
             plot_stabilograms(preprocessed_cop_data, device_name, self.acq_frequency, filepath=filepath)
 
         except Exception as err:
@@ -52,6 +55,7 @@ class DataPipeline(HybridAcquisitionReader, DataPreprocessor, DataProcessor):
         Pipeline the COP data processing, i.e the time and frequency feature extraction steps, and save the results to a json file."""
 
         try:
+
             # Compute time features from COP displacement
             time_features = self.compute_time_features(filepath)
 
@@ -64,7 +68,9 @@ class DataPipeline(HybridAcquisitionReader, DataPreprocessor, DataProcessor):
             processed_data = {**file_info, "time_features": time_features, "frequency_features": frequency_features}
 
             # Save features computations in json format
-            save_as_json(processed_data, filepath, folder_to_replace="cop_data", destination_folder="feature_data", name_extension="_features.json")
+            logger.info("Saving time and frequency features to file: {}".format(filepath))
+            save_as_json(processed_data, filepath, folder_to_replace="cop_data",
+                         destination_folder="feature_data", name_extension="_features.json")
 
             # Plot and save the spectral densities
             spectral_densities = ["ap_spectral_density", "ml_spectral_density", "rd_spectral_density"]
@@ -72,31 +78,33 @@ class DataPipeline(HybridAcquisitionReader, DataPreprocessor, DataProcessor):
                                          spectral_densities]
             frequencies = [sd[0] for sd in spectrums_and_frequencies]
             spectrums = [sd[1] for sd in spectrums_and_frequencies]
+
+            logger.info("Saving spectral density plot to file: {}".format(filepath))
             plot_spectral_densities(frequencies, spectrums, filepath=filepath)
 
         except Exception as err:
             logger.error(": {} \n Problem with file:{}".format(err, filepath), exc_info=True, stack_info=True)
 
-    def preprocess_all_files(self, logger, balance_board=False):
+    def preprocess_all_files(self, external_logger, balance_board=False):
         """Preprocess all c3d files."""
 
         if self.acquisition_data is not None:
             for acquisition_file in tqdm(self.acquisition_data):
-                logger.debug("Preprocessing acquisition file: {}".format(acquisition_file))
+                external_logger.debug("Preprocessing acquisition file: {}".format(acquisition_file))
                 self.preprocess_acquisition_file(acquisition_file, balance_board)
         else:
-            logger.critical("No files to preprocess.")
+            external_logger.critical("No files to preprocess.")
             sys.exit()
 
-    def process_all_files(self, logger):
+    def process_all_files(self, external_logger):
         """Compute features from all preprocessed files."""
 
         if self.cop_data is not None:
             for cop_data_file in tqdm(self.cop_data):
-                logger.debug("Processing COP data file: {}".format(cop_data_file))
+                external_logger.debug("Processing COP data file: {}".format(cop_data_file))
                 self.process_cop_data_file(cop_data_file)
         else:
-            logger.critical("No files to process.")
+            external_logger.critical("No files to process.")
             sys.exit()
 
     def set_pipeline_acquisition_data(self, files):

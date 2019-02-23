@@ -5,9 +5,10 @@ from utils import load_config, get_path_to_all_files, setup_logging, check_folde
 import stats
 from argparse import ArgumentParser
 import logging
+import timeit
 
 setup_logging()
-logger = logging.getLogger("statistics")
+logger = logging.getLogger("statistical analysis")
 
 
 def compute_all_statistics():
@@ -25,7 +26,7 @@ def compute_all_statistics():
     logger.info("Computing frequency features statistics.")
 
     compute_statistics(wbb_frequency_feature_df, fp_frequency_feature_df, statistics_results_folders[1],
-                       html_report_results_folders[2], html_report_results_folders[3], plot_size=4)
+                       html_report_results_folders[2], html_report_results_folders[3], plot_size=6)
 
     logger.info("Statistical computations finished!")
 
@@ -104,6 +105,8 @@ def compute_statistics(wbb_df, fp_df, statistics_results_folder, html_report_res
 
 if __name__ == "__main__":
 
+    start = timeit.default_timer()
+
     ##################
     # Boilerplate code
     ##################
@@ -155,3 +158,7 @@ if __name__ == "__main__":
     #########################
 
     compute_all_statistics()
+
+    stop = timeit.default_timer()
+
+    print('Execution time: {} seconds'.format(stop - start))

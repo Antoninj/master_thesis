@@ -25,7 +25,6 @@
             "encoding": "utf8",
             "delay": "True"
         },
-
         "error_file_handler": {
             "class": "logging.handlers.RotatingFileHandler",
             "level": "ERROR",
@@ -40,9 +39,12 @@
 
     "loggers": {
         "pipeline": {
-            "level": "ERROR",
-            "handlers": ["error_file_handler"],
-            "propagate": "no"
+          "level": "INFO",
+          "handlers": [
+            "error_file_handler",
+            "info_file_handler"
+          ],
+          "propagate": "yes"
         },
         "feature extraction pipeline": {
             "level": "INFO",
@@ -59,12 +61,12 @@
             "handlers": ["console"],
             "propagate": "no"
         },
-        "stats": {
+      "statistics": {
             "level": "ERROR",
             "handlers": ["error_file_handler"],
             "propagate": "no"
         },
-        "statistics": {
+      "statistical analysis": {
             "level": "INFO",
             "handlers": ["info_file_handler","console"],
             "propagate": "no"
