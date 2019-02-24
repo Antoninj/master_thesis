@@ -23,14 +23,14 @@
   },
   "frequency_features_parameters": {
     "frequency_range":[3,101],
-    "apply_multitaper":true,
+    "apply_multitaper": false,
     "welch": {
-      "sampling_frequency": 10,
-      "nperseg": 100
+      "sampling_frequency": 100,
+      "nperseg": 500
     },
     "multitaper": {
       "delta": 0.01,
-      "time_bandwidth": 4,
+      "time_bandwidth": 3.5,
       "number_of_tapers": 8
     }
   },

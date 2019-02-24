@@ -64,13 +64,14 @@ class FrequencyFeatures(CopFeatures):
          ..[1] Scipy documentation: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.welch.html#scipy.signal.welch
         """
 
-        nfft = len(array) / 2
+        nfft = len(array)
         (f, psd) = welch(array, fs=self.fs, nperseg=self.nperseg, nfft=nfft)
 
         psd = psd[self.frequency_range[0]: self.frequency_range[1]]
         f = f[self.frequency_range[0]: self.frequency_range[1]]
 
         return (f, psd)
+
 
     @staticmethod
     def compute_power_spectral_density_area(power_spectrum):
@@ -187,6 +188,7 @@ class FrequencyFeatures(CopFeatures):
         return self.compute_power_frequency(n, power_spectrum_area, (f, psd))
 
     def compute_spectral_moment(self, k, psd_estimate):
+
         delta_f = self.delta
         spectral_moment = sum(
             [np.power(((m + self.frequency_range[0]) * delta_f), k) * psd for m, psd in enumerate(psd_estimate)])
