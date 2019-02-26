@@ -59,7 +59,7 @@ def compute_statistics(wbb_df, fp_df, statistics_results_folder, html_report_res
     # Paired T-test
     ################
 
-    logger.info("Computing t-statistics and p-values.")
+    # logger.info("Computing t-statistics and p-values.")
 
     # t_test_results = stats.perform_t_test(wbb_df, fp_df, statistics_results_folder)
     # logger.debug(t_test_results)
