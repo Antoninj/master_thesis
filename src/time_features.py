@@ -194,16 +194,12 @@ class AreaFeatures(DistanceFeatures):
     def compute_std_ml(self):
         """Compute the standard deviation of the ML time series."""
 
-        std_ml = np.sqrt(np.square(self.distance_features["Rms distance-ML"]) - np.square(
-            self.distance_features["Mean distance-ML"]))
-        return std_ml
+        return self.distance_features["Rms distance-ML"]
 
     def compute_std_ap(self):
         """Compute the standard deviation of the AP time series."""
 
-        std_ap = np.sqrt(np.square(self.distance_features["Rms distance-AP"]) - np.square(
-            self.distance_features["Mean distance-AP"]))
-        return std_ap
+        return self.distance_features["Rms distance-AP"]
 
     def compute_confidence_circle_area(self):
         """
@@ -238,7 +234,7 @@ class AreaFeatures(DistanceFeatures):
 
         features = {}
         features["95% confidence circle area"] = self.compute_confidence_circle_area()
-        #features["95% confidence elipse area"] = self.compute_confidence_elipse_area()
+        features["95% confidence elipse area"] = self.compute_confidence_elipse_area()
 
         return features
 

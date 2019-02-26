@@ -31,7 +31,8 @@ def compute_all_statistics():
     logger.info("Statistical computations finished!")
 
 
-def compute_statistics(wbb_df, fp_df, statistics_results_folder, html_report_results_folder_1, html_report_results_folder_2, plot_size=7):
+def compute_statistics(wbb_df, fp_df, statistics_results_folder, html_report_results_folder_1,
+                       html_report_results_folder_2, plot_size=8):
     """Wrap all statistics computations."""
 
     logger.info("Computing general descriptive statistics.")

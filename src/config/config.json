@@ -23,10 +23,10 @@
   },
   "frequency_features_parameters": {
     "frequency_range":[3,101],
-    "apply_multitaper": false,
+    "apply_multitaper": true,
     "welch": {
       "sampling_frequency": 100,
-      "nperseg": 500
+      "nperseg": 1000
     },
     "multitaper": {
       "delta": 0.01,
