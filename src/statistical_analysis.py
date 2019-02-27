@@ -32,7 +32,7 @@ def compute_all_statistics():
 
 
 def compute_statistics(wbb_df, fp_df, statistics_results_folder, html_report_results_folder_1,
-                       html_report_results_folder_2, plot_size=8):
+                       html_report_results_folder_2, plot_size=7):
     """Wrap all statistics computations."""
 
     logger.info("Computing general descriptive statistics.")

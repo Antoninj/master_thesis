@@ -152,15 +152,15 @@ class DistanceFeatures(CopFeatures):
         features["Rms distance"] = self.compute_rd_rms_distance()
         features["Rms distance-ML"] = self.compute_ml_rms_distance()
         features["Rms distance-AP"] = self.compute_ap_rms_distance()
-        features["Path length"] = self.compute_rd_path_length()
-        features["Path length-ML"] = self.compute_ml_path_length()
-        features["Path length-AP"] = self.compute_ap_path_length()
-        features["Mean velocity"] = self.compute_rd_mean_velocity()
-        features["Mean velocity-ML"] = self.compute_ml_mean_velocity()
-        features["Mean velocity-AP"] = self.compute_ap_mean_velocity()
+        # features["Path length"] = self.compute_rd_path_length()
+        # features["Path length-ML"] = self.compute_ml_path_length()
+        # features["Path length-AP"] = self.compute_ap_path_length()
         features["Range"] = self.compute_rd_range()
         features["Range-ML"] = self.compute_ml_range()
         features["Range-AP"] = self.compute_ap_range()
+        features["Mean velocity"] = self.compute_rd_mean_velocity()
+        features["Mean velocity-ML"] = self.compute_ml_mean_velocity()
+        features["Mean velocity-AP"] = self.compute_ap_mean_velocity()
 
         return features
 
@@ -314,9 +314,10 @@ class HybridFeatures(AreaFeatures):
         The fractal dimension (FD) is a unitless measure of the degree to which a curve fills the metric space which it encompasses.
         """
 
+        totex = self.compute_rd_path_length()
         N = self.cop_rd.size
         FD = (np.log(N)) / \
-            (np.log((N * d) / (self.distance_features["Path length"])))
+             (np.log((N * d) / (totex)))
 
         return FD
 
