@@ -4,6 +4,7 @@ import numpy as np
 import os
 import logging.config
 import sys
+from features import CopFeatures
 from matplotlib import pyplot as plt, gridspec
 
 
@@ -117,18 +118,12 @@ def setup_logging(default_level=logging.INFO):
         logging.basicConfig(level=default_level)
 
 
-def compute_rd(cop_x, cop_y):
-    """Compute the resultant distance vector from the x and y COP coordinates."""
-
-    return np.array([np.sqrt(x**2 + y**2) for x, y in zip(cop_x, cop_y)])
-
-
 def plot_stabilograms(preprocessed_cop_data, device_name, acq_frequency, filepath=None):
     """"Plot and save stabilograms from COP data."""
 
     cop_x = preprocessed_cop_data["COP_x"]
     cop_y = preprocessed_cop_data["COP_y"]
-    cop_rd = compute_rd(cop_x, cop_y)
+    cop_rd = CopFeatures.compute_rd(cop_x, cop_y)
 
     fig, axs = plt.subplots(2, 2, figsize=(15, 10))
     index = [i / acq_frequency for i in range(len(cop_x))]

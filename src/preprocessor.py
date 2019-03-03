@@ -1,7 +1,6 @@
 # Third-party module imports
 import logging
 import warnings
-from datetime import datetime
 
 import numpy as np
 import pandas as pd
@@ -35,8 +34,10 @@ class DataPreprocessor(SWARII):
     .. [3] SWARII implementation : https://reine.cmla.ens-cachan.fr/j.audiffren/SWARII
     """
 
-    up = config["preprocessing_parameters"]["upsampling_factor"]
-    down = config["preprocessing_parameters"]["downsampling_factor"]
+    fp_up = config["preprocessing_parameters"]["fp_upsampling_factor"]
+    fp_down = config["preprocessing_parameters"]["fp_downsampling_factor"]
+    wbb_up = config["preprocessing_parameters"]["wbb_upsampling_factor"]
+    wbb_down = config["preprocessing_parameters"]["wbb_downsampling_factor"]
     order = config["preprocessing_parameters"]["filter_order"]
     fc = config["preprocessing_parameters"]["cutoff_frequency"]
     detrending_type = config["preprocessing_parameters"]["detrending_type"]
@@ -57,7 +58,7 @@ class DataPreprocessor(SWARII):
 
         return resampled_signal
 
-    def apply_polyphase_resampling(self, input_signal):
+    def apply_polyphase_resampling(self, input_signal, up, down):
         """
         Resample the input signal using polyphase resampling.
 
@@ -66,7 +67,7 @@ class DataPreprocessor(SWARII):
         .. [1] Scipy documentation: https://docs.scipy.org/doc/scipy-1.1.0/reference/generated/scipy.signal.resample_poly.html#scipy.signal.resample_poly
         """
 
-        return scipy.signal.resample_poly(input_signal, self.up, self.down)
+        return scipy.signal.resample_poly(input_signal, up, down)
 
     def apply_filtering(self, input_signal):
         """
@@ -117,11 +118,11 @@ class DataPreprocessor(SWARII):
                 # Resample the force plate sampling frequency using SWARII
                 resampled_signal = self.apply_swarii_resampling(input_signal, timestamps)
             else:
-                resampled_signal = self.apply_polyphase_resampling(input_signal)
+                resampled_signal = self.apply_polyphase_resampling(input_signal, self.wbb_up, self.wbb_down)
 
         else:
             # Resample the force plate sampling frequency using polyphase resampling
-            resampled_signal = self.apply_polyphase_resampling(input_signal)
+            resampled_signal = self.apply_polyphase_resampling(input_signal, self.fp_up, self.fp_down)
 
         filtered_signal = self.apply_filtering(resampled_signal)
         reframed_data = self.apply_reframing(filtered_signal, balance_board)
@@ -129,41 +130,12 @@ class DataPreprocessor(SWARII):
 
         return detrended_data
 
-    @staticmethod
-    def compute_timestamps(time_dict):
-        """ Reformat the acquisition timestamps from absolute dates to relative timestamps in seconds. """
-
-        time_strings_lists = []
-        for key, value in time_dict.items():
-            flatten_values = time_dict[key].flatten()
-            time_strings = ['{0:g}'.format(float(value)) for value in flatten_values]
-            if key == "milisecond":
-                for i in range(len(time_strings)):
-                    if len(time_strings[i]) == 1:
-                        time_strings[i] = "00" + time_strings[i]
-                    if len(time_strings[i]) == 2:
-                        time_strings[i] = "0" + time_strings[i]
-            time_strings_lists.append(time_strings)
-
-        date_strings = [" ".join(date) for date in list(zip(*time_strings_lists))]
-        fmt = '%Y %m %d %H %M %S %f'
-        datetimes = [datetime.strptime(string, fmt) for string in date_strings]
-
-        timestamps_seconds = []
-        duration = 0
-        timestamps_seconds.append(duration)
-        for i in range(len(datetimes) - 1):
-            duration += (datetimes[i + 1] - datetimes[i]).total_seconds()
-            timestamps_seconds.append(duration)
-
-        return timestamps_seconds
 
     def preprocess_raw_data(self, data, balance_board=False):
         """Preprocess the raw data"""
 
         if self.use_swarii and balance_board:
-            time_data = data[0]
-            relative_timestamps = self.compute_timestamps(time_data)
+            relative_timestamps = data[0]
         else:
             relative_timestamps = None
 

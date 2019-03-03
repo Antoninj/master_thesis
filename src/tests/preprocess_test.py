@@ -61,14 +61,15 @@ def main():
         logger.info("Test file: {}".format(filepath_wbb))
 
         raw_data = data_reader.get_raw_data(filepath=filepath_wbb, balance_board=True)
-        analog_freq = data_reader.get_frequency(filepath=filepath_wbb)
-
-        logger.debug("Analog data: {} \nAnalog Frequency: {}".format(raw_data[0], analog_freq))
+        wbb_avg_freq = len(raw_data[0]) / raw_data[0][-1]
+        logger.debug("Time stamps: {} \nWBB average sampling frequency: {} Hz".format(raw_data[0], wbb_avg_freq))
         logger.debug("Point data :{}".format(raw_data[1]))
 
-        logger.debug("Data size: {}".format(len(raw_data[1]["Accelerometer"])))
+        logger.debug("Raw data size: {}".format(len(raw_data[1]["Accelerometer"])))
 
         preprocessed_cop_data = data_preprocessor.preprocess_raw_data(raw_data, True)
+
+        logger.debug("Preprocessed data size: {}".format(len(preprocessed_cop_data["COP_x"])))
 
         cop_x = preprocessed_cop_data["COP_x"]
         cop_y = preprocessed_cop_data["COP_y"]

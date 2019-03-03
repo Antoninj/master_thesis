@@ -44,7 +44,7 @@ class DataPipeline(HybridAcquisitionReader, DataPreprocessor, DataProcessor):
                          destination_folder="results/cop_data", name_extension="_cop.json")
 
             # Plot and save the stabilograms
-            logger.info("Saving stabilograms plot to file: {}".format(filepath))
+            logger.info("Saving stabilograms plots to file: {}".format(filepath))
             plot_stabilograms(preprocessed_cop_data, device_name, self.acq_frequency, filepath=filepath)
 
         except Exception as err:
