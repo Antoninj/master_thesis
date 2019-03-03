@@ -7,6 +7,8 @@ from mtspec import mtspec
 from scipy.signal import welch
 from scipy.integrate import cumtrapz
 import numpy as np
+import spectrum
+
 
 config = load_config()
 
