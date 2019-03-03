@@ -39,7 +39,8 @@ if __name__ == "__main__":
     COP = args.cop
 
     # Create a data pipeline object
-    data_pipeline = DataPipeline()
+    preprocessing_data_pipeline = PreprocessingPipeline()
+    feature_extraction_data_pipeline = FeatureExtractionPipeline()
 
     ##################
     # Tests
@@ -51,16 +52,16 @@ if __name__ == "__main__":
         logger.info("Test file: {}".format(wbb_raw_data))
 
         logger.info("Pre-processing Wii Balance Board acquistion data.")
-        data_pipeline.preprocess_acquisition_file(wbb_raw_data, balance_board=WBB)
+        preprocessing_data_pipeline.preprocess_acquisition_file(wbb_raw_data, balance_board=WBB)
 
         logger.info("Processing Wii Balance Board COP data.")
-        data_pipeline.process_cop_data_file(wbb_cop_data, balance_board=WBB)
+        feature_extraction_data_pipeline.process_cop_data_file(wbb_cop_data, balance_board=WBB)
 
     else:
         logger.info("Test file: {}".format(fp_raw_data))
 
         logger.info("Pre-processing Force Plate acquisition data.")
-        data_pipeline.preprocess_acquisition_file(fp_raw_data)
+        preprocessing_data_pipeline.preprocess_acquisition_file(fp_raw_data)
 
         logger.info("Processing Force Plate COP data.")
-        data_pipeline.process_cop_data_file(fp_cop_data)
+        feature_extraction_data_pipeline.process_cop_data_file(fp_cop_data)

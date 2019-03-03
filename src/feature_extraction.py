@@ -1,5 +1,5 @@
 # Built-in modules imports
-from pipeline import DataPipeline
+from feature_extraction_pipeline import FeatureExtractionPipeline
 from utils import load_config, get_path_to_all_files, setup_logging, check_folder
 
 # Third-party module imports
@@ -59,7 +59,7 @@ if __name__ == "__main__":
     logger.info("Processing COP data located in: {}".format(data_folder))
 
     # Create the pipeline object
-    data_pipeline = DataPipeline()
+    data_pipeline = FeatureExtractionPipeline()
 
     if WBB:
         logger.info("Beginning of Wii Balance Board COP data processing")
