@@ -16,8 +16,11 @@ config = load_config()
 class FrequencyFeatures(CopFeatures):
     """Class that implements the frequency domain features derived from the COP positions."""
 
+    psd_method_used = config["frequency_features_parameters"]["psd_method"]
+    fs = config["frequency_features_parameters"]["sampling_frequency"]
+    frequency_range = config["frequency_features_parameters"]["frequency_range"]
+
     # Welch periodogram parameters
-    fs = config["frequency_features_parameters"]["welch"]["sampling_frequency"]
     nperseg = config["frequency_features_parameters"]["welch"]["nperseg"]
 
     # Adaptive weighted multitaper spectrum parameters
@@ -25,20 +28,35 @@ class FrequencyFeatures(CopFeatures):
     time_bandwidth = config["frequency_features_parameters"]["multitaper"]["time_bandwidth"]
     number_of_tapers = config["frequency_features_parameters"]["multitaper"]["number_of_tapers"]
 
-    use_multitaper = config["frequency_features_parameters"]["apply_multitaper"]
-    frequency_range = config["frequency_features_parameters"]["frequency_range"]
+
 
     def __init__(self, cop_x, cop_y):
         super(FrequencyFeatures, self).__init__(cop_x, cop_y)
-        self.rd_spectral_density = self.compute_multitaper_power_spectral_density(self.cop_rd) if self.use_multitaper \
-            else self.compute_power_spectral_density(self.cop_rd)
-        self.ap_spectral_density = self.compute_multitaper_power_spectral_density(self.cop_x) if self.use_multitaper \
-            else self.compute_power_spectral_density(self.cop_x)
-        self.ml_spectral_density = self.compute_multitaper_power_spectral_density(self.cop_y) if self.use_multitaper \
-            else self.compute_power_spectral_density(self.cop_y)
+
+        self.psd_methods_dict = self.create_psd_methods_dict()
+        default_psd = "welch"
+        self.psd_method_impl = self.psd_methods_dict.get(self.psd_method_used, self.psd_methods_dict[default_psd])
+
+        self.rd_spectral_density = self.psd_method_impl(self.cop_rd)
+        self.ap_spectral_density = self.psd_method_impl(self.cop_x)
+        self.ml_spectral_density = self.psd_method_impl(self.cop_y)
         self.frequency_features = self.compute_frequency_features()
 
-    def compute_multitaper_power_spectral_density(self, array):
+    def create_psd_methods_dict(self):
+        psd_methods = {}
+        psd_methods["welch"] = self.compute_welch_psd
+        psd_methods["multitaper"] = self.compute_multitaper_psd
+        psd_methods["multitaper2"] = self.compute_multitaper_bis_psd
+        psd_methods["ma"] = self.compute_ma_psd
+        psd_methods["arma"] = self.compute_arma_psd
+        psd_methods["yule"] = self.compute_yulewalker_psd
+        psd_methods["burg"] = self.compute_burg_psd
+        psd_methods["covar"] = self.compute_covar_psd
+        psd_methods["modcovar"] = self.compute_modcovar_psd
+
+        return psd_methods
+
+    def compute_multitaper_psd(self, array):
         """
         Estimate the adaptive weighted multitaper spectrum, as in Thomson 1982. This is done by estimating the DPSS
         (discrete prolate spheroidal sequences), multiplying each of the tapers with the data series, take the FFT,
@@ -49,7 +67,6 @@ class FrequencyFeatures(CopFeatures):
          ..[1] mtspec package documentation: http://krischer.github.io/mtspec/multitaper_mtspec.html
         """
 
-        # nfft = len(array) / 2
         psd, f = mtspec(data=array, delta=self.delta, time_bandwidth=self.time_bandwidth, number_of_tapers=self.number_of_tapers)
 
         psd = psd[self.frequency_range[0]: self.frequency_range[1]]
@@ -57,7 +74,7 @@ class FrequencyFeatures(CopFeatures):
 
         return (f, psd)
 
-    def compute_power_spectral_density(self, array):
+    def compute_welch_psd(self, array):
         """
         Function to compute the power spectral density using the scipy implementation of the Welch method.
 
@@ -74,6 +91,61 @@ class FrequencyFeatures(CopFeatures):
 
         return (f, psd)
 
+    def compute_multitaper_bis_psd(self, array):
+        p = spectrum.mtm.pmtm(array, NW=self.time_bandwidth, k=self.number_of_tapers, NFFT=len(array))
+        p.run()
+        psd = p.psd[self.frequency_range[0]: self.frequency_range[1]]
+        f = p.frequencies()[self.frequency_range[0]: self.frequency_range[1]]
+
+        return (f, psd)
+
+    def compute_ma_psd(self, array):
+        p = spectrum.pma(array, 15, 30, NFFT=len(array), sampling=self.fs)
+        p.run()
+        psd = p.psd[self.frequency_range[0]: self.frequency_range[1]]
+        f = p.frequencies()[self.frequency_range[0]: self.frequency_range[1]]
+
+        return (f, psd)
+
+    def compute_arma_psd(self, array):
+        p = spectrum.parma(array, 15, 15, 30, NFFT=len(array), sampling=self.fs)
+        p.run()
+        psd = p.psd[self.frequency_range[0]: self.frequency_range[1]]
+        f = p.frequencies()[self.frequency_range[0]: self.frequency_range[1]]
+
+        return (f, psd)
+
+    def compute_yulewalker_psd(self, array):
+        p = spectrum.pyule(array, 15, norm="biased", NFFT=len(array))
+        p.run()
+        psd = p.psd[self.frequency_range[0]: self.frequency_range[1]]
+        f = p.frequencies()[self.frequency_range[0]: self.frequency_range[1]]
+
+        return (f, psd)
+
+    def compute_burg_psd(self, array):
+        p = spectrum.pburg(array, order=15, NFFT=len(array))
+        p.run()
+        psd = p.psd[self.frequency_range[0]: self.frequency_range[1]]
+        f = p.frequencies()[self.frequency_range[0]: self.frequency_range[1]]
+
+        return (f, psd)
+
+    def compute_covar_psd(self, array):
+        p = spectrum.pcovar(array, 15, NFFT=len(array))
+        p.run()
+        psd = p.psd[self.frequency_range[0]: self.frequency_range[1]]
+        f = p.frequencies()[self.frequency_range[0]: self.frequency_range[1]]
+
+        return (f, psd)
+
+    def compute_modcovar_psd(self, array):
+        p = spectrum.pmodcovar(array, 15, NFFT=len(array))
+        p.run()
+        psd = p.psd[self.frequency_range[0]: self.frequency_range[1]]
+        f = p.frequencies()[self.frequency_range[0]: self.frequency_range[1]]
+
+        return (f, psd)
 
     @staticmethod
     def compute_power_spectral_density_area(power_spectrum):

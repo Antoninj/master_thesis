@@ -24,10 +24,10 @@
     "F_05": 3
   },
   "frequency_features_parameters": {
+    "psd_method": "multitaper2",
+    "sampling_frequency": 100,
     "frequency_range":[3,101],
-    "apply_multitaper": true,
     "welch": {
-      "sampling_frequency": 100,
       "nperseg": 1000
     },
     "multitaper": {
@@ -62,8 +62,8 @@
   "test_files": {
     "wbb_raw_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard/Repro/Repro1/BB/1_1.c3d",
     "fp_raw_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard/Repro/Repro1/FP/1_1.c3d",
-    "wbb_cop_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/cop_data/Repro6/BB/1_3_cop.json",
-    "fp_cop_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/cop_data/Repro6/FP/1_3_cop.json"
+    "wbb_cop_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/cop_data/Repro1/BB/1_1_cop.json",
+    "fp_cop_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/cop_data/Repro1/FP/1_1_cop.json"
   },
   "acquisition_data_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard/Repro",
   "cop_data_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/cop_data",
