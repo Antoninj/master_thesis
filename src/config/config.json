@@ -24,7 +24,7 @@
     "F_05": 3
   },
   "frequency_features_parameters": {
-    "psd_method": "multitaper2",
+    "psd_method": "multitaper",
     "sampling_frequency": 100,
     "frequency_range":[3,101],
     "welch": {
@@ -32,8 +32,8 @@
     },
     "multitaper": {
       "delta": 0.01,
-      "time_bandwidth": 3.5,
-      "number_of_tapers": 8
+      "time_bandwidth": 2,
+      "number_of_tapers": 4
     }
   },
   "force_plate_labels": {

@@ -29,12 +29,11 @@ class FrequencyFeatures(CopFeatures):
     number_of_tapers = config["frequency_features_parameters"]["multitaper"]["number_of_tapers"]
 
 
-
     def __init__(self, cop_x, cop_y):
         super(FrequencyFeatures, self).__init__(cop_x, cop_y)
 
         self.psd_methods_dict = self.create_psd_methods_dict()
-        default_psd = "welch"
+        default_psd = "multitaper"
         self.psd_method_impl = self.psd_methods_dict.get(self.psd_method_used, self.psd_methods_dict[default_psd])
 
         self.rd_spectral_density = self.psd_method_impl(self.cop_rd)
@@ -53,6 +52,11 @@ class FrequencyFeatures(CopFeatures):
         psd_methods["burg"] = self.compute_burg_psd
         psd_methods["covar"] = self.compute_covar_psd
         psd_methods["modcovar"] = self.compute_modcovar_psd
+        psd_methods["correlogram"] = self.compute_correlogram_psd
+        psd_methods["minvar"] = self.compute_minvar_psd
+        psd_methods["music"] = self.compute_music_psd
+        psd_methods["ev"] = self.compute_ev_psd
+
 
         return psd_methods
 
@@ -139,8 +143,41 @@ class FrequencyFeatures(CopFeatures):
 
         return (f, psd)
 
+
     def compute_modcovar_psd(self, array):
         p = spectrum.pmodcovar(array, 15, NFFT=len(array))
+        p.run()
+        psd = p.psd[self.frequency_range[0]: self.frequency_range[1]]
+        f = p.frequencies()[self.frequency_range[0]: self.frequency_range[1]]
+
+        return (f, psd)
+
+    def compute_correlogram_psd(self, array):
+        p = spectrum.pcorrelogram(array, lag=15, NFFT=len(array))
+        p.run()
+        psd = p.psd[self.frequency_range[0]: self.frequency_range[1]]
+        f = p.frequencies()[self.frequency_range[0]: self.frequency_range[1]]
+
+        return (f, psd)
+
+    def compute_minvar_psd(self, array):
+        p = spectrum.pminvar(array, 15, NFFT=len(array))
+        p.run()
+        psd = p.psd[self.frequency_range[0]: self.frequency_range[1]]
+        f = p.frequencies()[self.frequency_range[0]: self.frequency_range[1]]
+
+        return (f, psd)
+
+    def compute_music_psd(self, array):
+        p = spectrum.pmusic(array, 15, 11, NFFT=len(array))
+        p.run()
+        psd = p.psd[self.frequency_range[0]: self.frequency_range[1]]
+        f = p.frequencies()[self.frequency_range[0]: self.frequency_range[1]]
+
+        return (f, psd)
+
+    def compute_ev_psd(self, array):
+        p = spectrum.pev(array, 15, 11, NFFT=len(array))
         p.run()
         psd = p.psd[self.frequency_range[0]: self.frequency_range[1]]
         f = p.frequencies()[self.frequency_range[0]: self.frequency_range[1]]
