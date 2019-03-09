@@ -111,21 +111,29 @@ class DataPreprocessor(SWARII):
         Pipeline the preprocessing steps.
 
         The SWARII resampling is applied to the wii balance board data in order to match the downsampled force plate sampling frequency (using polyphase resampling).
+
+        NB: The WBB signal doesn't need to be filtered "as doing averages over a window already denoises the signal" (cf SWARII paper).
         """
 
         if balance_board:
             if timestamps is not None:
-                # Resample the force plate sampling frequency using SWARII
+                # Resample the balance board data using SWARII
                 resampled_signal = self.apply_swarii_resampling(input_signal, timestamps)
+                reframed_data = self.apply_reframing(resampled_signal, balance_board)
+
+
             else:
+                # Resample the balance board data using polyphase resampling
                 resampled_signal = self.apply_polyphase_resampling(input_signal, self.wbb_up, self.wbb_down)
+                filtered_signal = self.apply_filtering(resampled_signal)
+                reframed_data = self.apply_reframing(filtered_signal, balance_board)
 
         else:
-            # Resample the force plate sampling frequency using polyphase resampling
+            # Resample the force plate data using polyphase resampling
             resampled_signal = self.apply_polyphase_resampling(input_signal, self.fp_up, self.fp_down)
+            filtered_signal = self.apply_filtering(resampled_signal)
+            reframed_data = self.apply_reframing(filtered_signal, balance_board)
 
-        filtered_signal = self.apply_filtering(resampled_signal)
-        reframed_data = self.apply_reframing(filtered_signal, balance_board)
         detrended_data = self.apply_detrending(reframed_data)
 
         return detrended_data

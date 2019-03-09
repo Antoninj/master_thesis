@@ -1,7 +1,7 @@
 # Built-in modules imports
 from hybrid_reader import HybridAcquisitionReader
 from preprocessor import DataPreprocessor
-from utils import save_as_json, plot_stabilograms, plot_spectral_densities
+from utils import save_as_json, plot_stabilograms
 from tqdm import tqdm
 import sys
 

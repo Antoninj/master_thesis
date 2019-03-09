@@ -57,7 +57,6 @@ class FrequencyFeatures(CopFeatures):
         psd_methods["music"] = self.compute_music_psd
         psd_methods["ev"] = self.compute_ev_psd
 
-
         return psd_methods
 
     def compute_multitaper_psd(self, array):

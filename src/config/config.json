@@ -5,7 +5,7 @@
     "height": 55
   },
   "preprocessing_parameters": {
-    "filter_order": 1,
+    "filter_order": 2,
     "cutoff_frequency": 12,
     "detrending_type": "constant",
     "fp_upsampling_factor": 1,

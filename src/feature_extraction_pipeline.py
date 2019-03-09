@@ -25,7 +25,6 @@ class FeatureExtractionPipeline(HybridAcquisitionReader, DataProcessor):
         Pipeline the COP data processing, i.e the time and frequency feature extraction steps, and save the results to a json file."""
 
         try:
-
             # Compute time features from COP displacement
             time_features = self.compute_time_features(filepath)
 
