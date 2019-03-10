@@ -42,7 +42,7 @@ class FeatureExtractionPipeline(HybridAcquisitionReader, DataProcessor):
                          destination_folder="feature_data", name_extension="_features.json")
 
             # Plot and save the spectral densities
-            spectral_densities = ["ap_spectral_density", "ml_spectral_density", "rd_spectral_density"]
+            spectral_densities = ["ml_spectral_density", "ap_spectral_density", "rd_spectral_density"]
             spectrums_and_frequencies = [getattr(frequency_domain_features, spectral_density) for spectral_density in
                                          spectral_densities]
             frequencies = [sd[0] for sd in spectrums_and_frequencies]

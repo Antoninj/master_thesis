@@ -82,6 +82,11 @@ def compute_statistics(wbb_df, fp_df, statistics_results_folder, html_report_res
     linear_regression_results = stats.make_pearson_correlation_plots(wbb_df, fp_df, statistics_results_folder, plot_size)
     logger.debug(linear_regression_results)
 
+    global_linear_regression_results = stats.make_global_person_correlation_plots(wbb_df, fp_df,
+                                                                                  statistics_results_folder,
+                                                                                  plot_size)
+    logger.debug(global_linear_regression_results)
+
     ##################################################################
     # Bland and Altman plots and Limits of Agreement(LOA) computations
     ##################################################################

@@ -165,12 +165,12 @@ def plot_spectral_densities(frequencies, spectrums, filepath=None):
     ax = plt.subplot(gs[0, 0])
     plt.plot(frequencies[0], spectrums[0])
     plt.xlabel('Frequency [Hz]')
-    plt.ylabel('Power spectrum density in AP direction [mm**2/Hz]')
+    plt.ylabel('Power spectrum density in ML direction [mm**2/Hz]')
 
     ax = plt.subplot(gs[0, 1])
     plt.plot(frequencies[1], spectrums[1])
     plt.xlabel('Frequency [Hz]')
-    plt.ylabel('Power spectrum density in ML direction [mm**2/Hz]')
+    plt.ylabel('Power spectrum density in AP direction [mm**2/Hz]')
 
     ax = plt.subplot(gs[1, :])
     plt.plot(frequencies[2], spectrums[2])

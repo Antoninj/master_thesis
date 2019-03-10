@@ -36,8 +36,8 @@ class FrequencyFeatures(CopFeatures):
         self.psd_method_impl = self.psd_methods_dict.get(self.psd_method_used, self.psd_methods_dict[default_psd])
 
         self.rd_spectral_density = self.psd_method_impl(self.cop_rd)
-        self.ap_spectral_density = self.psd_method_impl(self.cop_x)
-        self.ml_spectral_density = self.psd_method_impl(self.cop_y)
+        self.ml_spectral_density = self.psd_method_impl(self.cop_x)
+        self.ap_spectral_density = self.psd_method_impl(self.cop_y)
         self.frequency_features = self.compute_frequency_features()
 
     def create_psd_methods_dict(self):

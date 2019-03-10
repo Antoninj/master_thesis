@@ -214,6 +214,52 @@ def perform_t_test(df1, df2, statistics_results_folder):
     return result_dict
 
 
+def make_global_person_correlation_plots(df1, df2, statistics_results_folder, plot_size):
+    fig, axs = plt.subplots(3, plot_size, figsize=(30, 15), facecolor='w', edgecolor='k')
+    fig.subplots_adjust(hspace=.5)
+    result_dict = {}
+    # Loop over each feature
+    for ax, column in zip(axs.ravel(), df1.columns):
+        x = df1[column]
+        y = df2[column]
+
+        try:
+            # Perform the linear regression
+            slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
+
+            # Store the linear regression results
+            result_dict[column] = {}
+            result_dict[column]["slope"] = round(slope, 4)
+            result_dict[column]["intercept"] = round(intercept, 4)
+            result_dict[column]["R"] = round(r_value, 4)
+            result_dict[column]["p-value"] = round(p_value, 4)
+
+            # Make the plot
+            ax.plot(x, y, '.', label='original data')
+            ax.plot(x, intercept + slope * x, 'black', label='fitted line', linewidth=0.3)
+            ax.set_xlabel('Balance Board')
+            ax.set_ylabel('Force plate')
+            ax.set_title(column, weight=600)
+            ax.text(0.8, 0.3, "R\u00b2={}".format(round(r_value ** 2, 4)), fontsize=9, horizontalalignment='center',
+                    verticalalignment='center', transform=ax.transAxes)
+
+        except (RuntimeWarning, Exception) as err:
+            logger.error("Problem with feature: {}.\n{}".format(column, err), exc_info=True, stack_info=True)
+            pass
+
+    # Save the plots
+    plt.tight_layout()
+    plt.savefig("{}/global_linear_regression_plots.png".format(statistics_results_folder),
+                bbox_inches='tight')
+
+    # Save the results
+    result_dict_df = pd.DataFrame.from_dict(result_dict).transpose()
+    report_name = "{}/global_linear_regression_results.csv".format(statistics_results_folder)
+    result_dict_df.to_csv(report_name, sep=',', encoding='utf-8')
+
+    return result_dict
+
+
 def make_pearson_correlation_plots(df1, df2, statistics_results_folder, plot_size):
     """
     Perform a linear least-squares regression and plot the correlation line for each feature.
