@@ -4,6 +4,9 @@
     "length": 238,
     "height": 55
   },
+  "force_plate_parameters": {
+    "dz": 20
+  },
   "preprocessing_parameters": {
     "filter_order": 2,
     "cutoff_frequency": 12,
@@ -32,8 +35,8 @@
     },
     "multitaper": {
       "delta": 0.01,
-      "time_bandwidth": 2,
-      "number_of_tapers": 4
+      "time_bandwidth": 4,
+      "number_of_tapers": 8
     }
   },
   "force_plate_labels": {

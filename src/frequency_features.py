@@ -28,7 +28,6 @@ class FrequencyFeatures(CopFeatures):
     time_bandwidth = config["frequency_features_parameters"]["multitaper"]["time_bandwidth"]
     number_of_tapers = config["frequency_features_parameters"]["multitaper"]["number_of_tapers"]
 
-
     def __init__(self, cop_x, cop_y):
         super(FrequencyFeatures, self).__init__(cop_x, cop_y)
 
@@ -71,7 +70,6 @@ class FrequencyFeatures(CopFeatures):
         """
 
         psd, f = mtspec(data=array, delta=self.delta, time_bandwidth=self.time_bandwidth, number_of_tapers=self.number_of_tapers)
-
         psd = psd[self.frequency_range[0]: self.frequency_range[1]]
         f = f[self.frequency_range[0]: self.frequency_range[1]]
 
@@ -142,7 +140,6 @@ class FrequencyFeatures(CopFeatures):
 
         return (f, psd)
 
-
     def compute_modcovar_psd(self, array):
         p = spectrum.pmodcovar(array, 15, NFFT=len(array))
         p.run()
@@ -208,7 +205,6 @@ class FrequencyFeatures(CopFeatures):
         """Function to compute the power spectral density area of the COP displacement in the AP direction."""
 
         return self.compute_power_spectral_density_area(self.ap_spectral_density)
-
 
     def compute_rd_total_power(self):
         """Function to compute the power spectral density total power.
@@ -298,8 +294,7 @@ class FrequencyFeatures(CopFeatures):
         return self.compute_power_frequency(n, power_spectrum_area, (f, psd))
 
     def compute_spectral_moment(self, k, psd_estimate):
-
-        delta_f = self.delta
+        delta_f = 5 * self.delta
         spectral_moment = sum(
             [np.power(((m + self.frequency_range[0]) * delta_f), k) * psd for m, psd in enumerate(psd_estimate)])
 
@@ -389,6 +384,9 @@ class FrequencyFeatures(CopFeatures):
         features["80% power frequency-RD"] = self.compute_rd_power_frequency(80)
         features["80% power frequency-ML"] = self.compute_ml_power_frequency(80)
         features["80% power frequency-AP"] = self.compute_ap_power_frequency(80)
+        features["95% power frequency-RD"] = self.compute_rd_power_frequency(95)
+        features["95% power frequency-ML"] = self.compute_ml_power_frequency(95)
+        features["95% power frequency-AP"] = self.compute_ap_power_frequency(95)
         features["Centroidal frequency-RD"] = self.compute_rd_centroidal_frequency()
         features["Centroidal frequency-ML"] = self.compute_ml_centroidal_frequency()
         features["Centroidal frequency-AP"] = self.compute_ap_centroidal_frequency()

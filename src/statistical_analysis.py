@@ -26,7 +26,7 @@ def compute_all_statistics():
     logger.info("Computing frequency features statistics.")
 
     compute_statistics(wbb_frequency_feature_df, fp_frequency_feature_df, statistics_results_folders[1],
-                       html_report_results_folders[2], html_report_results_folders[3], plot_size=6)
+                       html_report_results_folders[2], html_report_results_folders[3], plot_size=7)
 
     logger.info("Statistical computations finished!")
 
@@ -103,6 +103,12 @@ def compute_statistics(wbb_df, fp_df, statistics_results_folder, html_report_res
     logger.debug(icc_results_2)
 
 
+def get_outlier_identity(data, feature_name, balance_board_number):
+    data = data.loc[data.index.get_level_values('balance board') == balance_board_number]
+    outlier_values = data[data[feature_name] == data[feature_name].max()]
+
+    return outlier_values.index.tolist()
+
 
 if __name__ == "__main__":
 
@@ -129,8 +135,10 @@ if __name__ == "__main__":
     parser = ArgumentParser(
         description="")
     parser.add_argument("-d", "--debug", action='store_true', help="Show debugging messages")
+    parser.add_argument('-o', "--outliers", action='store_false', help="remove outliers")
     args = parser.parse_args()
     debug = args.debug
+    outliers = args.outliers
 
     if debug:
         logger.setLevel("DEBUG")
@@ -153,6 +161,24 @@ if __name__ == "__main__":
     fp_dfs = stats.construct_results_dfs(fp_files_curated)
     fp_time_feature_df = fp_dfs[0]
     fp_frequency_feature_df = fp_dfs[1]
+
+    ###################
+    # Outliers handling
+    ###################
+
+    outlier_feature = ["Range", "Range-AP", "Range-AP", "Range"]
+    wbb_numbers = [str(i) for i in range(1, 5)]
+    outlier_indexes_1 = [get_outlier_identity(fp_time_feature_df, id[0], id[1]) for id in
+                         zip(outlier_feature, wbb_numbers)]
+    outlier_indexes_2 = [get_outlier_identity(wbb_time_feature_df, id[0], id[1]) for id in
+                         zip(outlier_feature, wbb_numbers)]
+
+    if not args.outliers:
+        for df in [fp_time_feature_df, fp_frequency_feature_df]:
+            [df.drop(index, inplace=True) for index in outlier_indexes_1]
+
+        for df in [wbb_time_feature_df, wbb_frequency_feature_df]:
+            [df.drop(index, inplace=True) for index in outlier_indexes_2]
 
     #########################
     # PUTTING IT ALL TOGETHER

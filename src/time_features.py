@@ -75,6 +75,7 @@ class DistanceFeatures(CopFeatures):
 
         return path_length
 
+
     def compute_rd_path_length(self):
         """Compute the total length of the COP path."""
 
@@ -142,6 +143,9 @@ class DistanceFeatures(CopFeatures):
 
         return self.compute_range(self.cop_y.min(), self.cop_y.max())
 
+    def compute_sway_displacement(self):
+        return self.cop_rd.sum()
+
     def compute_distance_features(self):
         """Compute all the distance features and store them in a dictionary."""
 
@@ -152,7 +156,6 @@ class DistanceFeatures(CopFeatures):
         features["Rms distance"] = self.compute_rd_rms_distance()
         features["Rms distance-ML"] = self.compute_ml_rms_distance()
         features["Rms distance-AP"] = self.compute_ap_rms_distance()
-        # features["Path length"] = self.compute_rd_path_length()
         # features["Path length-ML"] = self.compute_ml_path_length()
         # features["Path length-AP"] = self.compute_ap_path_length()
         features["Range"] = self.compute_rd_range()
@@ -161,6 +164,7 @@ class DistanceFeatures(CopFeatures):
         features["Mean velocity"] = self.compute_rd_mean_velocity()
         features["Mean velocity-ML"] = self.compute_ml_mean_velocity()
         features["Mean velocity-AP"] = self.compute_ap_mean_velocity()
+        features["Sway displacement"] = self.compute_sway_displacement()
 
         return features
 
@@ -354,10 +358,10 @@ class HybridFeatures(AreaFeatures):
         """Compute all the hybrid features and store them in a dictionary."""
 
         features = {}
-        features["Sway area"] = self.compute_sway_area()
         features["Mean frequency"] = self.compute_mean_frequency()
         features["Mean frequency-ML"] = self.compute_mean_frequency_ml()
         features["Mean frequency-AP"] = self.compute_mean_frequency_ap()
+        features["Sway area"] = self.compute_sway_area()
         features["Fractal dimension-CC"] = self.compute_fractal_dimension_cc()
         features["Fractal dimension-CE"] = self.compute_fractal_dimension_ce()
 

@@ -121,7 +121,6 @@ class DataPreprocessor(SWARII):
                 resampled_signal = self.apply_swarii_resampling(input_signal, timestamps)
                 reframed_data = self.apply_reframing(resampled_signal, balance_board)
 
-
             else:
                 # Resample the balance board data using polyphase resampling
                 resampled_signal = self.apply_polyphase_resampling(input_signal, self.wbb_up, self.wbb_down)
@@ -137,7 +136,6 @@ class DataPreprocessor(SWARII):
         detrended_data = self.apply_detrending(reframed_data)
 
         return detrended_data
-
 
     def preprocess_raw_data(self, data, balance_board=False):
         """Preprocess the raw data"""
@@ -178,7 +176,7 @@ class DataPreprocessor(SWARII):
         """Compute the y coordinate of the force plate center of pressure (ML direction)."""
 
         # Force plate height (in mm)
-        dz = config["wbb_parameters"]["height"]
+        dz = config["force_plate_parameters"]["dz"]
 
         # Force plate sensor values
         Fy1 = data["Fy1"].flatten()
@@ -198,7 +196,7 @@ class DataPreprocessor(SWARII):
         """Compute the x coordinate of the force plate center of pressure (AP direction)."""
 
         # Force plate height (in mm)
-        dz = config["wbb_parameters"]["height"]
+        dz = config["force_plate_parameters"]["dz"]
 
         # Force plate sensor values
         Fx1 = data["Fx1"].flatten()
@@ -210,7 +208,7 @@ class DataPreprocessor(SWARII):
         My1 = self.replace_missing_data(My1)
         Fz1 = self.replace_missing_data(Fz1)
 
-        cop_fp_y = -(My1 + dz * Fx1) / (Fz1)
+        cop_fp_y = -(My1 + (dz * Fx1)) / (Fz1)
 
         return cop_fp_y
 

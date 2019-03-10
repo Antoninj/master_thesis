@@ -66,6 +66,7 @@ def check_folder(folder_name):
     if not os.path.exists(folder_name):
         os.makedirs(folder_name)
 
+
 def check_folders(folders):
     for folder in folders:
         check_folder(folder)
@@ -153,6 +154,7 @@ def plot_stabilograms(preprocessed_cop_data, device_name, acq_frequency, filepat
         fig_name = build_filename(filepath, folder_to_replace="BalanceBoard/Repro", destination_folder="results/cop_plots", name_extension="_SWARII_{}.png".format(swarii_window))
         plt.savefig(fig_name, bbox_inches='tight')
         plt.close(fig)
+
 
 def plot_spectral_densities(frequencies, spectrums, filepath=None):
     """"Plot and save spectral densities."""

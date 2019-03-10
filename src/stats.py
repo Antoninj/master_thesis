@@ -128,13 +128,24 @@ def compute_spearman_correlation(df1, df2, statistics_results_folder):
     """
 
     wbb_numbers = ["1", "2", "3", "4"]
+    # Conpute the statistic for each WBB
     dfs_1 = [df1.loc[(df1.index.get_level_values(3) == number)] for number in wbb_numbers]
+    # Compute the statistic on the mean of the 3 trials
+    dfs_1_mean = [
+        df.groupby([df.index.get_level_values(0), df.index.get_level_values(1), df.index.get_level_values(3)]).mean()
+        for df in dfs_1]
+
+    # Conpute the statistic for each WBB
     dfs_2 = [df2.loc[(df2.index.get_level_values(3) == number)] for number in wbb_numbers]
+    # Compute the statistic on the mean of the 3 trials
+    dfs_2_mean = [
+        df.groupby([df.index.get_level_values(0), df.index.get_level_values(1), df.index.get_level_values(3)]).mean()
+        for df in dfs_2]
 
     result_dict = {key:{} for key in df1.columns}
 
     # Loop over each WBB data
-    for (df1, df2, number) in zip(dfs_1, dfs_2, wbb_numbers):
+    for (df1, df2, number) in zip(dfs_1_mean, dfs_2_mean, wbb_numbers):
         # Loop over each feature
         for column in df1.columns:
             x = df1[column]
@@ -221,9 +232,8 @@ def make_pearson_correlation_plots(df1, df2, statistics_results_folder, plot_siz
     # Loop over each WBB data
     for (df1, df2, number) in zip(dfs_1, dfs_2, wbb_numbers):
 
-        fig, axs = plt.subplots(plot_size, 3, figsize=(20, 30), facecolor='w', edgecolor='k')
+        fig, axs = plt.subplots(3, plot_size, figsize=(30, 15), facecolor='w', edgecolor='k')
         fig.subplots_adjust(hspace=.5)
-        #axs[-1, -1].axis('off')
 
         # Loop over each feature
         for ax, column in zip(axs.ravel(), df1.columns):
@@ -256,6 +266,7 @@ def make_pearson_correlation_plots(df1, df2, statistics_results_folder, plot_siz
                 pass
 
         # Save the plots
+        plt.tight_layout()
         plt.savefig("{}/balance_board_{}_linear_regression_plots.png".format(statistics_results_folder, number), bbox_inches='tight')
 
     # Reshape the raw results
@@ -276,7 +287,7 @@ def make_bland_altman_plots(df1, df2, statistics_results_folder, plot_size):
 
     # TODO : ENHANCE PLOTS
 
-    fig, axs = plt.subplots(plot_size, 3, figsize=(20, 30), facecolor='w', edgecolor='k')
+    fig, axs = plt.subplots(3, plot_size, figsize=(30, 15), facecolor='w', edgecolor='k')
     fig.subplots_adjust(hspace=.5)
     df1 = df1.reorder_levels(['balance board', 'device', 'subject', 'trial']).sort_index()
     df2 = df2.reorder_levels(['balance board', 'device', 'subject', 'trial']).sort_index()
@@ -318,6 +329,7 @@ def make_bland_altman_plots(df1, df2, statistics_results_folder, plot_size):
             pass
 
     # Save the plots
+    plt.tight_layout()
     plt.savefig("{}/bland_altman_plots.png".format(statistics_results_folder),  bbox_inches='tight')
 
     # Save the results
@@ -351,17 +363,22 @@ def compute_ICC(df1, statistics_results_folder):
     psych = importr("psych")
 
     wbb_numbers = ["1", "2", "3", "4"]
+    # Conpute the statistic for each WBB
     dfs_1 = [df1.loc[(df1.index.get_level_values(3) == number)] for number in wbb_numbers]
+    # Compute the statistic on the mean of the 3 trials
+    dfs_1_mean = [
+        df.groupby([df.index.get_level_values(0), df.index.get_level_values(1), df.index.get_level_values(3)]).mean()
+        for df in dfs_1]
 
     result_dict = {}
     # Loop over each feature
     for column in df1.columns:
 
         try:
-            r_df = DataFrame({"WBB 1 feature": FloatVector(dfs_1[0][column]),
-                              "WBB 2 feature": FloatVector(dfs_1[1][column]),
-                              "WBB 3 feature": FloatVector(dfs_1[2][column]),
-                              "WBB 4 feature": FloatVector(dfs_1[3][column])})
+            r_df = DataFrame({"WBB 1 feature": FloatVector(dfs_1_mean[0][column]),
+                              "WBB 2 feature": FloatVector(dfs_1_mean[1][column]),
+                              "WBB 3 feature": FloatVector(dfs_1_mean[2][column]),
+                              "WBB 4 feature": FloatVector(dfs_1_mean[3][column])})
 
             # Compute the two way random ICC
             icc_res = psych.ICC(r_df)
@@ -408,20 +425,25 @@ def compute_ICC_2(df1, statistics_results_folder):
     irr = importr("irr")
 
     wbb_numbers = ["1", "2", "3", "4"]
+    # Conpute the statistic for each WBB
     dfs_1 = [df1.loc[(df1.index.get_level_values(3) == number)] for number in wbb_numbers]
+    # Compute the statistic on the mean of the 3 trials
+    dfs_1_mean = [
+        df.groupby([df.index.get_level_values(0), df.index.get_level_values(1), df.index.get_level_values(3)]).mean()
+        for df in dfs_1]
 
     result_dict = {}
     # Loop over each feature
     for column in df1.columns:
 
         try:
-            r_df = DataFrame({"WBB 1 feature": FloatVector(dfs_1[0][column]),
-                              "WBB 2 feature": FloatVector(dfs_1[1][column]),
-                              "WBB 3 feature": FloatVector(dfs_1[2][column]),
-                              "WBB 4 feature": FloatVector(dfs_1[3][column])})
+            r_df = DataFrame({"WBB 1 feature": FloatVector(dfs_1_mean[0][column]),
+                              "WBB 2 feature": FloatVector(dfs_1_mean[1][column]),
+                              "WBB 3 feature": FloatVector(dfs_1_mean[2][column]),
+                              "WBB 4 feature": FloatVector(dfs_1_mean[3][column])})
 
             # Compute the two way random ICC
-            icc_res = irr.icc(r_df, "twoway", "consistency", "average")
+            icc_res = irr.icc(r_df, "twoway", "agreement", "average")
 
             result_dict[column] = dict(zip(icc_res.names, list(icc_res)))
 

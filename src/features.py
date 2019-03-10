@@ -21,7 +21,7 @@ class CopFeatures:
     def __init__(self, cop_x, cop_y):
         self.cop_x = cop_x
         self.cop_y = cop_y
-        self.cop_rd = self.compute_rd(self.cop_x, self.cop_x)
+        self.cop_rd = self.compute_rd(self.cop_x, self.cop_y)
         self.N = self.cop_rd.size
         self.T = self.N / self.acquisition_frequency
 
