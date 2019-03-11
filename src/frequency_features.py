@@ -86,14 +86,13 @@ class FrequencyFeatures(CopFeatures):
 
         nfft = len(array)
         (f, psd) = welch(array, fs=self.fs, nperseg=self.nperseg, nfft=nfft)
-
         psd = psd[self.frequency_range[0]: self.frequency_range[1]]
         f = f[self.frequency_range[0]: self.frequency_range[1]]
 
         return (f, psd)
 
     def compute_multitaper_bis_psd(self, array):
-        p = spectrum.mtm.pmtm(array, NW=self.time_bandwidth, k=self.number_of_tapers, NFFT=len(array))
+        p = spectrum.mtm.pmtm(array, NW=self.time_bandwidth, k=self.number_of_tapers, NFFT=len(array) / 2 + 1)
         p.run()
         psd = p.psd[self.frequency_range[0]: self.frequency_range[1]]
         f = p.frequencies()[self.frequency_range[0]: self.frequency_range[1]]

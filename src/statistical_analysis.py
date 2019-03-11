@@ -171,8 +171,8 @@ if __name__ == "__main__":
     # Outliers handling
     ###################
 
-    outlier_feature = ["Range", "Range-AP", "Range-AP", "Range"]
-    wbb_numbers = [str(i) for i in range(1, 5)]
+    outlier_feature = ["Range", "Range-AP", "Range-AP"]
+    wbb_numbers = [str(i) for i in range(1, 4)]
     outlier_indexes_1 = [get_outlier_identity(fp_time_feature_df, id[0], id[1]) for id in
                          zip(outlier_feature, wbb_numbers)]
     outlier_indexes_2 = [get_outlier_identity(wbb_time_feature_df, id[0], id[1]) for id in
