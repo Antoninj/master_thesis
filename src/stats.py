@@ -9,6 +9,8 @@ from matplotlib import pyplot as plt
 from rpy2.robjects import DataFrame, FloatVector, pandas2ri
 from rpy2.robjects.packages import importr
 from scipy import stats
+from scipy.odr import Model, Data, ODR
+
 # Built-in modules imports
 from utils import load_config, setup_logging
 
@@ -84,7 +86,7 @@ def generate_profile_report(df, filename, bins=50):
 
 
 def generate_all_profile_reports(dataframes, statistics_results_folder):
-    """Create all the profile reports."""
+    """Create profile reports for each balance board data."""
 
     wbb_numbers = ["1", "2", "3", "4"]
     html_report_names = ["{}/{}_report.html".format(statistics_results_folder, number) for number in wbb_numbers]
@@ -103,7 +105,7 @@ def compute_mean_and_stds(df1, df2, statistics_results_folder):
     feature_mean_results = wbb_and_fp_results.groupby(
         [wbb_and_fp_results.index.get_level_values(0), wbb_and_fp_results.index.get_level_values(3)]).mean().transpose().stack(0).unstack()
 
-    # Group by WBB and compute the mean value for each feature
+    # Group by WBB and compute the standard deviation for each feature
     feature_std_results = wbb_and_fp_results.groupby(
         [wbb_and_fp_results.index.get_level_values(0), wbb_and_fp_results.index.get_level_values(3)]).std().transpose().stack(0).unstack()
 
@@ -214,7 +216,38 @@ def perform_t_test(df1, df2, statistics_results_folder):
     return result_dict
 
 
+def linear(p, x):
+    """Basic linear regression 'model' for use with ODR"""
+    return (p[0] * x) + p[1]
+
+
+def orthoregress(x, y):
+    """
+    Performs an Orthogonal Distance Regression on the given data,
+    using the same interface as the standard scipy.stats.linregress function.
+    Uses standard ordinary least squares to estimate the starting parameters
+    then uses the scipy.odr interface to the ODRPACK Fortran code to do the
+    orthogonal distance calculations.
+    """
+    linreg = stats.linregress(x, y)
+    mod = Model(linear)
+    dat = Data(x, y)
+    od = ODR(dat, mod, beta0=linreg[0:2])
+    out = od.run()
+    # out.pprint()
+    slope, intercept = out.beta[0], out.beta[1]
+
+    return slope, intercept
+
 def make_global_person_correlation_plots(df1, df2, statistics_results_folder, plot_size):
+    """
+        Perform a linear least-squares regression and plot the correlation line for each feature.
+
+        References
+        ----------
+        .. [1] Scipy documentation: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.linregress.html
+    """
+
     fig, axs = plt.subplots(3, plot_size, figsize=(30, 15), facecolor='w', edgecolor='k')
     fig.subplots_adjust(hspace=.5)
     result_dict = {}
@@ -224,23 +257,27 @@ def make_global_person_correlation_plots(df1, df2, statistics_results_folder, pl
         y = df2[column]
 
         try:
-            # Perform the linear regression
-            slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
+            # Perform the orthogonal distance regression
+            slope, intercept = orthoregress(x, y)
 
             # Store the linear regression results
             result_dict[column] = {}
             result_dict[column]["slope"] = round(slope, 4)
             result_dict[column]["intercept"] = round(intercept, 4)
-            result_dict[column]["R"] = round(r_value, 4)
-            result_dict[column]["p-value"] = round(p_value, 4)
+            #result_dict[column]["R"] = round(r_value, 4)
 
             # Make the plot
             ax.plot(x, y, '.', label='original data')
             ax.plot(x, intercept + slope * x, 'black', label='fitted line', linewidth=0.3)
-            ax.set_xlabel('Balance Board')
-            ax.set_ylabel('Force plate')
+            ax.set_xlabel('Force plate')
+            ax.set_ylabel('Balance Board')
+
             ax.set_title(column, weight=600)
-            ax.text(0.8, 0.3, "R\u00b2={}".format(round(r_value ** 2, 4)), fontsize=9, horizontalalignment='center',
+            # ax.text(0.8, 0.3, "R\u00b2={}".format(round(r_value ** 2, 4)), fontsize=9, horizontalalignment='center',
+            # verticalalignment='center', transform=ax.transAxes)
+            ax.text(0.8, 0.2, "Slope = {}".format(round(slope, 4)), fontsize=9, horizontalalignment='center',
+                    verticalalignment='center', transform=ax.transAxes)
+            ax.text(0.8, 0.1, "Intercept = {}".format(round(intercept, 4)), fontsize=9, horizontalalignment='center',
                     verticalalignment='center', transform=ax.transAxes)
 
         except (RuntimeWarning, Exception) as err:
@@ -262,7 +299,8 @@ def make_global_person_correlation_plots(df1, df2, statistics_results_folder, pl
 
 def make_pearson_correlation_plots(df1, df2, statistics_results_folder, plot_size):
     """
-    Perform a linear least-squares regression and plot the correlation line for each feature.
+    Perform a linear least-squares regression and plot the correlation line for each feature and
+    for each balance_board.
 
     References
     ----------
@@ -287,25 +325,28 @@ def make_pearson_correlation_plots(df1, df2, statistics_results_folder, plot_siz
             y = df2[column]
 
             try:
-                # Perform the linear regression
-                slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
+                # Perform the orthogonal distance regression
+                slope, intercept = orthoregress(x, y)
 
                 # Store the linear regression results
                 result_dict[column][number] = {}
                 result_dict[column][number]["slope"] = round(slope, 4)
                 result_dict[column][number]["intercept"] = round(intercept, 4)
-                result_dict[column][number]["R"] = round(r_value, 4)
-                result_dict[column][number]["p-value"] = round(p_value, 4)
+                #result_dict[column][number]["R"] = round(r_value, 4)
 
                 # Make the plot
                 ax.plot(x, y, '.', label='original data')
                 ax.plot(x, intercept + slope * x, 'black', label='fitted line', linewidth=0.3)
-                ax.set_xlabel('Balance Board')
-                ax.set_ylabel('Force plate')
+                ax.set_xlabel('Force plate')
+                ax.set_ylabel('Balance Board')
                 ax.set_title(column, weight=600)
-                ax.text(0.8, 0.3, "R\u00b2={}".format(round(r_value**2, 4)), fontsize=9, horizontalalignment='center',
+                # ax.text(0.8, 0.3, "R\u00b2={}".format(round(r_value**2, 4)), fontsize=9, horizontalalignment='center',
+                # verticalalignment='center', transform=ax.transAxes)
+                ax.text(0.8, 0.2, "Slope = {}".format(round(slope, 4)), fontsize=9, horizontalalignment='center',
                         verticalalignment='center', transform=ax.transAxes)
-
+                ax.text(0.8, 0.1, "Intercept = {}".format(round(intercept, 4)), fontsize=9,
+                        horizontalalignment='center',
+                        verticalalignment='center', transform=ax.transAxes)
 
             except (RuntimeWarning, Exception) as err:
                 logger.error("Problem with feature: {}.\n{}".format(column, err), exc_info=True, stack_info=True)
@@ -331,7 +372,7 @@ def make_pearson_correlation_plots(df1, df2, statistics_results_folder, plot_siz
 def make_bland_altman_plots(df1, df2, statistics_results_folder, plot_size):
     """Compute limit of agreement values and make bland and altman plot for each feature."""
 
-    # TODO : ENHANCE PLOTS
+    # TODO : FIX PLOT
 
     fig, axs = plt.subplots(3, plot_size, figsize=(30, 15), facecolor='w', edgecolor='k')
     fig.subplots_adjust(hspace=.5)

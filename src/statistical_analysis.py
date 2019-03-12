@@ -11,28 +11,37 @@ setup_logging()
 logger = logging.getLogger("statistical analysis")
 
 
+def compute_time_features_stats():
+    compute_statistics(fp_time_feature_df, wbb_time_feature_df, statistics_results_folders[0],
+                       html_report_results_folders[0], html_report_results_folders[1])
+
+
+def compute_frequency_features_stats():
+    compute_statistics(fp_frequency_feature_df, wbb_frequency_feature_df, statistics_results_folders[1],
+                       html_report_results_folders[2], html_report_results_folders[3], plot_size=7)
+
+
 def compute_all_statistics():
     ######################################
     # Time feature statistics computations
     ######################################
-    logger.info("Computing time features statistics.")
 
-    compute_statistics(wbb_time_feature_df, fp_time_feature_df, statistics_results_folders[0],
-                       html_report_results_folders[0], html_report_results_folders[1])
+    logger.info("Computing time features statistics...")
+
+    compute_time_features_stats()
 
     ###########################################
     # Frequency feature statistics computations
     ###########################################
-    logger.info("Computing frequency features statistics.")
 
-    compute_statistics(wbb_frequency_feature_df, fp_frequency_feature_df, statistics_results_folders[1],
-                       html_report_results_folders[2], html_report_results_folders[3], plot_size=7)
+    logger.info("Computing frequency features statistics...")
+    compute_frequency_features_stats()
 
     logger.info("Statistical computations finished!")
 
 
-def compute_statistics(wbb_df, fp_df, statistics_results_folder, html_report_results_folder_1,
-                       html_report_results_folder_2, plot_size=7):
+def compute_statistics(fp_df, wbb_df, statistics_results_folder, wbb_html_report_results_folder,
+                       fp_html_report_results_folder, plot_size=7):
     """Wrap all statistics computations."""
 
     logger.info("Computing general descriptive statistics.")
@@ -41,10 +50,18 @@ def compute_statistics(wbb_df, fp_df, statistics_results_folder, html_report_res
     # Dataframes HTML profile reports
     #################################
 
-    logger.info("Generating profile reports.")
+    logger.info("Generating profile reports using pandas profiling.")
 
-    stats.generate_all_profile_reports(wbb_df, html_report_results_folder_1)
-    stats.generate_all_profile_reports(fp_df, html_report_results_folder_2)
+    fp_profile_report_filename = "{}/FP_report.html".format(fp_html_report_results_folder)
+    wbb_profile_report_filename = "{}/WBB_report.html".format(wbb_html_report_results_folder)
+
+    # Balance Board aggregated data
+    stats.generate_profile_report(fp_df, fp_profile_report_filename)
+    stats.generate_profile_report(wbb_df, wbb_profile_report_filename)
+
+    # Balance Board granularity level
+    stats.generate_all_profile_reports(fp_df, fp_html_report_results_folder)
+    stats.generate_all_profile_reports(wbb_df, wbb_html_report_results_folder)
 
     ###########################################################
     # Features mean and standard deviations values computations
@@ -70,19 +87,22 @@ def compute_statistics(wbb_df, fp_df, statistics_results_folder, html_report_res
 
     logger.info("Computing spearman correlation coefficients and p-values.")
 
-    spearman_results = stats.compute_spearman_correlation(wbb_df, fp_df, statistics_results_folder)
+    spearman_results = stats.compute_spearman_correlation(fp_df, wbb_df, statistics_results_folder)
     logger.debug(spearman_results)
 
     ###########################################
     # Pearson correlation and linear regression
     ###########################################
 
-    logger.info("Generating pearson correlation plots.")
+    logger.info("Generating regression plots using ODR.")
 
-    linear_regression_results = stats.make_pearson_correlation_plots(wbb_df, fp_df, statistics_results_folder, plot_size)
+    # Balance Board granularity level
+    linear_regression_results = stats.make_pearson_correlation_plots(fp_df, wbb_df, statistics_results_folder,
+                                                                     plot_size)
     logger.debug(linear_regression_results)
 
-    global_linear_regression_results = stats.make_global_person_correlation_plots(wbb_df, fp_df,
+    # Balance Board aggregated data
+    global_linear_regression_results = stats.make_global_person_correlation_plots(fp_df, wbb_df,
                                                                                   statistics_results_folder,
                                                                                   plot_size)
     logger.debug(global_linear_regression_results)
@@ -93,7 +113,7 @@ def compute_statistics(wbb_df, fp_df, statistics_results_folder, html_report_res
 
     logger.info("Generating Bland and Altman agreement plots.")
 
-    bland_altman = stats.make_bland_altman_plots(wbb_df, fp_df, statistics_results_folder, plot_size)
+    bland_altman = stats.make_bland_altman_plots(fp_df, wbb_df, statistics_results_folder, plot_size)
     logger.debug(bland_altman)
 
     ########################################################
