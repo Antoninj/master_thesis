@@ -61,7 +61,10 @@ def main():
         logger.info("Test file: {}".format(filepath_wbb))
 
         raw_data = data_reader.get_raw_data(filepath=filepath_wbb, balance_board=True)
-        wbb_avg_freq = len(raw_data[0]) / raw_data[0][-1]
+        acquisition_duration = raw_data[0][-1]
+        acquisition_sample_size = len(raw_data[0])
+        wbb_avg_freq = acquisition_sample_size / acquisition_duration
+        logger.debug("Acquisition duration: {} s".format(acquisition_duration))
         logger.debug("Time stamps: {} \nWBB average sampling frequency: {} Hz".format(raw_data[0], wbb_avg_freq))
         logger.debug("Point data :{}".format(raw_data[1]))
 

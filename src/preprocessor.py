@@ -58,6 +58,28 @@ class DataPreprocessor(SWARII):
 
         return resampled_signal
 
+    def apply_resampling(self, input_signal, num):
+        """
+        Resample the input signal using Fourier method.
+
+        References
+        ----------
+        .. [1] Scipy documentation: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.resample.html#scipy.signal.resample
+         """
+
+        return scipy.signal.resample(input_signal, num)
+
+    def apply_downsampling(self, input_signal, down):
+        """
+        Downsample the input signal.
+
+        References
+        ----------
+        .. [1] Scipy documentation: https://docs.scipy.org/doc/scipy-1.1.0/reference/generated/scipy.signal.resample_poly.html#scipy.signal.resample_poly
+        """
+
+        return scipy.signal.decimate(input_signal, down)
+
     def apply_polyphase_resampling(self, input_signal, up, down):
         """
         Resample the input signal using polyphase resampling.
@@ -116,20 +138,22 @@ class DataPreprocessor(SWARII):
         """
 
         if balance_board:
-            if timestamps is not None:
+            if self.use_swarii:
                 # Resample the balance board data using SWARII
                 resampled_signal = self.apply_swarii_resampling(input_signal, timestamps)
                 reframed_data = self.apply_reframing(resampled_signal, balance_board)
 
             else:
-                # Resample the balance board data using polyphase resampling
-                resampled_signal = self.apply_polyphase_resampling(input_signal, self.wbb_up, self.wbb_down)
+                # Resample the balance board data using fourier resampling
+                acquisition_duration = timestamps[-1]
+                num = round(acquisition_duration * 100)
+                resampled_signal = self.apply_resampling(input_signal, num)
                 filtered_signal = self.apply_filtering(resampled_signal)
                 reframed_data = self.apply_reframing(filtered_signal, balance_board)
 
         else:
-            # Resample the force plate data using polyphase resampling
-            resampled_signal = self.apply_polyphase_resampling(input_signal, self.fp_up, self.fp_down)
+            # Downsample the force plate data using decimation
+            resampled_signal = self.apply_downsampling(input_signal, self.fp_down)
             filtered_signal = self.apply_filtering(resampled_signal)
             reframed_data = self.apply_reframing(filtered_signal, balance_board)
 
@@ -140,13 +164,11 @@ class DataPreprocessor(SWARII):
     def preprocess_raw_data(self, data, balance_board=False):
         """Preprocess the raw data"""
 
-        if self.use_swarii and balance_board:
+        if balance_board:
             relative_timestamps = data[0]
+            data = data[1]
         else:
             relative_timestamps = None
-
-        if balance_board:
-            data = data[1]
 
         cop_data = self.compute_cop_positions(data, balance_board)
         for key, value in cop_data.items():

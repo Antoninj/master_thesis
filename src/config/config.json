@@ -5,10 +5,10 @@
     "height": 55
   },
   "force_plate_parameters": {
-    "dz": 20
+    "dz": 16
   },
   "preprocessing_parameters": {
-    "filter_order": 2,
+    "filter_order": 4,
     "cutoff_frequency": 12,
     "detrending_type": "constant",
     "fp_upsampling_factor": 1,
@@ -63,9 +63,9 @@
     ]
   },
   "test_files": {
-    "wbb_raw_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard/Repro/Repro1/BB/3_2.c3d",
-    "fp_raw_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard/Repro/Repro6/FP/3_2.c3d",
-    "wbb_cop_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/cop_data/Repro6/BB/1_3_cop.json",
+    "wbb_raw_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard/Repro/Repro1/BB/1_1.c3d",
+    "fp_raw_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard/Repro/Repro1/FP/1_1.c3d",
+    "wbb_cop_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/cop_data/Repro1/BB/1_1_cop.json",
     "fp_cop_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/results/cop_data/Repro1/FP/1_1_cop.json"
   },
   "acquisition_data_folder": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard/Repro",
