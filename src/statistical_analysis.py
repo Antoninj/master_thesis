@@ -55,11 +55,11 @@ def compute_statistics(fp_df, wbb_df, statistics_results_folder, wbb_html_report
     fp_profile_report_filename = "{}/FP_report.html".format(fp_html_report_results_folder)
     wbb_profile_report_filename = "{}/WBB_report.html".format(wbb_html_report_results_folder)
 
-    # Balance Board aggregated data
+    # Aggregated WBB data granularity level
     stats.generate_profile_report(fp_df, fp_profile_report_filename)
     stats.generate_profile_report(wbb_df, wbb_profile_report_filename)
 
-    # Balance Board granularity level
+    # Individual Balance Board data granularity level
     stats.generate_all_profile_reports(fp_df, fp_html_report_results_folder)
     stats.generate_all_profile_reports(wbb_df, wbb_html_report_results_folder)
 
@@ -72,14 +72,6 @@ def compute_statistics(fp_df, wbb_df, statistics_results_folder, wbb_html_report
     mean_and_std_results = stats.compute_mean_and_stds(wbb_df, fp_df, statistics_results_folder)
     logger.debug(mean_and_std_results)
 
-    ################
-    # Paired T-test
-    ################
-
-    # logger.info("Computing t-statistics and p-values.")
-
-    # t_test_results = stats.perform_t_test(wbb_df, fp_df, statistics_results_folder)
-    # logger.debug(t_test_results)
 
     ######################
     # Spearman correlation
@@ -128,6 +120,12 @@ def compute_statistics(fp_df, wbb_df, statistics_results_folder, wbb_html_report
     logger.debug(icc_results_2)
 
 
+def get_duplicate_identity(data, balance_board_number):
+    data = data.loc[data.index.get_level_values('balance board') == balance_board_number]
+
+    return data[data.duplicated() == True].index.tolist()
+
+
 def get_outlier_identity(data, feature_name, balance_board_number):
     data = data.loc[data.index.get_level_values('balance board') == balance_board_number]
     outlier_values = data[data[feature_name] == data[feature_name].max()]
@@ -143,12 +141,11 @@ if __name__ == "__main__":
     # Boilerplate code
     ##################
 
-    # Load configuration files
+    # Load configuration file
     config = load_config()
 
     # Features computations results folder path
     feature_data_folder = config["feature_results_folder"]
-
 
     # Statistics results folder path
     html_report_results_folders = config["html_report_results_folders"]
@@ -156,7 +153,7 @@ if __name__ == "__main__":
     statistics_results_folders = [config["time_features_results_folder"], config["frequency_features_results_folder"]]
     check_folders(statistics_results_folders)
 
-    # Command line argument parser to choose between wbb or force plate data
+    # Command line argument parser: option to remove outliers from the study
     parser = ArgumentParser(
         description="")
     parser.add_argument("-d", "--debug", action='store_true', help="Show debugging messages")
@@ -187,18 +184,37 @@ if __name__ == "__main__":
     fp_time_feature_df = fp_dfs[0]
     fp_frequency_feature_df = fp_dfs[1]
 
-    ###################
-    # Outliers handling
-    ###################
+    #####################
+    # Duplicates removal
+    #####################
 
-    outlier_feature = ["Range", "Range-AP", "Range-AP"]
-    wbb_numbers = [str(i) for i in range(1, 4)]
-    outlier_indexes_1 = [get_outlier_identity(fp_time_feature_df, id[0], id[1]) for id in
-                         zip(outlier_feature, wbb_numbers)]
-    outlier_indexes_2 = [get_outlier_identity(wbb_time_feature_df, id[0], id[1]) for id in
-                         zip(outlier_feature, wbb_numbers)]
+    wbb_numbers = [str(i) for i in range(2, 4)]
+    duplicate_indexes_1 = [get_duplicate_identity(fp_time_feature_df, wbb) for wbb in
+                           wbb_numbers]
+    duplicate_indexes_2 = [get_duplicate_identity(wbb_time_feature_df, wbb) for wbb in
+                           wbb_numbers]
 
+    logger.info("Removing duplicates: {}".format(duplicate_indexes_1))
+
+    for df in [fp_time_feature_df, fp_frequency_feature_df]:
+        [df.drop(index, inplace=True) for index in duplicate_indexes_1]
+
+    for df in [wbb_time_feature_df, wbb_frequency_feature_df]:
+        [df.drop(index, inplace=True) for index in duplicate_indexes_2]
+
+    #############################
+    # Outliers removal (optional)
+    #############################
     if not args.outliers:
+        outlier_feature = ["Range", "Range-AP", "Range-AP"]
+        wbb_numbers = [str(i) for i in range(1, 4)]
+        outlier_indexes_1 = [get_outlier_identity(fp_time_feature_df, id[0], id[1]) for id in
+                             zip(outlier_feature, wbb_numbers)]
+        outlier_indexes_2 = [get_outlier_identity(wbb_time_feature_df, id[0], id[1]) for id in
+                             zip(outlier_feature, wbb_numbers)]
+
+        logger.info("Removing outliers: {}".format(outlier_indexes_1))
+
         for df in [fp_time_feature_df, fp_frequency_feature_df]:
             [df.drop(index, inplace=True) for index in outlier_indexes_1]
 
@@ -208,9 +224,8 @@ if __name__ == "__main__":
     #########################
     # PUTTING IT ALL TOGETHER
     #########################
-
     compute_all_statistics()
 
     stop = timeit.default_timer()
 
-    print('Execution time: {} seconds'.format(stop - start))
+    logger.info('Execution time: {} seconds'.format(stop - start))
