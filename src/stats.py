@@ -334,8 +334,14 @@ def make_pearson_correlation_plots(df1, df2, statistics_results_folder, plot_siz
                 result_dict[column][number]["intercept"] = round(intercept, 4)
                 #result_dict[column][number]["R"] = round(r_value, 4)
 
+
                 # Make the plot
-                ax.plot(x, y, '.', label='original data')
+                wbb_numbers = ["1", "2", "3", "4"]
+                for wbb_number in wbb_numbers:
+                    x_wbb = x.loc[(x.index.get_level_values(3) == wbb_number)]
+                    y_wbb = y.loc[(y.index.get_level_values(3) == wbb_number)]
+                    label = "WBB {}".format(wbb_number)
+                    ax.scatter(x_wbb, y_wbb, marker='.', label=label)
                 ax.plot(x, intercept + slope * x, 'black', label='fitted line', linewidth=0.3)
                 ax.set_xlabel('Force plate')
                 ax.set_ylabel('Balance Board')
@@ -347,6 +353,7 @@ def make_pearson_correlation_plots(df1, df2, statistics_results_folder, plot_siz
                 ax.text(0.8, 0.1, "Intercept = {}".format(round(intercept, 4)), fontsize=9,
                         horizontalalignment='center',
                         verticalalignment='center', transform=ax.transAxes)
+                ax.legend()
 
             except (RuntimeWarning, Exception) as err:
                 logger.error("Problem with feature: {}.\n{}".format(column, err), exc_info=True, stack_info=True)
@@ -372,7 +379,7 @@ def make_pearson_correlation_plots(df1, df2, statistics_results_folder, plot_siz
 def make_bland_altman_plots(df1, df2, statistics_results_folder, plot_size):
     """Compute limit of agreement values and make bland and altman plot for each feature."""
 
-    # TODO : FIX PLOT
+    # TODO : FIX THIS PLOT
 
     fig, axs = plt.subplots(3, plot_size, figsize=(30, 15), facecolor='w', edgecolor='k')
     fig.subplots_adjust(hspace=.5)
