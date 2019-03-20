@@ -37,12 +37,12 @@ class PreprocessingPipeline(HybridAcquisitionReader, DataPreprocessor):
                 device_name = "Force plate"
 
             # Save results of COP signal computations and preprocessing
-            logger.info("Saving COP preprocessed data to file: {}".format(filepath))
+            logger.debug("Saving COP preprocessed data to file: {}".format(filepath))
             save_as_json(preprocessed_cop_data, filepath, folder_to_replace="BalanceBoard/Repro",
                          destination_folder="results/cop_data", name_extension="_cop.json")
 
             # Plot and save the stabilograms
-            logger.info("Saving stabilograms plots to file: {}".format(filepath))
+            logger.debug("Saving stabilograms plots to file: {}".format(filepath))
             plot_stabilograms(preprocessed_cop_data, device_name, self.acq_frequency, filepath=filepath)
 
         except Exception as err:

@@ -37,7 +37,7 @@ class FeatureExtractionPipeline(HybridAcquisitionReader, DataProcessor):
             processed_data = {**file_info, "time_features": time_features, "frequency_features": frequency_features}
 
             # Save features computations in json format
-            logger.info("Saving time and frequency features to file: {}".format(filepath))
+            logger.debug("Saving time and frequency features to file: {}".format(filepath))
             save_as_json(processed_data, filepath, folder_to_replace="cop_data",
                          destination_folder="feature_data", name_extension="_features.json")
 
@@ -48,7 +48,7 @@ class FeatureExtractionPipeline(HybridAcquisitionReader, DataProcessor):
             frequencies = [sd[0] for sd in spectrums_and_frequencies]
             spectrums = [sd[1] for sd in spectrums_and_frequencies]
 
-            logger.info("Saving spectral density plot to file: {}".format(filepath))
+            logger.debug("Saving spectral density plot to file: {}".format(filepath))
             plot_spectral_densities(frequencies, spectrums, filepath=filepath)
 
         except Exception as err:

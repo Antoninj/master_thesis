@@ -1,44 +1,4 @@
 {
-  "wbb_parameters": {
-    "width": 433,
-    "length": 238,
-    "height": 55
-  },
-  "force_plate_parameters": {
-    "dz": 16
-  },
-  "preprocessing_parameters": {
-    "filter_order": 4,
-    "cutoff_frequency": 12,
-    "detrending_type": "constant",
-    "fp_upsampling_factor": 1,
-    "fp_downsampling_factor": 10,
-    "wbb_upsampling_factor": 1,
-    "wbb_downsampling_factor": 4,
-    "acquisition_frequency": 100,
-    "lower_threshold": 800,
-    "upper_threshold": 2800,
-    "time_shift": 50,
-    "apply_swarii": true,
-    "swarii_window_size": 0.6
-  },
-  "time_features_parameters": {
-    "z_05": 1.645,
-    "F_05": 3
-  },
-  "frequency_features_parameters": {
-    "psd_method": "multitaper",
-    "sampling_frequency": 100,
-    "frequency_range":[3,101],
-    "welch": {
-      "nperseg": 1000
-    },
-    "multitaper": {
-      "delta": 0.01,
-      "time_bandwidth": 3.5,
-      "number_of_tapers": 8
-    }
-  },
   "force_plate_labels": {
     "analog_labels": [
       "Fx1",
@@ -61,6 +21,46 @@
     "data_points_labels": [
       "Accelerometer"
     ]
+  },
+  "wbb_parameters": {
+    "device_name": "Wii Balance Board",
+    "width": 433,
+    "length": 238,
+    "height": 55
+  },
+  "force_plate_parameters": {
+    "device_name": "Force plate",
+    "dz": 16
+  },
+  "preprocessing_parameters": {
+    "acquisition_frequency": 100,
+    "filter_order": 4,
+    "cutoff_frequency": 12,
+    "detrending_type": "constant",
+    "fp_upsampling_factor": 1,
+    "fp_downsampling_factor": 10,
+    "apply_swarii": true,
+    "swarii_window_size": 0.6,
+    "time_window_upper_threshold": 2800,
+    "time_window_lower_threshold": 800,
+    "time_shift": 50
+  },
+  "time_features_parameters": {
+    "z_05": 1.645,
+    "F_05": 3
+  },
+  "frequency_features_parameters": {
+    "psd_method": "multitaper",
+    "sampling_frequency": 100,
+    "frequency_range":[3,101],
+    "welch": {
+      "nperseg": 1000
+    },
+    "multitaper": {
+      "delta": 0.01,
+      "time_bandwidth": 3.5,
+      "number_of_tapers": 8
+    }
   },
   "test_files": {
     "wbb_raw_data": "/Users/Antonin/Documents/VUB/semester 4/thesis/validation study/data/BalanceBoard/Repro/Repro1/BB/1_1.c3d",

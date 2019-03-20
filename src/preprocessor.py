@@ -36,13 +36,11 @@ class DataPreprocessor(SWARII):
 
     fp_up = config["preprocessing_parameters"]["fp_upsampling_factor"]
     fp_down = config["preprocessing_parameters"]["fp_downsampling_factor"]
-    wbb_up = config["preprocessing_parameters"]["wbb_upsampling_factor"]
-    wbb_down = config["preprocessing_parameters"]["wbb_downsampling_factor"]
     order = config["preprocessing_parameters"]["filter_order"]
     fc = config["preprocessing_parameters"]["cutoff_frequency"]
     detrending_type = config["preprocessing_parameters"]["detrending_type"]
-    low_thresh = config["preprocessing_parameters"]["lower_threshold"]
-    up_thresh = config["preprocessing_parameters"]["upper_threshold"]
+    low_thresh = config["preprocessing_parameters"]["time_window_lower_threshold"]
+    up_thresh = config["preprocessing_parameters"]["time_window_upper_threshold"]
     time_shift = config["preprocessing_parameters"]["time_shift"]
     swarii_window = config["preprocessing_parameters"]["swarii_window_size"]
     acq_frequency = config["preprocessing_parameters"]["acquisition_frequency"]
@@ -241,8 +239,3 @@ class DataPreprocessor(SWARII):
         backward_fill_missing_data = pd.DataFrame(forward_fill_missing_data)[0].replace(to_replace=0,
                                                                                         method='bfill').values
         return backward_fill_missing_data
-
-    @staticmethod
-    def replace_outliers(data):
-        # TODO : refine this process to use mean value instead of harcoded values!
-        return pd.DataFrame(data)[0].apply(lambda x: [y if y <= -3 else -2 for y in x]).values
