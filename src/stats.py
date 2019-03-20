@@ -267,7 +267,12 @@ def make_global_person_correlation_plots(df1, df2, statistics_results_folder, pl
             #result_dict[column]["R"] = round(r_value, 4)
 
             # Make the plot
-            ax.plot(x, y, '.', label='original data')
+            wbb_numbers = ["1", "2", "3", "4"]
+            for wbb_number in wbb_numbers:
+                x_wbb = x.loc[(x.index.get_level_values(3) == wbb_number)]
+                y_wbb = y.loc[(y.index.get_level_values(3) == wbb_number)]
+                label = "WBB {}".format(wbb_number)
+                ax.scatter(x_wbb, y_wbb, marker='.', label=label)
             ax.plot(x, intercept + slope * x, 'black', label='fitted line', linewidth=0.3)
             ax.set_xlabel('Force plate')
             ax.set_ylabel('Balance Board')
@@ -279,6 +284,7 @@ def make_global_person_correlation_plots(df1, df2, statistics_results_folder, pl
                     verticalalignment='center', transform=ax.transAxes)
             ax.text(0.8, 0.1, "Intercept = {}".format(round(intercept, 4)), fontsize=9, horizontalalignment='center',
                     verticalalignment='center', transform=ax.transAxes)
+            ax.legend()
 
         except (RuntimeWarning, Exception) as err:
             logger.error("Problem with feature: {}.\n{}".format(column, err), exc_info=True, stack_info=True)
@@ -336,12 +342,7 @@ def make_pearson_correlation_plots(df1, df2, statistics_results_folder, plot_siz
 
 
                 # Make the plot
-                wbb_numbers = ["1", "2", "3", "4"]
-                for wbb_number in wbb_numbers:
-                    x_wbb = x.loc[(x.index.get_level_values(3) == wbb_number)]
-                    y_wbb = y.loc[(y.index.get_level_values(3) == wbb_number)]
-                    label = "WBB {}".format(wbb_number)
-                    ax.scatter(x_wbb, y_wbb, marker='.', label=label)
+                ax.plot(x, y, '.', label='original data')
                 ax.plot(x, intercept + slope * x, 'black', label='fitted line', linewidth=0.3)
                 ax.set_xlabel('Force plate')
                 ax.set_ylabel('Balance Board')
@@ -353,7 +354,6 @@ def make_pearson_correlation_plots(df1, df2, statistics_results_folder, plot_siz
                 ax.text(0.8, 0.1, "Intercept = {}".format(round(intercept, 4)), fontsize=9,
                         horizontalalignment='center',
                         verticalalignment='center', transform=ax.transAxes)
-                ax.legend()
 
             except (RuntimeWarning, Exception) as err:
                 logger.error("Problem with feature: {}.\n{}".format(column, err), exc_info=True, stack_info=True)
