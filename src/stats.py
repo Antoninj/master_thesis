@@ -383,8 +383,8 @@ def make_bland_altman_plots(df1, df2, statistics_results_folder, plot_size):
 
     fig, axs = plt.subplots(3, plot_size, figsize=(30, 15), facecolor='w', edgecolor='k')
     fig.subplots_adjust(hspace=.5)
-    df1 = df1.reorder_levels(['balance board', 'device', 'subject', 'trial']).sort_index()
-    df2 = df2.reorder_levels(['balance board', 'device', 'subject', 'trial']).sort_index()
+    # df1 = df1.reorder_levels(['balance board', 'device', 'subject', 'trial']).sort_index()
+    # df2 = df2.reorder_levels(['balance board', 'device', 'subject', 'trial']).sort_index()
 
     result_dict = {}
     # Loop over each feature
@@ -394,8 +394,7 @@ def make_bland_altman_plots(df1, df2, statistics_results_folder, plot_size):
 
         try:
             # Compute the LOA and arrange the data for the plots
-            #mean = np.mean([x, y], axis=0)
-            trials = [trial for trial in range(len(x))]
+            mean = np.mean([x, y], axis=0)
             diff = x - y
             md = np.mean(diff)
             sd = np.std(diff, axis=0)
@@ -405,18 +404,24 @@ def make_bland_altman_plots(df1, df2, statistics_results_folder, plot_size):
             result_dict[column]["LOA"] = "{},{}".format(md - 2 * sd, md + 2 * sd)
 
             # Make the plot
-            ax.scatter(trials, diff, marker='.', s=60, color="gray", linewidth=0.5)
-            trials_limits = [x * 18 + 0.5 for x in range(1, 4)]
-            for limit in trials_limits:
-                ax.axvline(limit, color='black', linestyle='--', linewidth=0.5)
+            wbb_numbers = ["1", "2", "3", "4"]
+            for wbb_number in wbb_numbers:
+                x_wbb = df1[column].loc[(df1[column].index.get_level_values(3) == wbb_number)].values
+                y_wbb = df2[column].loc[(df2[column].index.get_level_values(3) == wbb_number)].values
+                label = "WBB {}".format(wbb_number)
+                mean_wbb = np.mean([x_wbb, y_wbb], axis=0)
+                diff_wbb = x_wbb - y_wbb
+                ax.scatter(mean_wbb, diff_wbb, marker='.', s=60, linewidth=0.5, label=label)
+
+            #ax.scatter(mean, diff, marker='.', s=60, linewidth=0.5)
+
             ax.axhline(md, color='tomato', linestyle='--')
             ax.axhline(md + 2 * sd, color='teal', linestyle='--', linewidth=0.5)
             ax.axhline(md - 2 * sd, color='teal', linestyle='--', linewidth=0.5)
-            ax.set_xlabel('Trials')
-            ax.set_ylabel('Difference')
+            ax.set_xlabel('Mean of the two systems')
+            ax.set_ylabel('Difference between the two systems')
             ax.set_title(column, weight=600)
-
-            # ax.legend()
+            ax.legend()
 
         except (RuntimeWarning, Exception) as err:
             logger.error("Problem with feature: {}.\n{}".format(column, err), exc_info=True, stack_info=True)
