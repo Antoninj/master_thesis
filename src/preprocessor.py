@@ -144,7 +144,7 @@ class DataPreprocessor(SWARII):
             else:
                 # Resample the balance board data using fourier resampling
                 acquisition_duration = timestamps[-1]
-                num = round(acquisition_duration * 100)
+                num = round(acquisition_duration * self.acq_frequency)
                 resampled_signal = self.apply_resampling(input_signal, num)
                 filtered_signal = self.apply_filtering(resampled_signal)
                 reframed_data = self.apply_reframing(filtered_signal, balance_board)

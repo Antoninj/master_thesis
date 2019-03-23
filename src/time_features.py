@@ -156,15 +156,16 @@ class DistanceFeatures(CopFeatures):
         features["Rms distance"] = self.compute_rd_rms_distance()
         features["Rms distance-ML"] = self.compute_ml_rms_distance()
         features["Rms distance-AP"] = self.compute_ap_rms_distance()
+        features["Total path length"] = self.compute_rd_path_length()
         # features["Path length-ML"] = self.compute_ml_path_length()
         # features["Path length-AP"] = self.compute_ap_path_length()
-        features["Range"] = self.compute_rd_range()
-        features["Range-ML"] = self.compute_ml_range()
-        features["Range-AP"] = self.compute_ap_range()
+
         features["Mean velocity"] = self.compute_rd_mean_velocity()
         features["Mean velocity-ML"] = self.compute_ml_mean_velocity()
         features["Mean velocity-AP"] = self.compute_ap_mean_velocity()
-        features["Sway displacement"] = self.compute_sway_displacement()
+        features["Range"] = self.compute_rd_range()
+        features["Range-ML"] = self.compute_ml_range()
+        features["Range-AP"] = self.compute_ap_range()
 
         return features
 
@@ -219,7 +220,7 @@ class AreaFeatures(DistanceFeatures):
 
         return area_cc
 
-    def compute_confidence_elipse_area(self):
+    def compute_confidence_ellipse_area(self):
         """
         Compute the 95% confidence elipse area (AREA-CE).
 
@@ -238,7 +239,7 @@ class AreaFeatures(DistanceFeatures):
 
         features = {}
         features["95% confidence circle area"] = self.compute_confidence_circle_area()
-        features["95% confidence elipse area"] = self.compute_confidence_elipse_area()
+        features["95% confidence ellipse area"] = self.compute_confidence_ellipse_area()
 
         return features
 
