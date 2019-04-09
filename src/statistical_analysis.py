@@ -18,7 +18,7 @@ def compute_time_features_stats():
 
 def compute_frequency_features_stats():
     compute_statistics(fp_frequency_feature_df, wbb_frequency_feature_df, statistics_results_folders[1],
-                       html_report_results_folders[2], html_report_results_folders[3], plot_size=7)
+                       html_report_results_folders[2], html_report_results_folders[3], plot_size=6)
 
 
 def compute_all_statistics():

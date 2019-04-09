@@ -100,7 +100,7 @@ def main():
 
     if plot:
         acq_frequency = config["preprocessing_parameters"]["acquisition_frequency"]
-        plot_stabilograms(preprocessed_cop_data, device_name, acq_frequency)
+        plot_stabilograms(preprocessed_cop_data, device_name, acq_frequency, "/Users/Antonin/Downloads/sample.png")
         plt.show()
 
 

@@ -181,8 +181,8 @@ class DataPreprocessor(SWARII):
         cop_data = {}
         try:
             if balance_board:
-                cop_data["COP_x"] = self.replace_missing_data(raw_data["Accelerometer"][:, 0])
-                cop_data["COP_y"] = self.replace_missing_data(raw_data["Accelerometer"][:, 1])
+                cop_data["COP_x"] = raw_data["Accelerometer"][:, 0]
+                cop_data["COP_y"] = raw_data["Accelerometer"][:, 1]
             else:
                 cop_data["COP_x"] = self.compute_cop_fp_x(raw_data)
                 cop_data["COP_y"] = self.compute_cop_fp_y(raw_data)
