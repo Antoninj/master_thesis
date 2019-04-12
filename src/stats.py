@@ -516,7 +516,7 @@ def compute_ICC_2(df1, statistics_results_folder):
 
      Notes
     -----
-    More info on what is the two-way mixed ICC:
+    More info on what is the two-way random ICC:
     - https://www.uvm.edu/~dhowell/methods8/Supplements/icc/More%20on%20ICCs.pdf
     - https://en.wikipedia.org/wiki/Intraclass_correlation
     """
@@ -542,7 +542,7 @@ def compute_ICC_2(df1, statistics_results_folder):
                               "WBB 4 feature": FloatVector(dfs_1_mean[3][column])})
 
             # Compute the two way random ICC
-            icc_res = irr.icc(r_df, "twoway", "agreement", "average")
+            icc_res = irr.icc(r_df, "twoway", "agreement", "single")
 
             result_dict[column] = dict(zip(icc_res.names, list(icc_res)))
 

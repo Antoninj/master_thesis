@@ -128,7 +128,7 @@ def get_duplicate_identity(data, balance_board_number):
 
 def get_outlier_identity(data, feature_name, balance_board_number):
     data = data.loc[data.index.get_level_values('balance board') == balance_board_number]
-    outlier_values = data[data[feature_name] == data[feature_name].max()]
+    outlier_values = data[data[feature_name] > 4 * data[feature_name].std()]
 
     return outlier_values.index.tolist()
 
