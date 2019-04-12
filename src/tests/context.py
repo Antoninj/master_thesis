@@ -7,6 +7,7 @@ from preprocessor import DataPreprocessor
 from processor import DataProcessor
 from time_features import TimeFeatures
 from frequency_features import FrequencyFeatures
-from utils import load_config, setup_logging, plot_stabilograms, plot_spectral_densities
+from utils import load_config, setup_logging, plot_stabilograms, plot_spectral_densities, \
+    plot_swarii_comparison_stabilograms
 from feature_extraction_pipeline import FeatureExtractionPipeline
 from preprocessing_pipeline import PreprocessingPipeline

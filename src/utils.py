@@ -183,3 +183,49 @@ def plot_spectral_densities(frequencies, spectrums, filepath=None):
         plt.savefig(fig_name, bbox_inches='tight')
         plt.close(fig)
 
+
+def plot_swarii_comparison_stabilograms(preprocessed_cop_data_no_swarii, preprocessed_cop_data_swarii, device_name,
+                                        acq_frequency, filepath=None):
+    """"Plot and save stabilograms from COP data."""
+
+    cop_x_no_swarii = preprocessed_cop_data_no_swarii["COP_x"]
+    cop_y_no_swarii = preprocessed_cop_data_no_swarii["COP_y"]
+    cop_rd_no_swarii = compute_rd(cop_x_no_swarii, cop_y_no_swarii)
+
+    cop_x_swarii = preprocessed_cop_data_swarii["COP_x"]
+    cop_y_swarii = preprocessed_cop_data_swarii["COP_y"]
+    cop_rd_swarii = compute_rd(cop_x_swarii, cop_y_swarii)
+
+    fig, axs = plt.subplots(2, 2, figsize=(15, 10))
+    index = [i / acq_frequency for i in range(len(cop_x_no_swarii))]
+    fig.suptitle("{} plots".format(device_name), fontsize=16)
+
+    axs[0][0].plot(index, cop_x_no_swarii, label="Fourier resampling")
+    axs[0][0].plot(index, cop_x_swarii, label="SWARII resampling")
+    axs[0][0].set_xlabel('Time (seconds)')
+    axs[0][0].set_ylabel('ML distance (mm)')
+    axs[0][1].plot(index, cop_y_no_swarii, label="Fourier resampling")
+    axs[0][1].plot(index, cop_y_swarii, label="SWARII resampling")
+    axs[0][1].set_xlabel('Time (seconds)')
+    axs[0][1].set_ylabel('AP distance (mm)')
+    axs[1][0].plot(index, cop_rd_no_swarii, label="Fourier resampling")
+    axs[1][0].plot(index, cop_rd_swarii, label="SWARII resampling")
+    axs[1][0].set_xlabel('Time (seconds)')
+    axs[1][0].set_ylabel('Resultant distance (mm)')
+    axs[1][1].plot(cop_x_no_swarii, cop_y_no_swarii, label="Fourier resampling")
+    axs[1][1].plot(cop_x_no_swarii, cop_y_swarii, label="SWARII resampling")
+    axs[1][1].set_xlabel('ML distance (mm)')
+    axs[1][1].set_ylabel('AP distance (mm)')
+
+    for ax in axs.ravel():
+        ax.legend()
+
+    # Save the plots
+    if filepath:
+        config = load_config()
+        swarii_window = config["preprocessing_parameters"]["swarii_window_size"]
+        fig_name = build_filename(filepath, folder_to_replace="BalanceBoard/Repro",
+                                  destination_folder="results/cop_plots",
+                                  name_extension="_SWARII_{}.png".format(swarii_window))
+        plt.savefig(fig_name, bbox_inches='tight')
+        plt.close(fig)

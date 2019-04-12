@@ -6,7 +6,6 @@ from argparse import ArgumentParser
 from context import *
 from matplotlib import pyplot as plt
 
-
 def main():
 
     ##################
@@ -48,7 +47,6 @@ def main():
 
     # Create a data preprocessor reader object
     data_preprocessor = DataPreprocessor()
-
     ##################
     # Tests
     ##################
@@ -70,14 +68,24 @@ def main():
 
         logger.debug("Raw data size: {}".format(len(raw_data[1]["Accelerometer"])))
 
-        preprocessed_cop_data = data_preprocessor.preprocess_raw_data(raw_data, True)
+        data_preprocessor.use_swarii = False
+        preprocessed_cop_data_no_swarii = data_preprocessor.preprocess_raw_data(raw_data, True)
 
-        logger.debug("Preprocessed data size: {}".format(len(preprocessed_cop_data["COP_x"])))
+        data_preprocessor.use_swarii = True
+        preprocessed_cop_data_swarii = data_preprocessor.preprocess_raw_data(raw_data, True)
 
-        cop_x = preprocessed_cop_data["COP_x"]
-        cop_y = preprocessed_cop_data["COP_y"]
+        logger.debug("Preprocessed data size: {}".format(len(preprocessed_cop_data_no_swarii["COP_x"])))
+
+        cop_x = preprocessed_cop_data_no_swarii["COP_x"]
+        cop_y = preprocessed_cop_data_no_swarii["COP_y"]
 
         logger.debug("WBB COP x: {} \n WBB COP y: {}".format(cop_x, cop_y))
+
+        if plot:
+            acq_frequency = config["preprocessing_parameters"]["acquisition_frequency"]
+            plot_swarii_comparison_stabilograms(preprocessed_cop_data_no_swarii, preprocessed_cop_data_swarii,
+                                                device_name, acq_frequency, "/Users/Antonin/Downloads/sample.png")
+            plt.show()
 
     else:
         device_name = "Force plate"
@@ -98,10 +106,10 @@ def main():
 
         logger.debug("FP COP x: {} \n FP COP y: {} \n".format(cop_x, cop_y))
 
-    if plot:
-        acq_frequency = config["preprocessing_parameters"]["acquisition_frequency"]
-        plot_stabilograms(preprocessed_cop_data, device_name, acq_frequency, "/Users/Antonin/Downloads/sample.png")
-        plt.show()
+        if plot:
+            acq_frequency = config["preprocessing_parameters"]["acquisition_frequency"]
+            plot_stabilograms(preprocessed_cop_data, device_name, acq_frequency, "/Users/Antonin/Downloads/sample.png")
+            plt.show()
 
 
 if __name__ == "__main__":
