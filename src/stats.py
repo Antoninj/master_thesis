@@ -2,6 +2,7 @@
 import json
 import logging
 
+import csv
 import numpy as np
 import pandas as pd
 import pandas_profiling
@@ -248,7 +249,7 @@ def make_global_person_correlation_plots(df1, df2, statistics_results_folder, pl
         .. [1] Scipy documentation: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.linregress.html
     """
 
-    fig, axs = plt.subplots(3, plot_size, figsize=(30, 15), facecolor='w', edgecolor='k')
+    fig, axs = plt.subplots(plot_size, 3, figsize=(15, 30), facecolor='w', edgecolor='k')
     fig.subplots_adjust(hspace=.5)
     result_dict = {}
     # Loop over each feature
@@ -322,7 +323,7 @@ def make_pearson_correlation_plots(df1, df2, statistics_results_folder, plot_siz
     # Loop over each WBB data
     for (df1, df2, number) in zip(dfs_1, dfs_2, wbb_numbers):
 
-        fig, axs = plt.subplots(3, plot_size, figsize=(30, 15), facecolor='w', edgecolor='k')
+        fig, axs = plt.subplots(plot_size, 3, figsize=(15, 30), facecolor='w', edgecolor='k')
         fig.subplots_adjust(hspace=.5)
 
         # Loop over each feature
@@ -381,7 +382,7 @@ def make_bland_altman_plots(df1, df2, statistics_results_folder, plot_size):
 
     # TODO : FIX THIS PLOT
 
-    fig, axs = plt.subplots(3, plot_size, figsize=(30, 15), facecolor='w', edgecolor='k')
+    fig, axs = plt.subplots(plot_size, 3, figsize=(15, 30), facecolor='w', edgecolor='k')
     fig.subplots_adjust(hspace=.5)
     # df1 = df1.reorder_levels(['balance board', 'device', 'subject', 'trial']).sort_index()
     # df2 = df2.reorder_levels(['balance board', 'device', 'subject', 'trial']).sort_index()
@@ -488,11 +489,12 @@ def compute_ICC(df1, statistics_results_folder):
             icc = iccs_df.iloc[4]["ICC"]
             icc_lower_bound = iccs_df.iloc[5]["lower bound"]
             icc_upper_bound = iccs_df.iloc[5]["upper bound"]
-            icc_result = "{}({}, {})".format(round(icc, 4), round(icc_lower_bound, 4), round(icc_upper_bound, 4))
+            icc_result = "{}({}, {})".format(round(icc, 3), round(icc_lower_bound, 3), round(icc_upper_bound, 3))
 
             # Store the results
             result_dict[column] = {}
             result_dict[column]["ICC"] = icc_result
+
 
         except (RuntimeWarning, Exception) as err:
             logger.error("Problem with feature: {}.\n{}".format(column, err), exc_info=True, stack_info=True)
@@ -500,8 +502,8 @@ def compute_ICC(df1, statistics_results_folder):
 
     # Save the results
     result_dict_df = pd.DataFrame.from_dict(result_dict).transpose()
-    report_name = "{}/ICC_results_1.csv".format(statistics_results_folder)
-    result_dict_df.to_csv(report_name, sep=',', encoding='utf-8')
+    report_name = "{}/icc_results_1.csv".format(statistics_results_folder)
+    result_dict_df.to_csv(report_name, sep=';', encoding='utf-8', quoting=csv.QUOTE_NONE)
 
     return result_dict
 
@@ -552,7 +554,7 @@ def compute_ICC_2(df1, statistics_results_folder):
 
     # Save the results
     result_dict_df = pd.DataFrame.from_dict(result_dict).transpose()
-    report_name = "{}/ICC_results_2.csv".format(statistics_results_folder)
+    report_name = "{}/icc_results_2.csv".format(statistics_results_folder)
     result_dict_df.to_csv(report_name, sep=',', encoding='utf-8')
 
     return result_dict
