@@ -558,3 +558,73 @@ def compute_ICC_2(df1, statistics_results_folder):
     result_dict_df.to_csv(report_name, sep=',', encoding='utf-8')
 
     return result_dict
+
+
+def compute_ICC_diff(df1, df2, statistics_results_folder):
+    """
+    Compute the two-way mixed ICC.
+
+    References
+    ----------
+    .. [1] R library used for the ICC implementation:
+    - https://personality-project.org/r/psych/
+    - http://www.personality-project.org/r/html/ICC.html
+    - https://www.rdocumentation.org/packages/psych/versions/1.8.12/topics/ICC
+
+    .. [2] R to python: https://rpy2.github.io/doc/latest/html/index.html#
+
+    Notes
+    -----
+    More info on what is the two-way mixed ICC:
+    - https://www.uvm.edu/~dhowell/methods8/Supplements/icc/More%20on%20ICCs.pdf
+    - https://en.wikipedia.org/wiki/Intraclass_correlation
+    """
+
+    psych = importr("psych")
+
+    wbb_numbers = ["1", "2", "3", "4"]
+    # Compute the statistic for each WBB
+    dfs_1 = [df1.reset_index(level=0, drop=True).loc[(df1.index.get_level_values(3) == number)] for number in
+             wbb_numbers]
+    dfs_2 = [df2.reset_index(level=0, drop=True).loc[(df2.index.get_level_values(3) == number)] for number in
+             wbb_numbers]
+
+    # Compute the statistic on the FP and WBB diff
+    dfs_1_diff = [df1 - df2 for df1, df2 in zip(dfs_1, dfs_2)]
+
+    result_dict = {}
+    # Loop over each feature
+    for column in df1.columns:
+
+        try:
+            r_df = DataFrame({"WBB 1 feature": FloatVector(dfs_1_diff[0][column]),
+                              "WBB 2 feature": FloatVector(dfs_1_diff[1][column]),
+                              "WBB 3 feature": FloatVector(dfs_1_diff[2][column]),
+                              "WBB 4 feature": FloatVector(dfs_1_diff[3][column])})
+
+            # Compute the two way random ICC
+            icc_res = psych.ICC(r_df)
+            iccs_r_df = icc_res[0]
+            iccs_df = pandas2ri.ri2py(iccs_r_df)
+
+            # Select the ICC that corresponds to the 2 way random model (see links above)
+            icc = iccs_df.iloc[4]["ICC"]
+            icc_lower_bound = iccs_df.iloc[5]["lower bound"]
+            icc_upper_bound = iccs_df.iloc[5]["upper bound"]
+            icc_result = "{}({}, {})".format(round(icc, 3), round(icc_lower_bound, 3), round(icc_upper_bound, 3))
+
+            # Store the results
+            result_dict[column] = {}
+            result_dict[column]["ICC"] = icc_result
+
+
+        except (RuntimeWarning, Exception) as err:
+            logger.error("Problem with feature: {}.\n{}".format(column, err), exc_info=True, stack_info=True)
+            pass
+
+    # Save the results
+    result_dict_df = pd.DataFrame.from_dict(result_dict).transpose()
+    report_name = "{}/icc_results_1.csv".format(statistics_results_folder)
+    result_dict_df.to_csv(report_name, sep=';', encoding='utf-8', quoting=csv.QUOTE_NONE)
+
+    return result_dict
