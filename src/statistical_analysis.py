@@ -158,9 +158,12 @@ if __name__ == "__main__":
         description="")
     parser.add_argument("-d", "--debug", action='store_true', help="Show debugging messages")
     parser.add_argument('-o', "--outliers", action='store_false', help="remove outliers")
+    parser.add_argument('-e', "--excel", action='store_true',
+                        help="store dataframes used for the analysis to excel spreadsheets")
     args = parser.parse_args()
     debug = args.debug
     outliers = args.outliers
+    excel = args.excel
 
     if debug:
         logger.setLevel("DEBUG")
@@ -220,6 +223,17 @@ if __name__ == "__main__":
 
         for df in [wbb_time_feature_df, wbb_frequency_feature_df]:
             [df.drop(index, inplace=True) for index in outlier_indexes_2]
+
+    #####################################
+    # Saving dataframes to Excel for Bart
+    #####################################
+    if args.excel:
+        wbb_time_feature_df.to_excel(statistics_results_folders[0] + "/WBB_TIME_FEATURES.xlsx")
+        wbb_frequency_feature_df.to_excel(statistics_results_folders[1] + "/WBB_FREQ_FEATURES.xlsx")
+
+        fp_time_feature_df.to_excel(statistics_results_folders[0] + "/FP_TIME_FEATURES.xlsx")
+        fp_frequency_feature_df.to_excel(statistics_results_folders[1] + "/FP_FREQ_FEATURES.xlsx")
+
 
     #########################
     # PUTTING IT ALL TOGETHER
