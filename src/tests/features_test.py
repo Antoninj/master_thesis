@@ -40,8 +40,10 @@ if __name__ == "__main__":
 
     if WBB:
         data_file = wbb_cop_data
+        device = "WBB"
     else:
         data_file = fp_cop_data
+        device = "FP"
 
     logger.info("Testing feature computation modules.")
     logger.info("Test file: {}".format(data_file))
@@ -64,4 +66,8 @@ if __name__ == "__main__":
 
     if plot:
         plot_spectral_densities(frequencies, spectrums)
+        plt.savefig(
+            "/Users/Antonin/Documents/VUB/semester 4/thesis/paper/images/chapter 4/PSD_{}.png".format(device),
+            bbox_inches='tight')
+
         plt.show()

@@ -62,28 +62,31 @@ class HybridAcquisitionReader(btkAcquisitionFileReader):
     def compute_timestamps(time_dict):
         """ Reformat the acquisition timestamps from absolute dates to relative timestamps in seconds. """
 
-        time_strings_lists = []
-        for key, value in time_dict.items():
-            flatten_values = time_dict[key].flatten()
-            time_strings = ['{0:g}'.format(float(value)) for value in flatten_values]
-            if key == "milisecond":
-                for i in range(len(time_strings)):
-                    if len(time_strings[i]) == 1:
-                        time_strings[i] = "00" + time_strings[i]
-                    if len(time_strings[i]) == 2:
-                        time_strings[i] = "0" + time_strings[i]
-            time_strings_lists.append(time_strings)
+        try:
+            time_strings_lists = []
+            for key, value in time_dict.items():
+                flatten_values = time_dict[key].flatten()
+                time_strings = ['{0:g}'.format(float(value)) for value in flatten_values]
+                if key == "milisecond":
+                    for i in range(len(time_strings)):
+                        if len(time_strings[i]) == 1:
+                            time_strings[i] = "00" + time_strings[i]
+                        if len(time_strings[i]) == 2:
+                            time_strings[i] = "0" + time_strings[i]
+                time_strings_lists.append(time_strings)
 
-        date_strings = [" ".join(date) for date in list(zip(*time_strings_lists))]
-        fmt = '%Y %m %d %H %M %S %f'
-        datetimes = [datetime.strptime(string, fmt) for string in date_strings]
+            date_strings = [" ".join(date) for date in list(zip(*time_strings_lists))]
+            fmt = '%Y %m %d %H %M %S %f'
+            datetimes = [datetime.strptime(string, fmt) for string in date_strings]
 
-        timestamps_seconds = []
-        duration = 0
-        timestamps_seconds.append(duration)
-        for i in range(len(datetimes) - 1):
-            duration += (datetimes[i + 1] - datetimes[i]).total_seconds()
+            timestamps_seconds = []
+            duration = 0
             timestamps_seconds.append(duration)
+            for i in range(len(datetimes) - 1):
+                duration += (datetimes[i + 1] - datetimes[i]).total_seconds()
+                timestamps_seconds.append(duration)
+        except RuntimeError:
+            raise
 
         return timestamps_seconds
 

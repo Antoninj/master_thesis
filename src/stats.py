@@ -70,7 +70,7 @@ def construct_results_dfs(files):
     return [df1, df2]
 
 
-def generate_profile_report(df, filename, bins=50):
+def generate_profile_report(df, filename, bins=10):
     """
     Create a HTML profile report of a dataframe using general descriptive statistics.
 
@@ -411,14 +411,14 @@ def make_bland_altman_plots(df1, df2, statistics_results_folder, plot_size):
                 y_wbb = df2[column].loc[(df2[column].index.get_level_values(3) == wbb_number)].values
                 label = "WBB {}".format(wbb_number)
                 mean_wbb = np.mean([x_wbb, y_wbb], axis=0)
-                diff_wbb = x_wbb - y_wbb
+                diff_wbb = ((x_wbb - y_wbb) / mean_wbb) * 100
                 ax.scatter(mean_wbb, diff_wbb, marker='.', s=60, linewidth=0.5, label=label)
 
             #ax.scatter(mean, diff, marker='.', s=60, linewidth=0.5)
 
             ax.axhline(md, color='tomato', linestyle='--')
-            ax.axhline(md + 2 * sd, color='teal', linestyle='--', linewidth=0.5)
-            ax.axhline(md - 2 * sd, color='teal', linestyle='--', linewidth=0.5)
+            ax.axhline(md + 1.96 * sd, color='teal', linestyle='--', linewidth=0.5)
+            ax.axhline(md - 1.96 * sd, color='teal', linestyle='--', linewidth=0.5)
             ax.set_xlabel('Mean of the two systems')
             ax.set_ylabel('Difference between the two systems')
             ax.set_title(column, weight=600)

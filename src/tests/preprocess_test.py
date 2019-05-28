@@ -36,6 +36,7 @@ def main():
 
     args = parser.parse_args()
     WBB = args.wbb
+    FP = args.fp
     plot = args.plot
     debug = args.debug
 
@@ -45,7 +46,7 @@ def main():
     # Create a sensor data reader object
     data_reader = HybridAcquisitionReader()
 
-    # Create a data preprocessor reader object
+    # Create a data preprocessor object
     data_preprocessor = DataPreprocessor()
     ##################
     # Tests
@@ -84,10 +85,11 @@ def main():
         if plot:
             acq_frequency = config["preprocessing_parameters"]["acquisition_frequency"]
             plot_swarii_comparison_stabilograms(preprocessed_cop_data_no_swarii, preprocessed_cop_data_swarii,
-                                                device_name, acq_frequency, "/Users/Antonin/Downloads/sample.png")
+                                                device_name, acq_frequency,
+                                                "/Users/Antonin/Documents/VUB/semester 4/thesis/paper/images/chapter 4/stabilogram_statokinesigram_WBB.png")
             plt.show()
 
-    else:
+    elif FP:
         device_name = "Force plate"
         logger.info("Processing Force Plate data.")
         logger.info("Test file: {}".format(filepath_fp))
@@ -108,7 +110,39 @@ def main():
 
         if plot:
             acq_frequency = config["preprocessing_parameters"]["acquisition_frequency"]
-            plot_stabilograms(preprocessed_cop_data, device_name, acq_frequency, "/Users/Antonin/Downloads/sample.png")
+            plot_stabilograms(preprocessed_cop_data, device_name, acq_frequency)
+            plt.savefig(
+                "/Users/Antonin/Documents/VUB/semester 4/thesis/paper/images/chapter 4/stabilogram_statokinesigram_FP.png",
+                bbox_inches='tight')
+            plt.show()
+
+    else:
+        logger.info("Processing Force Plate and WBB data.")
+        logger.info("WBB Test file: {}".format(filepath_wbb))
+        logger.info("FP Test file: {}".format(filepath_fp))
+
+        fp_raw_data = data_reader.get_raw_data(filepath=filepath_fp)
+        wbb_raw_data = data_reader.get_raw_data(filepath=filepath_wbb, balance_board=True)
+
+        analog_freq = data_reader.get_frequency(filepath=filepath_fp)
+
+        fp_preprocessed_cop_data = data_preprocessor.preprocess_raw_data(fp_raw_data)
+
+        fp_cop_x = fp_preprocessed_cop_data["COP_x"]
+        fp_cop_y = fp_preprocessed_cop_data["COP_y"]
+
+        data_preprocessor.use_swarii = True
+        wbb_preprocessed_cop_data = data_preprocessor.preprocess_raw_data(wbb_raw_data, True)
+
+        wbb_cop_x = wbb_preprocessed_cop_data["COP_x"]
+        wbb_cop_y = wbb_preprocessed_cop_data["COP_y"]
+
+        if plot:
+            acq_frequency = config["preprocessing_parameters"]["acquisition_frequency"]
+            plot_superposed_stabilograms(fp_preprocessed_cop_data, wbb_preprocessed_cop_data, acq_frequency)
+            plt.savefig(
+                "/Users/Antonin/Documents/VUB/semester 4/thesis/paper/images/chapter 4/WBB_FP_superposed_stabilogram_statokinesigram.png",
+                bbox_inches='tight')
             plt.show()
 
 

@@ -27,7 +27,6 @@ def compute_all_statistics():
     ######################################
 
     logger.info("Computing time features statistics...")
-
     compute_time_features_stats()
 
     ###########################################
@@ -153,7 +152,7 @@ if __name__ == "__main__":
     statistics_results_folders = [config["time_features_results_folder"], config["frequency_features_results_folder"]]
     check_folders(statistics_results_folders)
 
-    # Command line argument parser: option to remove outliers from the study
+    # Command line argument parser: option to remove outliers from the study, save dataframes to excel and enable debug mode
     parser = ArgumentParser(
         description="")
     parser.add_argument("-d", "--debug", action='store_true', help="Show debugging messages")
@@ -228,6 +227,8 @@ if __name__ == "__main__":
     # Saving dataframes to Excel for Bart
     #####################################
     if args.excel:
+        logger.info("Saving dataframes to excel")
+
         wbb_time_feature_df.to_excel(statistics_results_folders[0] + "/WBB_TIME_FEATURES.xlsx")
         wbb_frequency_feature_df.to_excel(statistics_results_folders[1] + "/WBB_FREQ_FEATURES.xlsx")
 
