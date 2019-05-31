@@ -25,6 +25,9 @@ def main():
     # Force plate data test file
     filepath_fp = config["test_files"]["fp_raw_data"]
 
+    # scale factor to adjust WBB COP displacement
+    scale_factor = config["preprocessing_parameters"]["scaling_factor"]
+
     # Command line argument parser to choose between wbb or force plate data
     parser = ArgumentParser(
         description="Preprocessing tests")
@@ -71,9 +74,15 @@ def main():
 
         data_preprocessor.use_swarii = False
         preprocessed_cop_data_no_swarii = data_preprocessor.preprocess_raw_data(raw_data, True)
+        for key in preprocessed_cop_data_no_swarii:
+            preprocessed_cop_data_no_swarii[key] *= scale_factor
+
 
         data_preprocessor.use_swarii = True
         preprocessed_cop_data_swarii = data_preprocessor.preprocess_raw_data(raw_data, True)
+        for key in preprocessed_cop_data_swarii:
+            preprocessed_cop_data_swarii[key] *= scale_factor
+
 
         logger.debug("Preprocessed data size: {}".format(len(preprocessed_cop_data_no_swarii["COP_x"])))
 
@@ -133,6 +142,8 @@ def main():
 
         data_preprocessor.use_swarii = True
         wbb_preprocessed_cop_data = data_preprocessor.preprocess_raw_data(wbb_raw_data, True)
+        for key in wbb_preprocessed_cop_data:
+            wbb_preprocessed_cop_data[key] *= scale_factor
 
         wbb_cop_x = wbb_preprocessed_cop_data["COP_x"]
         wbb_cop_y = wbb_preprocessed_cop_data["COP_y"]

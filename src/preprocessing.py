@@ -23,7 +23,7 @@ if __name__ == "__main__":
     data_folder = config["acquisition_data_folder"]
 
     # Results folder path
-    results_folder = config["feature_results_folder"]
+    results_folder = config["cop_data_folder"]
     check_folder(results_folder)
 
     # Command line argument parser to choose between wbb or force plate data

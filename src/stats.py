@@ -235,7 +235,6 @@ def orthoregress(x, y):
     dat = Data(x, y)
     od = ODR(dat, mod, beta0=linreg[0:2])
     out = od.run()
-    # out.pprint()
     slope, intercept = out.beta[0], out.beta[1]
 
     return slope, intercept
@@ -263,9 +262,8 @@ def make_global_person_correlation_plots(df1, df2, statistics_results_folder, pl
 
             # Store the linear regression results
             result_dict[column] = {}
-            result_dict[column]["slope"] = round(slope, 4)
-            result_dict[column]["intercept"] = round(intercept, 4)
-            #result_dict[column]["R"] = round(r_value, 4)
+            result_dict[column]["Slope"] = round(slope, 4)
+            result_dict[column]["Intercept"] = round(intercept, 4)
 
             # Make the plot
             wbb_numbers = ["1", "2", "3", "4"]
@@ -274,18 +272,17 @@ def make_global_person_correlation_plots(df1, df2, statistics_results_folder, pl
                 y_wbb = y.loc[(y.index.get_level_values(3) == wbb_number)]
                 label = "WBB {}".format(wbb_number)
                 ax.scatter(x_wbb, y_wbb, marker='.', label=label)
-            ax.plot(x, intercept + slope * x, 'black', label='fitted line', linewidth=0.3)
+            ax.plot(x, intercept + slope * x, 'black', label='Fitted line', linewidth=0.3)
             ax.set_xlabel('Force plate')
-            ax.set_ylabel('Balance Board')
+            ax.set_ylabel('Wii Balance Board')
 
-            ax.set_title(column, weight=600)
-            # ax.text(0.8, 0.3, "R\u00b2={}".format(round(r_value ** 2, 4)), fontsize=9, horizontalalignment='center',
-            # verticalalignment='center', transform=ax.transAxes)
-            ax.text(0.8, 0.2, "Slope = {}".format(round(slope, 4)), fontsize=9, horizontalalignment='center',
+            ax.set_title(column, weight=500)
+            ax.text(0.8, 0.1, "Slope = {} \n Intercept = {}".format(round(slope, 4), round(intercept, 4)), fontsize=9,
+                    horizontalalignment='center',
                     verticalalignment='center', transform=ax.transAxes)
-            ax.text(0.8, 0.1, "Intercept = {}".format(round(intercept, 4)), fontsize=9, horizontalalignment='center',
-                    verticalalignment='center', transform=ax.transAxes)
-            ax.legend()
+            # ax.text(0.8, 0.1, "Intercept = {}".format(round(intercept, 4)), fontsize=9, horizontalalignment='center',
+            #       verticalalignment='center', transform=ax.transAxes)
+            ax.legend(loc=2)
 
         except (RuntimeWarning, Exception) as err:
             logger.error("Problem with feature: {}.\n{}".format(column, err), exc_info=True, stack_info=True)
@@ -337,8 +334,8 @@ def make_pearson_correlation_plots(df1, df2, statistics_results_folder, plot_siz
 
                 # Store the linear regression results
                 result_dict[column][number] = {}
-                result_dict[column][number]["slope"] = round(slope, 4)
-                result_dict[column][number]["intercept"] = round(intercept, 4)
+                result_dict[column][number]["Slope"] = round(slope, 4)
+                result_dict[column][number]["Intercept"] = round(intercept, 4)
                 #result_dict[column][number]["R"] = round(r_value, 4)
 
 
@@ -347,7 +344,7 @@ def make_pearson_correlation_plots(df1, df2, statistics_results_folder, plot_siz
                 ax.plot(x, intercept + slope * x, 'black', label='fitted line', linewidth=0.3)
                 ax.set_xlabel('Force plate')
                 ax.set_ylabel('Balance Board')
-                ax.set_title(column, weight=600)
+                ax.set_title(column, weight=500)
                 # ax.text(0.8, 0.3, "R\u00b2={}".format(round(r_value**2, 4)), fontsize=9, horizontalalignment='center',
                 # verticalalignment='center', transform=ax.transAxes)
                 ax.text(0.8, 0.2, "Slope = {}".format(round(slope, 4)), fontsize=9, horizontalalignment='center',
@@ -380,8 +377,6 @@ def make_pearson_correlation_plots(df1, df2, statistics_results_folder, plot_siz
 def make_bland_altman_plots(df1, df2, statistics_results_folder, plot_size):
     """Compute limit of agreement values and make bland and altman plot for each feature."""
 
-    # TODO : FIX THIS PLOT
-
     fig, axs = plt.subplots(plot_size, 3, figsize=(15, 30), facecolor='w', edgecolor='k')
     fig.subplots_adjust(hspace=.5)
     # df1 = df1.reorder_levels(['balance board', 'device', 'subject', 'trial']).sort_index()
@@ -411,17 +406,15 @@ def make_bland_altman_plots(df1, df2, statistics_results_folder, plot_size):
                 y_wbb = df2[column].loc[(df2[column].index.get_level_values(3) == wbb_number)].values
                 label = "WBB {}".format(wbb_number)
                 mean_wbb = np.mean([x_wbb, y_wbb], axis=0)
-                diff_wbb = ((x_wbb - y_wbb) / mean_wbb) * 100
+                diff_wbb = x_wbb - y_wbb
                 ax.scatter(mean_wbb, diff_wbb, marker='.', s=60, linewidth=0.5, label=label)
 
-            #ax.scatter(mean, diff, marker='.', s=60, linewidth=0.5)
-
-            ax.axhline(md, color='tomato', linestyle='--')
-            ax.axhline(md + 1.96 * sd, color='teal', linestyle='--', linewidth=0.5)
-            ax.axhline(md - 1.96 * sd, color='teal', linestyle='--', linewidth=0.5)
+            ax.axhline(md, color='tomato', linewidth=1.5)
+            ax.axhline(md + 2 * sd, color='tab:green', linestyle='--', linewidth=1.2)
+            ax.axhline(md - 2 * sd, color='tab:green', linestyle='--', linewidth=1.2)
             ax.set_xlabel('Mean of the two systems')
             ax.set_ylabel('Difference between the two systems')
-            ax.set_title(column, weight=600)
+            ax.set_title(column, weight=500)
             ax.legend()
 
         except (RuntimeWarning, Exception) as err:
@@ -486,9 +479,9 @@ def compute_ICC(df1, statistics_results_folder):
             iccs_df = pandas2ri.ri2py(iccs_r_df)
 
             # Select the ICC that corresponds to the 2 way random model (see links above)
-            icc = iccs_df.iloc[4]["ICC"]
-            icc_lower_bound = iccs_df.iloc[5]["lower bound"]
-            icc_upper_bound = iccs_df.iloc[5]["upper bound"]
+            icc = iccs_df.iloc[1]["ICC"]
+            icc_lower_bound = iccs_df.iloc[1]["lower bound"]
+            icc_upper_bound = iccs_df.iloc[1]["upper bound"]
             icc_result = "{}({}, {})".format(round(icc, 3), round(icc_lower_bound, 3), round(icc_upper_bound, 3))
 
             # Store the results
@@ -508,7 +501,7 @@ def compute_ICC(df1, statistics_results_folder):
     return result_dict
 
 
-def compute_ICC_2(df1, statistics_results_folder):
+def compute_ICC_pooled(fp_df, wbb_df, statistics_results_folder):
     """
     Compute the two-way mixed ICC.
 
@@ -525,23 +518,17 @@ def compute_ICC_2(df1, statistics_results_folder):
 
     irr = importr("irr")
 
-    wbb_numbers = ["1", "2", "3", "4"]
-    # Conpute the statistic for each WBB
-    dfs_1 = [df1.loc[(df1.index.get_level_values(3) == number)] for number in wbb_numbers]
-    # Compute the statistic on the mean of the 3 trials
-    dfs_1_mean = [
-        df.groupby([df.index.get_level_values(0), df.index.get_level_values(1), df.index.get_level_values(3)]).mean()
-        for df in dfs_1]
+    wbb_df_mean = wbb_df.groupby([wbb_df.index.get_level_values(0), wbb_df.index.get_level_values(1), \
+                                  wbb_df.index.get_level_values(3)]).mean()
+    fp_df_mean = fp_df.groupby([fp_df.index.get_level_values(0), fp_df.index.get_level_values(1), \
+                                fp_df.index.get_level_values(3)]).mean()
 
     result_dict = {}
     # Loop over each feature
-    for column in df1.columns:
-
+    for column in wbb_df.columns:
         try:
-            r_df = DataFrame({"WBB 1 feature": FloatVector(dfs_1_mean[0][column]),
-                              "WBB 2 feature": FloatVector(dfs_1_mean[1][column]),
-                              "WBB 3 feature": FloatVector(dfs_1_mean[2][column]),
-                              "WBB 4 feature": FloatVector(dfs_1_mean[3][column])})
+            r_df = DataFrame({"WBB feature": FloatVector(wbb_df_mean[column]),
+                              "FP feature": FloatVector(fp_df_mean[column])})
 
             # Compute the two way random ICC
             icc_res = irr.icc(r_df, "twoway", "agreement", "single")
@@ -554,7 +541,7 @@ def compute_ICC_2(df1, statistics_results_folder):
 
     # Save the results
     result_dict_df = pd.DataFrame.from_dict(result_dict).transpose()
-    report_name = "{}/icc_results_2.csv".format(statistics_results_folder)
+    report_name = "{}/icc_results_pooled.csv".format(statistics_results_folder)
     result_dict_df.to_csv(report_name, sep=',', encoding='utf-8')
 
     return result_dict
@@ -590,7 +577,7 @@ def compute_ICC_diff(df1, df2, statistics_results_folder):
              wbb_numbers]
 
     # Compute the statistic on the FP and WBB diff
-    dfs_1_diff = [df1 - df2 for df1, df2 in zip(dfs_1, dfs_2)]
+    dfs_1_diff = [np.abs(df1 - df2) for df1, df2 in zip(dfs_1, dfs_2)]
 
     result_dict = {}
     # Loop over each feature
@@ -607,10 +594,10 @@ def compute_ICC_diff(df1, df2, statistics_results_folder):
             iccs_r_df = icc_res[0]
             iccs_df = pandas2ri.ri2py(iccs_r_df)
 
-            # Select the ICC that corresponds to the 2 way random model (see links above)
-            icc = iccs_df.iloc[4]["ICC"]
-            icc_lower_bound = iccs_df.iloc[5]["lower bound"]
-            icc_upper_bound = iccs_df.iloc[5]["upper bound"]
+            # Select the ICC that corresponds to the 2 way random model single measurement absolute agreement(see links above)
+            icc = iccs_df.iloc[1]["ICC"]
+            icc_lower_bound = iccs_df.iloc[1]["lower bound"]
+            icc_upper_bound = iccs_df.iloc[1]["upper bound"]
             icc_result = "{}({}, {})".format(round(icc, 3), round(icc_lower_bound, 3), round(icc_upper_bound, 3))
 
             # Store the results
@@ -624,7 +611,8 @@ def compute_ICC_diff(df1, df2, statistics_results_folder):
 
     # Save the results
     result_dict_df = pd.DataFrame.from_dict(result_dict).transpose()
-    report_name = "{}/icc_results_1.csv".format(statistics_results_folder)
+
+    report_name = "{}/icc_results_3.csv".format(statistics_results_folder)
     result_dict_df.to_csv(report_name, sep=';', encoding='utf-8', quoting=csv.QUOTE_NONE)
 
     return result_dict

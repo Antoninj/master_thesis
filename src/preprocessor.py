@@ -146,8 +146,8 @@ class DataPreprocessor(SWARII):
             if self.use_swarii:
                 # Resample the balance board data using SWARII
                 resampled_signal = self.apply_swarii_resampling(input_signal, timestamps)
-                rescaled_data = self.apply_rescaling(resampled_signal)
-                reframed_data = self.apply_reframing(rescaled_data, balance_board)
+                # rescaled_data = self.apply_rescaling(resampled_signal)
+                reframed_data = self.apply_reframing(resampled_signal, balance_board)
 
             else:
                 # Resample the balance board data using fourier resampling
@@ -155,8 +155,8 @@ class DataPreprocessor(SWARII):
                 num = round(acquisition_duration * self.acq_frequency)
                 resampled_signal = self.apply_resampling(input_signal, num)
                 filtered_signal = self.apply_filtering(resampled_signal)
-                rescaled_data = self.apply_rescaling(filtered_signal)
-                reframed_data = self.apply_reframing(rescaled_data, balance_board)
+                # rescaled_data = self.apply_rescaling(filtered_signal)
+                reframed_data = self.apply_reframing(filtered_signal, balance_board)
 
 
         else:

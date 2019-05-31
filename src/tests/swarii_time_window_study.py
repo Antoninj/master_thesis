@@ -23,6 +23,9 @@ def main():
     # WBB data test file
     filepath_wbb = config["test_files"]["wbb_raw_data"]
 
+    # scale factor to adjust WBB COP displacement
+    scale_factor = config["preprocessing_parameters"]["scaling_factor"]
+
     # Command line argument parser to choose between wbb or force plate data
     parser = ArgumentParser(
         description="SWARII time window stufy")
@@ -53,6 +56,9 @@ def main():
     raw_data = data_reader.get_raw_data(filepath=filepath_wbb, balance_board=True)
 
     preprocessed_cop_data_swariis = [dp.preprocess_raw_data(raw_data, True) for dp in data_preprocessors]
+    for preprocessed_cop_data in preprocessed_cop_data_swariis:
+        for key in preprocessed_cop_data:
+            preprocessed_cop_data[key] *= scale_factor
 
     if plot:
         acq_frequency = config["preprocessing_parameters"]["acquisition_frequency"]

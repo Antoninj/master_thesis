@@ -1,43 +1,15 @@
 # Built-in modules imports
 from utils import load_config, get_path_to_all_files, setup_logging, check_folder, check_folders, separate_files
+import stats
 
 # Third-party module imports
-import stats
+import statsmodels.api as sm
 from argparse import ArgumentParser
 import logging
 import timeit
 
 setup_logging()
 logger = logging.getLogger("statistical analysis")
-
-
-def compute_time_features_stats():
-    compute_statistics(fp_time_feature_df, wbb_time_feature_df, statistics_results_folders[0],
-                       html_report_results_folders[0], html_report_results_folders[1])
-
-
-def compute_frequency_features_stats():
-    compute_statistics(fp_frequency_feature_df, wbb_frequency_feature_df, statistics_results_folders[1],
-                       html_report_results_folders[2], html_report_results_folders[3], plot_size=6)
-
-
-def compute_all_statistics():
-    ######################################
-    # Time feature statistics computations
-    ######################################
-
-    logger.info("Computing time features statistics...")
-    compute_time_features_stats()
-
-    ###########################################
-    # Frequency feature statistics computations
-    ###########################################
-
-    logger.info("Computing frequency features statistics...")
-    compute_frequency_features_stats()
-
-    logger.info("Statistical computations finished!")
-
 
 def compute_statistics(fp_df, wbb_df, statistics_results_folder, wbb_html_report_results_folder,
                        fp_html_report_results_folder, plot_size=7):
@@ -70,7 +42,6 @@ def compute_statistics(fp_df, wbb_df, statistics_results_folder, wbb_html_report
 
     mean_and_std_results = stats.compute_mean_and_stds(wbb_df, fp_df, statistics_results_folder)
     logger.debug(mean_and_std_results)
-
 
     ######################
     # Spearman correlation
@@ -114,10 +85,39 @@ def compute_statistics(fp_df, wbb_df, statistics_results_folder, wbb_html_report
     logger.info("Computing two-way mixed ICCs.")
 
     icc_results_1 = stats.compute_ICC(wbb_df, statistics_results_folder)
-    icc_results_2 = stats.compute_ICC_2(wbb_df, statistics_results_folder)
+    icc_results_pooled = stats.compute_ICC_pooled(fp_df, wbb_df, statistics_results_folder)
+    # TODO: fix this
+    # icc_results_3 = stats.compute_ICC_diff(wbb_df, fp_df, statistics_results_folder)
 
-    logger.debug(icc_results_2)
+    logger.debug(icc_results_pooled)
 
+
+def compute_time_features_stats():
+    compute_statistics(fp_time_feature_df, wbb_time_feature_df, statistics_results_folders[0],
+                       html_report_results_folders[0], html_report_results_folders[1])
+
+
+def compute_frequency_features_stats():
+    compute_statistics(fp_frequency_feature_df, wbb_frequency_feature_df, statistics_results_folders[1],
+                       html_report_results_folders[2], html_report_results_folders[3], plot_size=6)
+
+
+def compute_all_statistics():
+    ######################################
+    # Time feature statistics computations
+    ######################################
+
+    logger.info("Computing time features statistics...")
+    compute_time_features_stats()
+
+    ###########################################
+    # Frequency feature statistics computations
+    ###########################################
+
+    logger.info("Computing frequency features statistics...")
+    compute_frequency_features_stats()
+
+    logger.info("Statistical computations finished!")
 
 def get_duplicate_identity(data, balance_board_number):
     data = data.loc[data.index.get_level_values('balance board') == balance_board_number]
@@ -130,6 +130,14 @@ def get_outlier_identity(data, feature_name, balance_board_number):
     outlier_values = data[data[feature_name] > 4 * data[feature_name].std()]
 
     return outlier_values.index.tolist()
+
+
+def rescale_wbb_data(wbb_df, fp_df):
+    for column in wbb_df.columns:
+        model = sm.OLS(fp_df[column].values, wbb_df[column].values)
+        results = model.fit()
+        scaling_factor = results.params[0]
+        wbb_df[column] = wbb_df[column].multiply(scaling_factor)
 
 
 if __name__ == "__main__":
@@ -223,9 +231,17 @@ if __name__ == "__main__":
         for df in [wbb_time_feature_df, wbb_frequency_feature_df]:
             [df.drop(index, inplace=True) for index in outlier_indexes_2]
 
-    #####################################
-    # Saving dataframes to Excel for Bart
-    #####################################
+    ##################
+    # Rescale WBB data
+    ##################
+    logger.info("Rescaling WBB data...")
+
+    rescale_wbb_data(wbb_time_feature_df, fp_time_feature_df)
+    rescale_wbb_data(wbb_frequency_feature_df, fp_frequency_feature_df)
+
+    ################################################
+    # Saving dataframes to Excel for Bart (optional)
+    ################################################
     if args.excel:
         logger.info("Saving dataframes to excel")
 
@@ -234,7 +250,6 @@ if __name__ == "__main__":
 
         fp_time_feature_df.to_excel(statistics_results_folders[0] + "/FP_TIME_FEATURES.xlsx")
         fp_frequency_feature_df.to_excel(statistics_results_folders[1] + "/FP_FREQ_FEATURES.xlsx")
-
 
     #########################
     # PUTTING IT ALL TOGETHER
