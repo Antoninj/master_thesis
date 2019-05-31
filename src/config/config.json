@@ -43,7 +43,8 @@
     "swarii_window_size": 0.6,
     "time_window_upper_threshold": 2800,
     "time_window_lower_threshold": 800,
-    "time_shift": 50
+    "time_shift": 50,
+    "scaling_factor": 1.7
   },
   "time_features_parameters": {
     "z_05": 1.645,

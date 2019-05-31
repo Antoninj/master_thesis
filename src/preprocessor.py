@@ -45,6 +45,7 @@ class DataPreprocessor(SWARII):
     swarii_window = config["preprocessing_parameters"]["swarii_window_size"]
     acq_frequency = config["preprocessing_parameters"]["acquisition_frequency"]
     use_swarii = config["preprocessing_parameters"]["apply_swarii"]
+    scale_factor = config["preprocessing_parameters"]["scaling_factor"]
 
     def __init__(self):
         super(DataPreprocessor, self).__init__(window_size=self.swarii_window, desired_frequency=self.acq_frequency)
@@ -126,6 +127,12 @@ class DataPreprocessor(SWARII):
         return input_signal[threshold_1:threshold_2] if balance_board else\
             input_signal[(threshold_1+self.time_shift):(threshold_2+self.time_shift)]
 
+    def apply_rescaling(self, input_signal, scale_factor=scale_factor):
+        """Rescale the Wii Balance Board data since no calibration was performed."""
+
+        return input_signal * scale_factor
+
+
     def preprocess_signal(self, input_signal, balance_board=False, timestamps=None):
         """
         Pipeline the preprocessing steps.
@@ -139,7 +146,8 @@ class DataPreprocessor(SWARII):
             if self.use_swarii:
                 # Resample the balance board data using SWARII
                 resampled_signal = self.apply_swarii_resampling(input_signal, timestamps)
-                reframed_data = self.apply_reframing(resampled_signal, balance_board)
+                rescaled_data = self.apply_rescaling(resampled_signal)
+                reframed_data = self.apply_reframing(rescaled_data, balance_board)
 
             else:
                 # Resample the balance board data using fourier resampling
@@ -147,7 +155,9 @@ class DataPreprocessor(SWARII):
                 num = round(acquisition_duration * self.acq_frequency)
                 resampled_signal = self.apply_resampling(input_signal, num)
                 filtered_signal = self.apply_filtering(resampled_signal)
-                reframed_data = self.apply_reframing(filtered_signal, balance_board)
+                rescaled_data = self.apply_rescaling(filtered_signal)
+                reframed_data = self.apply_reframing(rescaled_data, balance_board)
+
 
         else:
             # Downsample the force plate data using decimation
