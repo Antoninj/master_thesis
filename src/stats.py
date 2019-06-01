@@ -433,7 +433,7 @@ def make_bland_altman_plots(df1, df2, statistics_results_folder, plot_size):
     return result_dict
 
 
-def compute_ICC(df1, statistics_results_folder):
+def compute_ICC(fp_df, wbb_df, statistics_results_folder):
     """
     Compute the two-way mixed ICC.
 
@@ -455,23 +455,18 @@ def compute_ICC(df1, statistics_results_folder):
 
     psych = importr("psych")
 
-    wbb_numbers = ["1", "2", "3", "4"]
-    # Conpute the statistic for each WBB
-    dfs_1 = [df1.loc[(df1.index.get_level_values(3) == number)] for number in wbb_numbers]
-    # Compute the statistic on the mean of the 3 trials
-    dfs_1_mean = [
-        df.groupby([df.index.get_level_values(0), df.index.get_level_values(1), df.index.get_level_values(3)]).mean()
-        for df in dfs_1]
+    wbb_df_mean = wbb_df.groupby([wbb_df.index.get_level_values(0), wbb_df.index.get_level_values(1), \
+                                  wbb_df.index.get_level_values(3)]).mean()
+    fp_df_mean = fp_df.groupby([fp_df.index.get_level_values(0), fp_df.index.get_level_values(1), \
+                                fp_df.index.get_level_values(3)]).mean()
 
     result_dict = {}
     # Loop over each feature
-    for column in df1.columns:
+    for column in wbb_df.columns:
 
         try:
-            r_df = DataFrame({"WBB 1 feature": FloatVector(dfs_1_mean[0][column]),
-                              "WBB 2 feature": FloatVector(dfs_1_mean[1][column]),
-                              "WBB 3 feature": FloatVector(dfs_1_mean[2][column]),
-                              "WBB 4 feature": FloatVector(dfs_1_mean[3][column])})
+            r_df = DataFrame({"WBB feature": FloatVector(wbb_df_mean[column]),
+                              "FP feature": FloatVector(fp_df_mean[column])})
 
             # Compute the two way random ICC
             icc_res = psych.ICC(r_df)
@@ -495,7 +490,7 @@ def compute_ICC(df1, statistics_results_folder):
 
     # Save the results
     result_dict_df = pd.DataFrame.from_dict(result_dict).transpose()
-    report_name = "{}/icc_results_1.csv".format(statistics_results_folder)
+    report_name = "{}/icc_results_pooled.csv".format(statistics_results_folder)
     result_dict_df.to_csv(report_name, sep=';', encoding='utf-8', quoting=csv.QUOTE_NONE)
 
     return result_dict
@@ -541,7 +536,7 @@ def compute_ICC_pooled(fp_df, wbb_df, statistics_results_folder):
 
     # Save the results
     result_dict_df = pd.DataFrame.from_dict(result_dict).transpose()
-    report_name = "{}/icc_results_pooled.csv".format(statistics_results_folder)
+    report_name = "{}/icc_results_pooled_bis.csv".format(statistics_results_folder)
     result_dict_df.to_csv(report_name, sep=',', encoding='utf-8')
 
     return result_dict

@@ -84,12 +84,12 @@ def compute_statistics(fp_df, wbb_df, statistics_results_folder, wbb_html_report
 
     logger.info("Computing two-way mixed ICCs.")
 
-    icc_results_1 = stats.compute_ICC(wbb_df, statistics_results_folder)
-    icc_results_pooled = stats.compute_ICC_pooled(fp_df, wbb_df, statistics_results_folder)
+    icc_results_pooled_1 = stats.compute_ICC(fp_df, wbb_df, statistics_results_folder)
+    icc_results_pooled_2 = stats.compute_ICC_pooled(fp_df, wbb_df, statistics_results_folder)
     # TODO: fix this
     # icc_results_3 = stats.compute_ICC_diff(wbb_df, fp_df, statistics_results_folder)
 
-    logger.debug(icc_results_pooled)
+    logger.debug(icc_results_pooled_1)
 
 
 def compute_time_features_stats():
