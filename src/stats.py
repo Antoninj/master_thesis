@@ -235,13 +235,14 @@ def orthoregress(x, y):
     dat = Data(x, y)
     od = ODR(dat, mod, beta0=linreg[0:2])
     out = od.run()
-    slope, intercept = out.beta[0], out.beta[1]
+    slope, intercept, r_squared = out.beta[0], out.beta[1], out.sum_square
 
-    return slope, intercept
+    return slope, intercept, r_squared
+
 
 def make_global_person_correlation_plots(df1, df2, statistics_results_folder, plot_size):
     """
-        Perform a linear least-squares regression and plot the correlation line for each feature.
+        Perform a total least-squares regression and plot the fitting line for each feature.
 
         References
         ----------
@@ -258,12 +259,13 @@ def make_global_person_correlation_plots(df1, df2, statistics_results_folder, pl
 
         try:
             # Perform the orthogonal distance regression
-            slope, intercept = orthoregress(x, y)
+            slope, intercept, r_squared = orthoregress(x, y)
 
             # Store the linear regression results
             result_dict[column] = {}
             result_dict[column]["Slope"] = round(slope, 4)
             result_dict[column]["Intercept"] = round(intercept, 4)
+            result_dict[column]["R\u00b2"] = round(r_squared, 4)
 
             # Make the plot
             wbb_numbers = ["1", "2", "3", "4"]
@@ -277,7 +279,10 @@ def make_global_person_correlation_plots(df1, df2, statistics_results_folder, pl
             ax.set_ylabel('Wii Balance Board')
 
             ax.set_title(column, weight=500)
-            ax.text(0.8, 0.1, "Slope = {} \n Intercept = {}".format(round(slope, 4), round(intercept, 4)), fontsize=9,
+            ax.text(0.8, 0.2,
+                    "Slope = {} \n Intercept = {} \n R\u00b2 = {}".format(round(slope, 4), round(intercept, 4),
+                                                                          round(r_squared, 4)),
+                    fontsize=9,
                     horizontalalignment='center',
                     verticalalignment='center', transform=ax.transAxes)
             # ax.text(0.8, 0.1, "Intercept = {}".format(round(intercept, 4)), fontsize=9, horizontalalignment='center',
@@ -330,13 +335,13 @@ def make_pearson_correlation_plots(df1, df2, statistics_results_folder, plot_siz
 
             try:
                 # Perform the orthogonal distance regression
-                slope, intercept = orthoregress(x, y)
+                slope, intercept, r_squared = orthoregress(x, y)
 
                 # Store the linear regression results
                 result_dict[column][number] = {}
                 result_dict[column][number]["Slope"] = round(slope, 4)
                 result_dict[column][number]["Intercept"] = round(intercept, 4)
-                #result_dict[column][number]["R"] = round(r_value, 4)
+                result_dict[column][number]["R\u00b2"] = round(r_squared, 4)
 
 
                 # Make the plot
@@ -345,7 +350,7 @@ def make_pearson_correlation_plots(df1, df2, statistics_results_folder, plot_siz
                 ax.set_xlabel('Force plate')
                 ax.set_ylabel('Balance Board')
                 ax.set_title(column, weight=500)
-                # ax.text(0.8, 0.3, "R\u00b2={}".format(round(r_value**2, 4)), fontsize=9, horizontalalignment='center',
+                # ax.text(0.8, 0.3, "R\u00b2={}".format(round(r_squared, 4)), fontsize=9, horizontalalignment='center',
                 # verticalalignment='center', transform=ax.transAxes)
                 ax.text(0.8, 0.2, "Slope = {}".format(round(slope, 4)), fontsize=9, horizontalalignment='center',
                         verticalalignment='center', transform=ax.transAxes)
@@ -448,7 +453,7 @@ def compute_ICC(fp_df, wbb_df, statistics_results_folder):
 
     Notes
     -----
-    More info on what is the two-way mixed ICC:
+    More info on what is the two-way random ICC:
     - https://www.uvm.edu/~dhowell/methods8/Supplements/icc/More%20on%20ICCs.pdf
     - https://en.wikipedia.org/wiki/Intraclass_correlation
     """
@@ -477,12 +482,16 @@ def compute_ICC(fp_df, wbb_df, statistics_results_folder):
             icc = iccs_df.iloc[1]["ICC"]
             icc_lower_bound = iccs_df.iloc[1]["lower bound"]
             icc_upper_bound = iccs_df.iloc[1]["upper bound"]
-            icc_result = "{}({}, {})".format(round(icc, 3), round(icc_lower_bound, 3), round(icc_upper_bound, 3))
+            icc_p_value = iccs_df.iloc[1]["p"]
+
+            icc_result = "{}".format(round(icc, 3))
+            icc_95_ci = "{} - {}".format(round(icc_lower_bound, 3), round(icc_upper_bound, 3))
 
             # Store the results
             result_dict[column] = {}
-            result_dict[column]["ICC"] = icc_result
-
+            result_dict[column]["ICC(A,1)"] = icc_result
+            result_dict[column]["95% CI"] = icc_95_ci
+            result_dict[column]["P value"] = icc_p_value
 
         except (RuntimeWarning, Exception) as err:
             logger.error("Problem with feature: {}.\n{}".format(column, err), exc_info=True, stack_info=True)
@@ -542,7 +551,7 @@ def compute_ICC_pooled(fp_df, wbb_df, statistics_results_folder):
     return result_dict
 
 
-def compute_ICC_diff(df1, df2, statistics_results_folder):
+def compute_inter_rater_ICC_diff(df1, df2, statistics_results_folder):
     """
     Compute the two-way mixed ICC.
 
@@ -557,7 +566,7 @@ def compute_ICC_diff(df1, df2, statistics_results_folder):
 
     Notes
     -----
-    More info on what is the two-way mixed ICC:
+    More info on what is the two-way random ICC:
     - https://www.uvm.edu/~dhowell/methods8/Supplements/icc/More%20on%20ICCs.pdf
     - https://en.wikipedia.org/wiki/Intraclass_correlation
     """
@@ -586,19 +595,23 @@ def compute_ICC_diff(df1, df2, statistics_results_folder):
 
             # Compute the two way random ICC
             icc_res = psych.ICC(r_df)
-            iccs_r_df = icc_res[0]
+            iccs_r_df = icc_res[1]
             iccs_df = pandas2ri.ri2py(iccs_r_df)
 
             # Select the ICC that corresponds to the 2 way random model single measurement absolute agreement(see links above)
             icc = iccs_df.iloc[1]["ICC"]
             icc_lower_bound = iccs_df.iloc[1]["lower bound"]
             icc_upper_bound = iccs_df.iloc[1]["upper bound"]
-            icc_result = "{}({}, {})".format(round(icc, 3), round(icc_lower_bound, 3), round(icc_upper_bound, 3))
+            icc_p_value = iccs_df.iloc[1]["p"]
+
+            icc_result = "{}".format(round(icc, 3))
+            icc_95_ci = "{} - {}".format(round(icc_lower_bound, 3), round(icc_upper_bound, 3))
 
             # Store the results
             result_dict[column] = {}
-            result_dict[column]["ICC"] = icc_result
-
+            result_dict[column]["ICC(A,1)"] = icc_result
+            result_dict[column]["95% CI"] = icc_95_ci
+            result_dict[column]["P value"] = icc_p_value
 
         except (RuntimeWarning, Exception) as err:
             logger.error("Problem with feature: {}.\n{}".format(column, err), exc_info=True, stack_info=True)
@@ -608,6 +621,81 @@ def compute_ICC_diff(df1, df2, statistics_results_folder):
     result_dict_df = pd.DataFrame.from_dict(result_dict).transpose()
 
     report_name = "{}/icc_results_3.csv".format(statistics_results_folder)
+    result_dict_df.to_csv(report_name, sep=';', encoding='utf-8', quoting=csv.QUOTE_NONE)
+
+    return result_dict
+
+
+def compute_inter_rater_ICC(df1, statistics_results_folder):
+    """
+    Compute the two-way mixed ICC.
+
+    References
+    ----------
+    .. [1] R library used for the ICC implementation:
+    - https://personality-project.org/r/psych/
+    - http://www.personality-project.org/r/html/ICC.html
+    - https://www.rdocumentation.org/packages/psych/versions/1.8.12/topics/ICC
+
+    .. [2] R to python: https://rpy2.github.io/doc/latest/html/index.html#
+
+    Notes
+    -----
+    More info on what is the two-way random ICC:
+    - https://www.uvm.edu/~dhowell/methods8/Supplements/icc/More%20on%20ICCs.pdf
+    - https://en.wikipedia.org/wiki/Intraclass_correlation
+    """
+
+    psych = importr("psych")
+
+    wbb_numbers = ["1", "2", "3", "4"]
+    # Conpute the statistic for each WBB
+    dfs_1 = [df1.loc[(df1.index.get_level_values(3) == number)] for number in wbb_numbers]
+    # Compute the statistic on the mean of the 3 trials
+    dfs_1_mean = [
+        df.groupby([df.index.get_level_values(0), df.index.get_level_values(1), df.index.get_level_values(3)]).mean()
+        for df in dfs_1]
+
+    result_dict = {}
+    # Loop over each feature
+    for column in df1.columns:
+
+        try:
+            r_df = DataFrame({"WBB 1 feature": FloatVector(dfs_1_mean[0][column]),
+                              "WBB 2 feature": FloatVector(dfs_1_mean[1][column]),
+                              "WBB 3 feature": FloatVector(dfs_1_mean[2][column]),
+                              "WBB 4 feature": FloatVector(dfs_1_mean[3][column])})
+
+            # Compute the two way random ICC
+            icc_res = psych.ICC(r_df)
+            iccs_r_df = icc_res[1]
+            iccs_df = pandas2ri.ri2py(iccs_r_df)
+
+            # Select the ICC that corresponds to the 2 way random model (see links above)
+            icc = iccs_df.iloc[4]["ICC"]
+            icc_lower_bound = iccs_df.iloc[5]["lower bound"]
+            icc_upper_bound = iccs_df.iloc[5]["upper bound"]
+            icc_p_value = iccs_df.iloc[1]["p"]
+
+            icc_result = "{}".format(round(icc, 3))
+            icc_95_ci = "{} - {}".format(round(icc_lower_bound, 3), round(icc_upper_bound, 3))
+
+            # Store the results
+            result_dict[column] = {}
+            result_dict[column]["ICC(A,1)"] = icc_result
+            result_dict[column]["95% CI"] = icc_95_ci
+            result_dict[column]["P value"] = icc_p_value
+
+
+        except (RuntimeWarning, Exception) as err:
+            logger.error("Problem with feature: {}.\n{}".format(column, err), exc_info=True, stack_info=True)
+            pass
+
+    # Save the results
+    result_dict_df = pd.DataFrame.from_dict(result_dict).transpose()
+    report_name = "{}/ICC_results_1.csv".format(statistics_results_folder)
+    result_dict_df.to_csv(report_name, sep=',', encoding='utf-8')
+    report_name = "{}/icc_results_1.csv".format(statistics_results_folder)
     result_dict_df.to_csv(report_name, sep=';', encoding='utf-8', quoting=csv.QUOTE_NONE)
 
     return result_dict

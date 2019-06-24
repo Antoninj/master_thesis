@@ -198,7 +198,8 @@ def plot_stabilograms(preprocessed_cop_data, device_name, acq_frequency, filepat
         plt.close(fig)
 
 
-def plot_superposed_spectral_densities(fp_frequencies, fp_spectrums, wbb_frequencies, wbb_spectrums):
+def plot_superposed_spectral_densities(fp_frequencies, fp_spectrums, fp_jackknifes, wbb_frequencies, wbb_spectrums,
+                                       wbb_jackknifes):
     """"Plot and save spectral densities."""
 
     gs = gridspec.GridSpec(2, 2)
@@ -207,6 +208,10 @@ def plot_superposed_spectral_densities(fp_frequencies, fp_spectrums, wbb_frequen
     ax = plt.subplot(gs[0, 0])
     plt.plot(fp_frequencies[0], fp_spectrums[0], label="FP")
     plt.plot(wbb_frequencies[0], wbb_spectrums[0], label="WBB")
+    plt.fill_between(fp_frequencies[0], fp_jackknifes[0][:, 0], fp_jackknifes[0][:, 1],
+                     color="blue", alpha=0.2)
+    plt.fill_between(wbb_frequencies[0], wbb_jackknifes[0][:, 0], wbb_jackknifes[0][:, 1],
+                     color="orange", alpha=0.2)
     plt.xlabel('Frequency [Hz]')
     plt.ylabel('Power spectral density in ML direction [mm**2/Hz]')
     ax.set_yscale('log')
@@ -216,6 +221,10 @@ def plot_superposed_spectral_densities(fp_frequencies, fp_spectrums, wbb_frequen
     ax = plt.subplot(gs[0, 1])
     plt.plot(fp_frequencies[1], fp_spectrums[1], label="FP")
     plt.plot(wbb_frequencies[1], wbb_spectrums[1], label="WBB")
+    plt.fill_between(fp_frequencies[1], fp_jackknifes[1][:, 0], fp_jackknifes[1][:, 1],
+                     color="blue", alpha=0.2)
+    plt.fill_between(wbb_frequencies[1], wbb_jackknifes[1][:, 0], wbb_jackknifes[1][:, 1],
+                     color="orange", alpha=0.2)
     plt.xlabel('Frequency [Hz]')
     plt.ylabel('Power spectral density in AP direction [mm**2/Hz]')
     ax.set_yscale('log')
@@ -225,6 +234,10 @@ def plot_superposed_spectral_densities(fp_frequencies, fp_spectrums, wbb_frequen
     ax = plt.subplot(gs[1, :])
     plt.plot(fp_frequencies[2], fp_spectrums[2], label="FP")
     plt.plot(wbb_frequencies[2], wbb_spectrums[2], label="WBB")
+    plt.fill_between(fp_frequencies[2], fp_jackknifes[2][:, 0], fp_jackknifes[2][:, 1],
+                     color="blue", alpha=0.2)
+    plt.fill_between(wbb_frequencies[2], wbb_jackknifes[2][:, 0], wbb_jackknifes[2][:, 1],
+                     color="orange", alpha=0.2)
     plt.xlabel('Frequency [Hz]')
     plt.ylabel('Resultant distance power spectral density[mm**2/Hz]')
     ax.set_yscale('log')

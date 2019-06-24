@@ -60,7 +60,8 @@
     "multitaper": {
       "delta": 0.01,
       "time_bandwidth": 3.5,
-      "number_of_tapers": 8
+      "number_of_tapers": 8,
+      "statistics": false
     }
   },
   "test_files": {

@@ -27,6 +27,8 @@ class FrequencyFeatures(CopFeatures):
     delta = config["frequency_features_parameters"]["multitaper"]["delta"]
     time_bandwidth = config["frequency_features_parameters"]["multitaper"]["time_bandwidth"]
     number_of_tapers = config["frequency_features_parameters"]["multitaper"]["number_of_tapers"]
+    statistics = config["frequency_features_parameters"]["multitaper"]["statistics"]
+
 
     def __init__(self, cop_x, cop_y):
         super(FrequencyFeatures, self).__init__(cop_x, cop_y)
@@ -38,6 +40,12 @@ class FrequencyFeatures(CopFeatures):
         self.rd_spectral_density = self.psd_method_impl(self.cop_rd)
         self.ml_spectral_density = self.psd_method_impl(self.cop_x)
         self.ap_spectral_density = self.psd_method_impl(self.cop_y)
+
+        if self.statistics:
+            self.rd_spectral_density_jackknife = self.compute_multitaper_psd(self.cop_rd, statistics=True)
+            self.ml_spectral_density_jackknife = self.compute_multitaper_psd(self.cop_x, statistics=True)
+            self.ap_spectral_density_jackknife = self.compute_multitaper_psd(self.cop_y, statistics=True)
+
         self.frequency_features = self.compute_frequency_features()
 
     def create_psd_methods_dict(self):
@@ -58,7 +66,7 @@ class FrequencyFeatures(CopFeatures):
 
         return psd_methods
 
-    def compute_multitaper_psd(self, array):
+    def compute_multitaper_psd(self, array, statistics=False):
         """
         Estimate the adaptive weighted multitaper spectrum, as in Thomson 1982. This is done by estimating the DPSS
         (discrete prolate spheroidal sequences), multiplying each of the tapers with the data series, take the FFT,
@@ -69,11 +77,23 @@ class FrequencyFeatures(CopFeatures):
          ..[1] mtspec package documentation: http://krischer.github.io/mtspec/multitaper_mtspec.html
         """
 
-        psd, f = mtspec(data=array, delta=self.delta, time_bandwidth=self.time_bandwidth, number_of_tapers=self.number_of_tapers)
-        psd = psd[self.frequency_range[0]: self.frequency_range[1]]
-        f = f[self.frequency_range[0]: self.frequency_range[1]]
+        if statistics:
+            psd, f, jackknife, _, _ = mtspec(data=array, delta=self.delta, time_bandwidth=self.time_bandwidth,
+                                             number_of_tapers=self.number_of_tapers, statistics=True)
+            psd = psd[self.frequency_range[0]: self.frequency_range[1]]
+            f = f[self.frequency_range[0]: self.frequency_range[1]]
+            jackknife = jackknife[self.frequency_range[0]: self.frequency_range[1]]
 
-        return (f, psd)
+            return (f, psd, jackknife)
+
+        else:
+            psd, f = mtspec(data=array, delta=self.delta, time_bandwidth=self.time_bandwidth,
+                            number_of_tapers=self.number_of_tapers)
+            psd = psd[self.frequency_range[0]: self.frequency_range[1]]
+            f = f[self.frequency_range[0]: self.frequency_range[1]]
+
+            return (f, psd)
+
 
     def compute_welch_psd(self, array):
         """
@@ -92,8 +112,7 @@ class FrequencyFeatures(CopFeatures):
         return (f, psd)
 
     def compute_multitaper_bis_psd(self, array):
-        p = spectrum.mtm.pmtm(array, NW=self.time_bandwidth, k=self.number_of_tapers, NFFT=len(array) / 2 + 1)
-        p.run()
+        psd = spectrum.mtm.pmtm(array, NW=self.time_bandwidth, k=self.number_of_tapers)
         psd = p.psd[self.frequency_range[0]: self.frequency_range[1]]
         f = p.frequencies()[self.frequency_range[0]: self.frequency_range[1]]
 

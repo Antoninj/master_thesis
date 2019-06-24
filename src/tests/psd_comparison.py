@@ -63,6 +63,8 @@ def main():
     data_preprocessor.use_swarii = True
     data_preprocessor.window_size = 0.1
     wbb_preprocessed_cop_data = data_preprocessor.preprocess_raw_data(wbb_raw_data, True)
+
+    # rescale wbb data
     for key in wbb_preprocessed_cop_data:
         wbb_preprocessed_cop_data[key] *= scale_factor
 
@@ -75,20 +77,24 @@ def main():
     fp_freq_features = FrequencyFeatures(fp_cop_x, fp_cop_y)
     wbb_freq_features = FrequencyFeatures(wbb_cop_x, wbb_cop_y)
 
-    spectral_densities = ["ml_spectral_density", "ap_spectral_density", "rd_spectral_density"]
+    spectral_densities = ["ml_spectral_density_jackknife", "ap_spectral_density_jackknife",
+                          "rd_spectral_density_jackknife"]
 
     fp_spectrums_and_frequencies = [getattr(fp_freq_features, spectral_density) for spectral_density in
                                     spectral_densities]
     fp_frequencies = [sd[0] for sd in fp_spectrums_and_frequencies]
     fp_spectrums = [sd[1] for sd in fp_spectrums_and_frequencies]
+    fp_jackknifes = [sd[2] for sd in fp_spectrums_and_frequencies]
 
     wbb_spectrums_and_frequencies = [getattr(wbb_freq_features, spectral_density) for spectral_density in
                                      spectral_densities]
     wbb_frequencies = [sd[0] for sd in wbb_spectrums_and_frequencies]
     wbb_spectrums = [sd[1] for sd in wbb_spectrums_and_frequencies]
+    wbb_jackknifes = [sd[2] for sd in wbb_spectrums_and_frequencies]
 
     if plot:
-        plot_superposed_spectral_densities(fp_frequencies, fp_spectrums, wbb_frequencies, wbb_spectrums)
+        plot_superposed_spectral_densities(fp_frequencies, fp_spectrums, fp_jackknifes, wbb_frequencies, wbb_spectrums,
+                                           wbb_jackknifes)
         plt.savefig(
             "/Users/Antonin/Documents/VUB/semester 4/thesis/paper/images/chapter 4/PSD_FP_WBB.png",
             bbox_inches='tight')
